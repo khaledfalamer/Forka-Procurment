@@ -62,6 +62,9 @@ h1,h2,h3{font-family:var(--fk-serif);font-weight:600;margin:0}
 .btn-primary{background:var(--fk-charcoal);border-color:var(--fk-charcoal);color:#fff}.btn-primary:hover{background:var(--fk-bronze);border-color:var(--fk-bronze);color:#fff}
 .btn-accent{background:var(--fk-bronze);border-color:var(--fk-bronze);color:#fff}.btn-accent:hover{background:var(--fk-bronze-hover);color:#fff}
 .btn:disabled{opacity:.45;cursor:not-allowed}
+input.chg,select.chg{border-color:var(--fk-bronze);background:#f7efe4;box-shadow:0 0 0 2px rgba(154,107,63,.18)}
+input:disabled,select:disabled{opacity:1;color:var(--fk-text);background:transparent;border-color:transparent;-webkit-appearance:none;appearance:none}
+input.miss:disabled,select.miss:disabled{background:var(--fk-danger-bg);border-color:var(--fk-danger)}
 .btn-ok{min-height:30px;padding:3px 10px;font-size:12px}
 .btn-ok.done{background:var(--fk-success-bg);border-color:var(--fk-success-bg);color:var(--fk-success)}
 input,select,textarea{font-family:var(--fk-sans);background:var(--fk-card);border:1.5px solid var(--fk-line);border-radius:var(--fk-radius-sm);color:var(--fk-text);padding:6px 9px;font-size:13px;min-height:34px}
@@ -116,13 +119,13 @@ textarea{width:100%;min-height:120px}
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script>
-const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;let pin='',pinNeeded=false;
+const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;let pin='',pinNeeded=false,editMode=false,saving=false,editMsg='';
 const T={
 en:{app:'Procurement Planner',sub:'November 2026 · Al Matbakh Al Kuwaiti + Mayar',fill:'Fill in',sum:'Summary',how:'How it works',
  name:'Your name',namePh:'Type your name to start',needName:'Type your name first, so we know who filled each line.',
  live:'Saved for the whole team — every change is shared live.',local:'You can’t save to the shared list from this link. Your changes stay in this browser — when you finish, press “Send my updates” and send it to procurement.',
  loading:'Connecting to the shared list…',offline:'The shared list can’t be reached right now. Changes stay in this browser for now.',
- send:'Send my updates',pin:'Team PIN',badPin:'Wrong team PIN — saved in this browser only',budget:'Budget',pemo:'Pemo card',credit:'Credit suppliers',nopay:'Payment not set',
+ send:'Send my updates',edit:'Edit',viewOnly:'View only. To make changes, type your name and the team PIN, then press Edit.',editingAs:'Editing as',unsaved:'unsaved changes',noChanges:'no changes yet',pendingHint:'press Edit to save or cancel them',save:'Save changes',saving:'Saving…',saved:'Saved to the Sheet',cancel:'Cancel changes',doneEdit:'Done',needPin:'Type the team PIN.',checking:'Checking PIN…',wrongPin:'Wrong PIN.',noPinSet:'The PIN is not set on the Sheet yet — ask Khaled.',oldScript:'The Sheet script needs updating before anyone can edit.',net:'Can’t reach the Sheet — check the internet and try again.',pin:'Team PIN',badPin:'Wrong team PIN — saved in this browser only',budget:'Budget',pemo:'Pemo card',credit:'Credit suppliers',nopay:'Payment not set',
  missing:'Missing',toconfirm:'To confirm',confirmed:'Confirmed',notneeded:'Not needed',all:'All',
  progress:'Progress',of:'of',lines:'lines',
  search:'Search item or supplier…',concept:'Concept',supplier:'Supplier',payment:'Payment',category:'Category',
@@ -143,7 +146,7 @@ ar:{app:'مخطط المشتريات',sub:'نوفمبر 2026 · المطبخ ا�
  name:'اسمك',namePh:'اكتب اسمك للبدء',needName:'اكتب اسمك أولاً حتى نعرف من عبّأ كل سطر.',
  live:'محفوظ للفريق كله — كل تعديل يظهر للجميع مباشرة.',local:'لا يمكنك الحفظ في القائمة المشتركة من هذا الرابط. تعديلاتك تبقى في هذا المتصفح — عند الانتهاء اضغط «إرسال تحديثاتي» وأرسلها لقسم المشتريات.',
  loading:'جاري الاتصال بالقائمة المشتركة…',offline:'لا يمكن الوصول للقائمة المشتركة الآن. التعديلات محفوظة في هذا المتصفح مؤقتاً.',
- send:'إرسال تحديثاتي',pin:'رمز الفريق',badPin:'رمز الفريق غير صحيح — حُفظ في هذا المتصفح فقط',budget:'الميزانية',pemo:'بطاقة Pemo',credit:'موردون بالآجل',nopay:'طريقة الدفع غير محددة',
+ send:'إرسال تحديثاتي',edit:'تعديل',viewOnly:'للعرض فقط. للتعديل اكتب اسمك ورمز الفريق ثم اضغط تعديل.',editingAs:'تعديل باسم',unsaved:'تعديلات غير محفوظة',noChanges:'لا توجد تعديلات بعد',pendingHint:'اضغط تعديل لحفظها أو إلغائها',save:'حفظ التعديلات',saving:'جاري الحفظ…',saved:'تم الحفظ في الشيت',cancel:'إلغاء التعديلات',doneEdit:'إنهاء',needPin:'اكتب رمز الفريق.',checking:'جاري التحقق من الرمز…',wrongPin:'الرمز غير صحيح.',noPinSet:'الرمز غير مضبوط في الشيت بعد — راجع خالد.',oldScript:'سكربت الشيت يحتاج تحديث قبل أن يستطيع أحد التعديل.',net:'لا يمكن الوصول للشيت — تأكد من الإنترنت وحاول مرة أخرى.',pin:'رمز الفريق',badPin:'رمز الفريق غير صحيح — حُفظ في هذا المتصفح فقط',budget:'الميزانية',pemo:'بطاقة Pemo',credit:'موردون بالآجل',nopay:'طريقة الدفع غير محددة',
  missing:'ناقص',toconfirm:'بانتظار التأكيد',confirmed:'مؤكد',notneeded:'غير مطلوب',all:'الكل',
  progress:'التقدم',of:'من',lines:'سطر',
  search:'ابحث عن صنف أو مورد…',concept:'المفهوم',supplier:'المورد',payment:'الدفع',category:'الفئة',
@@ -193,14 +196,32 @@ function status(l){const m=missing(l);if(m.length)return 'missing';if(l.ok&&!(+l
 // ---- saving ----
 const queue={},busy={};
 function edit(id,patch){
+  if(SHEET&&!editMode)return false;
   if(!me){toast(t('needName'));const n=document.getElementById('me');n&&n.focus();return false}
   const cur=Object.assign({},shared[id]||{},local[id]||{},patch,{who:me,at:new Date().toISOString()});if(uid)cur.uid=uid;
-  if(mode==='live'){shared[id]=cur;delete local[id];queue[id]=cur;flush(id)}else{local[id]=Object.assign({},local[id]||{},patch,{who:me,at:cur.at});ls('pp-local',local)}
+  if(mode==='live'&&!SHEET){shared[id]=cur;delete local[id];queue[id]=cur;flush(id)}else{local[id]=Object.assign({},local[id]||{},patch,{who:me,at:cur.at});ls('pp-local',local)}
   return true}
 async function flush(id){if(busy[id]||!queue[id])return;busy[id]=true;const body=queue[id];delete queue[id];
   try{await storeSet(id,JSON.parse(JSON.stringify(body)))}
   catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,800+Math.random()*800));try{await storeSet(id,body)}catch(e2){fail(id,body,e2)}}else fail(id,body,e)}
   busy[id]=false;if(queue[id])flush(id)}
+function viewOf(id,body){const l=Object.assign(line(id),body),c=calc(l);return {n:l.n,con:l.con,cat:l.cat,sup:l.sup,pay:l.pay,use:l.use,par:l.par,st:l.st,p:l.p,u:l.u,pkN:l.pkN,pkU:l.pkU,q:c.q,v:+c.v.toFixed(2),status:status(l)}}
+async function post(o){try{const r=await fetch(CFG.SHEET_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)});return await r.json()}catch(e){return {ok:false,error:'net'}}}
+async function startEdit(){
+  const n=document.getElementById('me'),pp=document.getElementById('pin');me=(n&&n.value.trim())||me;pin=(pp&&pp.value.trim())||'';ls('pp-me',me);
+  if(!me){editMsg=t('needName');render();return}if(!pin){editMsg=t('needPin');render();return}
+  editMsg=t('checking');render();const r=await post({pin,check:true});
+  if(r.ok){editMode=true;editMsg='';try{sessionStorage.setItem('pp-pin',pin)}catch(_){}}
+  else editMsg=r.error==='pin'?t('wrongPin'):r.error==='nopin'?t('noPinSet'):r.error==='net'?t('net'):t('oldScript');
+  render()}
+async function saveAll(){const ids=Object.keys(local);if(!ids.length||saving)return;saving=true;render();
+  const items=ids.map(id=>{const data=JSON.parse(JSON.stringify(Object.assign({},shared[id]||{},local[id])));return {id,data,view:viewOf(id,data)}});
+  const r=await post({pin,batch:items});
+  if(r.ok){items.forEach(it=>{shared[it.id]=it.data});local={};ls('pp-local',local);toast(t('saved'))}
+  else if(r.error==='pin'){editMode=false;editMsg=t('wrongPin')}
+  else toast(r.error==='net'?t('net'):r.error==='nopin'?t('noPinSet'):t('oldScript'));
+  saving=false;render()}
+function cancelEdits(){local={};ls('pp-local',local);render()}
 async function storeSet(id,body){
   if(!SHEET)return db.collection('lines').doc(id).set(body);
   const l=Object.assign(line(id),body),c=calc(l);
@@ -221,10 +242,20 @@ function render(){
   renderTop();const P=document.getElementById('page');
   const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.id?{elid:ae.id}:null;
   P.innerHTML=tab==='fill'?vFill():tab==='sum'?vSum():vHow();
+  if(SHEET){if(!editMode)P.querySelectorAll('[data-f],button[data-act="ok"],button[data-act="add"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+    Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`);if(el)el.classList.add('chg')}))}
   if(af){const el=af.elid?document.getElementById(af.elid):P.querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&el.tagName==='INPUT'){el.focus();try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
 }
 function banner(){
   const nl=Object.keys(local).length;
+  if(SHEET){
+    if(mode==='loading')return `<div class="banner bn-info">${t('loading')}</div>`;
+    if(mode==='offline')return `<div class="banner bn-warn">${t('net')}</div>`;
+    if(!editMode)return `<div class="card"><div class="controls"><span style="color:var(--fk-text-2)">🔒 ${t('viewOnly')}</span><span class="sp"></span>
+      <input id="me" value="${esc(me)}" placeholder="${t('name')}" style="width:170px"><input id="pin" type="password" placeholder="${t('pin')}" style="width:120px" autocomplete="off">
+      <button class="btn btn-accent" data-act="startedit">✏️ ${t('edit')}</button></div>${editMsg?`<div style="color:var(--fk-danger);font-size:13px;margin-top:8px">${esc(editMsg)}</div>`:''}${nl?`<div style="color:var(--fk-warning);font-size:13px;margin-top:6px">${nl} ${t('unsaved')} — ${t('pendingHint')}</div>`:''}</div>`;
+    return `<div class="banner ${nl?'bn-warn':'bn-ok'}" style="position:sticky;top:64px;z-index:5">✏️ ${t('editingAs')} <b>${esc(me)}</b> · ${nl?`<b>${nl}</b> ${t('unsaved')}`:t('noChanges')}<span class="sp"></span>
+      <button class="btn" data-act="canceledits" ${nl&&!saving?'':'disabled'}>${t('cancel')}</button><button class="btn btn-accent" data-act="saveall" ${nl&&!saving?'':'disabled'}>${saving?t('saving'):t('save')+(nl?' ('+nl+')':'')}</button><button class="btn" data-act="doneedit" ${saving?'disabled':''}>${t('doneEdit')}</button></div>`}
   if(mode==='loading')return `<div class="banner bn-info">${t('loading')}</div>`;
   if(mode==='live')return `<div class="banner bn-ok">● ${t('live')}${nl?` <span class="sp"></span><button class="btn" data-act="send">${t('send')} (${nl})</button>`:''}</div>`;
   if(mode==='offline')return `<div class="banner bn-warn">${t('offline')}${nl?`<span class="sp"></span><button class="btn btn-accent" data-act="send">${t('send')} (${nl})</button>`:''}</div>`;
@@ -250,7 +281,7 @@ function vFill(){
   const order={missing:0,toconfirm:1,confirmed:2,notneeded:3};R.sort((a,b)=>order[status(a)]-order[status(b)]||(a.con>b.con?1:-1)||((a.sup||'~')>(b.sup||'~')?1:-1)||(a.n>b.n?1:-1));
   const shown=R.slice(0,400);
   const num=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}">`;
-  return `<div class="card"><div class="controls"><label for="me">${t('name')}</label><input id="me" value="${esc(me)}" placeholder="${t('namePh')}" style="min-width:220px;${me?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">${SHEET&&(CFG.PIN===true||pinNeeded||pin)?`<label for="pin">${t('pin')}</label><input id="pin" type="password" value="${esc(pin)}" style="width:110px;${pin?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">`:''}<span class="sp"></span><span style="color:var(--fk-muted);font-size:12px">${t('basis')}</span></div></div>
+  return `${SHEET?'':`<div class="card"><div class="controls"><label for="me">${t('name')}</label><input id="me" value="${esc(me)}" placeholder="${t('namePh')}" style="min-width:220px;${me?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">${SHEET&&(CFG.PIN===true||pinNeeded||pin)?`<label for="pin">${t('pin')}</label><input id="pin" type="password" value="${esc(pin)}" style="width:110px;${pin?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">`:''}<span class="sp"></span><span style="color:var(--fk-muted);font-size:12px">${t('basis')}</span></div></div>`}
   ${banner()}${head(L)}
   <div class="controls"><input id="q" placeholder="${t('search')}" value="${esc(fl.q)}" style="min-width:230px">
    <div class="chips">${['all','missing','toconfirm','confirmed','notneeded'].map(k=>`<button class="chip ${fl.st===k?'on':''}" data-st="${k}">${t(k)}</button>`).join('')}</div>
@@ -296,6 +327,10 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button,[da
   if(b.dataset.st){fl.st=b.dataset.st;tab='fill';render();return}
   const a=b.dataset.act;
   if(a==='ok'){const l=line(b.dataset.id);if(edit(l.id,{ok:!l.ok}))render()}
+  else if(a==='startedit'){startEdit()}
+  else if(a==='saveall'){saveAll()}
+  else if(a==='canceledits'){cancelEdits()}
+  else if(a==='doneedit'){editMode=false;render()}
   else if(a==='useprice'){if(edit(b.dataset.id,{p:+b.dataset.v}))render()}
   else if(a==='add'){if(!me){toast(t('needName'));return}const id='N-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);edit(id,{n:'',con:fl.con||'Al Matbakh',cat:'Food',isNew:true});fl.st='all';fl.q='';render();const el=document.querySelector(`[data-id="${id}"][data-f="n"]`);el&&el.focus()}
   else if(a==='send'){copy(JSON.stringify({forka:'procurement-planner',v:1,who:me,at:new Date().toISOString(),lines:local}))}
@@ -308,8 +343,8 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button,[da
       toast(t('imported')+': '+n);render()}catch(err){toast('✗')}}
 });
 document.addEventListener('change',e=>{const el=e.target;
-  if(el.id==='pin'){pin=el.value.trim();ls('pp-pin',pin);if(mode==='live'&&Object.keys(local).length){const L0=local;local={};ls('pp-local',local);Object.entries(L0).forEach(([id,p])=>{const cur=Object.assign({},shared[id]||{},p);shared[id]=cur;queue[id]=cur;flush(id)})}setTimeout(render,0);return}
-  if(el.id==='me'){me=el.value.trim();ls('pp-me',me);setTimeout(render,0);return}
+  if(el.id==='pin'){if(SHEET)return;pin=el.value.trim();setTimeout(render,0);return}
+  if(el.id==='me'){me=el.value.trim();ls('pp-me',me);if(!SHEET)setTimeout(render,0);return}
   if(el.id==='fcon'){fl.con=el.value;render();return}if(el.id==='fsup'){fl.sup=el.value;render();return}if(el.id==='fpay'){fl.pay=el.value;render();return}
   if(el.dataset.id&&el.dataset.f){const f=el.dataset.f;let v=el.value;
     if(['use','par','st','p','pkN'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,120);
@@ -320,11 +355,11 @@ document.addEventListener('input',e=>{if(e.target.id==='q'){fl.q=e.target.value;
 (async()=>{
   lang=ls('pp-lang')||'en';me=ls('pp-me')||'';local=ls('pp-local')||{};
   try{const d=await (await fetch('data.json')).json();BASE=d.lines}catch(e){document.getElementById('page').innerHTML='<div class="empty">data.json</div>';return}
-  pin=ls('pp-pin')||'';
+  try{pin=sessionStorage.getItem('pp-pin')||''}catch(_){pin=''}
   render();
   if(SHEET){
     const go=async first=>{try{const o=await sheetLoad();shared=o;
-        if(first){mode='live';if(Object.keys(local).length){const L0=local;local={};ls('pp-local',local);Object.entries(L0).forEach(([id,p])=>{const cur=Object.assign({},o[id]||{},p);shared[id]=cur;queue[id]=cur;flush(id)})}}
+        if(first){mode='live'}
         const ae=document.activeElement;if(!(ae&&ae.tagName==='INPUT'&&ae.dataset.f))render()}
       catch(e){if(first){mode='offline';render()}}};
     await go(true);setInterval(()=>{if(!document.hidden)go(false)},30000);return}

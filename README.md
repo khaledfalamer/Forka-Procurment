@@ -16,7 +16,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 ### A. Connect the Google Sheet
 1. Open the Sheet above → **Extensions → Apps Script**.
 2. Delete what is there, paste all of `Code.gs`, and save.
-3. Optional team PIN: **Project Settings (⚙) → Script properties → Add**. Name `PIN`, value e.g. `4821`.
+3. **Team PIN (required):** **Project Settings (⚙) → Script properties → Add**. Name `PIN`, value e.g. `4821`. Without a PIN nobody can save.
 4. **Deploy → New deployment →** type **Web app**. Set *Execute as*: **Me**, and *Who has access*: **Anyone**. Press **Deploy** and allow access.
 5. Copy the **Web app URL** (it ends with `/exec`).
 
@@ -28,13 +28,15 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 5. Send the link (and the PIN) to the procurement team.
 
 ## How the team uses it
-- Type your name (and the PIN). Red boxes are missing: price, unit, packing, supplier, payment, monthly use, PAR.
+- The app opens **view only**. To change anything: type your name and the team PIN, then press **Edit**.
+- Red boxes are missing: price, unit, packing, supplier, payment, monthly use, PAR. Changed boxes turn bronze.
+- Nothing is saved until you press **Save changes**. **Cancel changes** throws them away.
 - **To buy = Use + PAR − Stock now.** Update the stock with today's count, then press **Confirm** on each line.
-- Every change goes to the Sheet. Others see it within 30 seconds.
+- After saving, others see the changes within 30 seconds.
 - The Sheet has one row per line the team touched, with readable columns. Don't edit the last column (`data`).
 
 ## Notes
-- Anyone with the app link **and** the PIN can save. Without a PIN, anyone with the link can save.
+- Only people with the PIN can save; the Sheet checks it. To change the PIN, edit it in Script properties (no redeploy needed).
 - If the Sheet can't be reached, changes stay in that browser. "Send my updates" copies them so they can be sent and imported later.
 - To change the code later, edit the script and use **Deploy → Manage deployments → Edit → New version**. The URL stays the same.
 
@@ -47,12 +49,14 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 
 ## الإعداد (مرة واحدة، حوالي 10 دقائق)
 1. افتح الشيت → **Extensions → Apps Script**. الصق كل محتوى `Code.gs` واحفظ.
-2. اختياري، رمز للفريق: **Project Settings → Script properties**. الاسم `PIN` والقيمة مثلاً `4821`.
+2. **رمز الفريق (إلزامي):** **Project Settings → Script properties**. الاسم `PIN` والقيمة مثلاً `4821`. بدون رمز لا أحد يستطيع الحفظ.
 3. **Deploy → New deployment → Web app**. *Execute as*: Me، و*Who has access*: Anyone. ثم Deploy، وانسخ الرابط الذي ينتهي بـ `/exec`.
 4. ملف `config.js` فيه رابط الشيت جاهز. خانة الرمز تظهر فقط إذا وضعت رمزاً في السكربت.
 5. ارفع `index.html` و`data.json` و`config.js` إلى GitHub، وفعّل **Settings → Pages**، ثم أرسل الرابط والرمز للفريق.
 
 ## طريقة الاستخدام
-- اكتب اسمك والرمز. الخانات الحمراء ناقصة ويجب تعبئتها.
+- التطبيق يفتح **للعرض فقط**. للتعديل اكتب اسمك ورمز الفريق ثم اضغط **تعديل**.
+- الخانات الحمراء ناقصة، والخانات التي غيّرتها تصبح بلون برونزي.
+- لا يُحفظ شيء حتى تضغط **حفظ التعديلات**.
 - **للشراء = الاستهلاك + مخزون الأمان − المخزون الآن.** حدّث المخزون بجرد اليوم ثم اضغط **تأكيد** لكل سطر.
-- كل تعديل يُحفظ في الشيت، ويظهر للباقين خلال 30 ثانية.
+- بعد الحفظ تظهر التعديلات للباقين خلال 30 ثانية.
