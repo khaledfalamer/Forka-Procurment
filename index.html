@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" translate="no" class="notranslate">
 <head>
 <meta charset="utf-8">
+<meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#23211f">
 <title>Forka Procurement Planner</title>
@@ -167,7 +168,7 @@ const UNITS=[['PC','Piece','حبة'],['KG','KG','كيلو'],['G','Gram','غرا�
 const U=c=>{const u=UNITS.find(x=>x[0]===c);return u?(lang==='ar'?u[2]:u[1]):(c||'')};
 function uSel(l,f,miss){const v=l[f]||'';return `<select class="us ${miss?'miss':''}" data-id="${esc(l.id)}" data-f="${f}"><option value="">—</option>${UNITS.map(u=>`<option value="${u[0]}" ${v===u[0]?'selected':''}>${lang==='ar'?u[2]:u[1]}</option>`).join('')}${v&&!UNITS.some(u=>u[0]===v)?`<option selected value="${esc(v)}">${esc(v)}</option>`:''}</select>`}
 const CON={'Al Matbakh':{en:'Al Matbakh',ar:'المطبخ الكويتي'},'Mayar':{en:'Mayar',ar:'ميار'}};
-let lang='en',tab='fill',BASE=[],shared={},local={},supShared={},supLocal={},sq='',db=null,user=null,mode='loading',me='',uid=null,isOwner=false;
+let rowRank=null,rowRankKey=null,keepKey='',keepIds=null,supRank=null,supRankKey=null,lastTab='',lang='en',tab='fill',BASE=[],shared={},local={},supShared={},supLocal={},sq='',db=null,user=null,mode='loading',me='',uid=null,isOwner=false;
 let fl={q:'',st:'all',con:'',sup:'',pay:''};
 const t=k=>T[lang][k]??T.en[k]??k;
 const fmt=(n,d=0)=>(n==null||isNaN(n))?'–':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -258,12 +259,14 @@ function renderTop(){
 function render(){
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
   renderTop();const P=document.getElementById('page');
-  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.id?{elid:ae.id}:null;
+  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
+  const same=lastTab===tab;lastTab=tab;const wy=window.scrollY,sc=[...P.querySelectorAll('.tbl-wrap')].map(e=>[e.scrollTop,e.scrollLeft]);
   P.innerHTML=tab==='fill'?vFill():tab==='sups'?vSups():tab==='sum'?vSum():vHow();
   if(SHEET){if(!editMode)P.querySelectorAll('[data-f],[data-sf],button[data-act="ok"],button[data-act="add"],button[data-act="addsup"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
     Object.entries(supLocal).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-sid="${CSS.escape(id)}"][data-sf="${f}"]`);if(el)el.classList.add('chg')}));
     Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`);if(el)el.classList.add('chg')}))}
-  if(af){const el=af.elid?document.getElementById(af.elid):P.querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&el.tagName==='INPUT'){el.focus();try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
+  if(same){[...P.querySelectorAll('.tbl-wrap')].forEach((e,i)=>{if(sc[i]){e.scrollTop=sc[i][0];e.scrollLeft=sc[i][1]}});window.scrollTo(0,wy)}
+  if(af){const el=af.elid?document.getElementById(af.elid):af.sid?P.querySelector(`[data-sid="${CSS.escape(af.sid)}"][data-sf="${af.sf}"]`):P.querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){el.focus({preventScroll:true});try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
 }
 function banner(){
   const nl=Object.keys(local).length+Object.keys(supLocal).length;
@@ -293,11 +296,14 @@ function head(L){
    <div class="legend">${['missing','toconfirm','confirmed','notneeded'].map(k=>`<span data-st="${k}"><i class="dot" style="background:${col[k]}"></i>${t(k)} <b>${c[k]}</b></span>`).join('')}</div></div>`}
 function vFill(){
   const L=lines();const sups=[...new Set(L.map(l=>l.sup).filter(Boolean))].sort();
+  const fk=JSON.stringify(fl);if(fk!==keepKey){keepKey=fk;keepIds=null}
   let R=L;const q=fl.q.toLowerCase();
   if(q)R=R.filter(l=>(l.n||'').toLowerCase().includes(q)||(l.sup||'').toLowerCase().includes(q)||l.id.toLowerCase().includes(q));
   if(fl.st!=='all')R=R.filter(l=>status(l)===fl.st);
   if(fl.con)R=R.filter(l=>l.con===fl.con);if(fl.sup)R=R.filter(l=>l.sup===fl.sup);if(fl.pay)R=R.filter(l=>(l.pay||'none')===fl.pay);
-  const order={missing:0,toconfirm:1,confirmed:2,notneeded:3};R.sort((a,b)=>order[status(a)]-order[status(b)]||(a.con>b.con?1:-1)||((a.sup||'~')>(b.sup||'~')?1:-1)||(a.n>b.n?1:-1));
+  if(keepIds){const inR=new Set(R.map(l=>l.id));L.forEach(l=>{if(keepIds.has(l.id)&&!inR.has(l.id))R.push(l)})}keepIds=new Set(R.map(l=>l.id));
+  if(!rowRank||rowRankKey!==fk){rowRankKey=fk;rowRank={};[...R].sort((a,b)=>(a.con>b.con?1:a.con<b.con?-1:0)||((a.sup||'~')>(b.sup||'~')?1:(a.sup||'~')<(b.sup||'~')?-1:0)||(a.n>b.n?1:a.n<b.n?-1:0)||(a.id>b.id?1:-1)).forEach((l,k)=>rowRank[l.id]=k)}
+  const rr=l=>rowRank[l.id]??-1;R.sort((a,b)=>rr(a)-rr(b)||(b.id>a.id?1:-1));
   const shown=R.slice(0,400);
   const num=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}">`;
   return `${SHEET?'':`<div class="card"><div class="controls"><label for="me">${t('name')}</label><input id="me" value="${esc(me)}" placeholder="${t('namePh')}" style="min-width:220px;${me?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">${SHEET&&(CFG.PIN===true||pinNeeded||pin)?`<label for="pin">${t('pin')}</label><input id="pin" type="password" value="${esc(pin)}" style="width:110px;${pin?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">`:''}<span class="sp"></span><span style="color:var(--fk-muted);font-size:12px">${t('basis')}</span></div></div>`}
@@ -339,7 +345,8 @@ function vSum(){
 function vSups(){
   const L=lines(),S=suppliers();const st={};L.forEach(l=>{if(!l.sup)return;const k=l.sup.trim().toUpperCase();st[k]=st[k]||{n:0,v:0};st[k].n++;st[k].v+=calc(l).v});
   let R=S;if(sq){const q=sq.toLowerCase();R=R.filter(x=>(x.n||'').toLowerCase().includes(q)||(x.contact||'').toLowerCase().includes(q)||(x.supplies||'').toLowerCase().includes(q))}
-  const isNew=x=>x.id.startsWith('S-N')?1:0;R.sort((a,b)=>isNew(b)-isNew(a)||(isNew(a)&&isNew(b)?(b.id>a.id?1:-1):0)||((st[(b.n||'').toUpperCase()]||{v:0}).v-(st[(a.n||'').toUpperCase()]||{v:0}).v)||(a.n>b.n?1:-1));
+  if(!supRank||supRankKey!==sq){supRankKey=sq;supRank={};[...R].sort((a,b)=>((st[(b.n||'').toUpperCase()]||{v:0}).v-(st[(a.n||'').toUpperCase()]||{v:0}).v)||((a.n||'')>(b.n||'')?1:-1)).forEach((x,i)=>supRank[x.id]=i)}
+  const rk=x=>supRank[x.id]??-1;R.sort((a,b)=>rk(a)-rk(b)||(b.id>a.id?1:-1));
   const nm=S.filter(x=>missingS(x).length).length;
   const inp=(x,f,miss,ph,w,type)=>`<input dir="auto" ${type?`type="${type}"`:''} class="${miss?'miss':''}" style="width:${w}px" data-sid="${esc(x.id)}" data-sf="${f}" value="${esc(x[f]??'')}" placeholder="${esc(ph||'')}">`;
   return `${banner()}<div class="card"><div class="controls"><input id="sq" placeholder="${t('supSearch')}" value="${esc(sq)}" style="min-width:240px"><span class="badge ${nm?'b-bad':'b-ok'}">${nm} ${t('supMissing')}</span><span class="sp"></span><button class="btn btn-primary" data-act="addsup">+ ${t('addSup')}</button></div>
