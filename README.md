@@ -22,7 +22,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 
 ### B. Put it on GitHub
 1. In GitHub, create a repository (e.g. `forka-procurement`), or add a folder `procurement/` to an existing one.
-2. Open `config.js` and paste the URL: `SHEET_URL: 'https://script.google.com/macros/s/…/exec'`. If you did not add a PIN, set `PIN: false`.
+2. `config.js` already holds your Sheet link. `PIN: 'auto'` means the PIN box appears only if you set a PIN in the script.
 3. Upload `index.html`, `data.json` and `config.js`.
 4. Go to **Settings → Pages → Deploy from branch → main / root → Save**. After a minute, the link is `https://<account>.github.io/<repo>/`.
 5. Send the link (and the PIN) to the procurement team.
@@ -49,7 +49,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 1. افتح الشيت → **Extensions → Apps Script**. الصق كل محتوى `Code.gs` واحفظ.
 2. اختياري، رمز للفريق: **Project Settings → Script properties**. الاسم `PIN` والقيمة مثلاً `4821`.
 3. **Deploy → New deployment → Web app**. *Execute as*: Me، و*Who has access*: Anyone. ثم Deploy، وانسخ الرابط الذي ينتهي بـ `/exec`.
-4. في `config.js` الصق الرابط في `SHEET_URL`. إذا لم تضع رمزاً اجعل `PIN: false`.
+4. ملف `config.js` فيه رابط الشيت جاهز. خانة الرمز تظهر فقط إذا وضعت رمزاً في السكربت.
 5. ارفع `index.html` و`data.json` و`config.js` إلى GitHub، وفعّل **Settings → Pages**، ثم أرسل الرابط والرمز للفريق.
 
 ## طريقة الاستخدام
