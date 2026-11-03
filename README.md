@@ -35,6 +35,11 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 - After saving, others see the changes within 30 seconds.
 - The Sheet has one row per line the team touched, with readable columns. Don't edit the last column (`data`).
 
+## Suppliers tab
+- Add suppliers and their details: contact, phone, email, payment terms, credit days, delivery days, lead time, TRN, area, what they supply, notes.
+- Red = missing phone or payment terms (and credit days for credit suppliers). Renaming a supplier renames it on all its items.
+- Saved to the **Suppliers** tab of the Sheet.
+
 ## Notes
 - Only people with the PIN can save; the Sheet checks it. To change the PIN, edit it in Script properties (no redeploy needed).
 - If the Sheet can't be reached, changes stay in that browser. "Send my updates" copies them so they can be sent and imported later.
@@ -53,6 +58,10 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 3. **Deploy → New deployment → Web app**. *Execute as*: Me، و*Who has access*: Anyone. ثم Deploy، وانسخ الرابط الذي ينتهي بـ `/exec`.
 4. ملف `config.js` فيه رابط الشيت جاهز. خانة الرمز تظهر فقط إذا وضعت رمزاً في السكربت.
 5. ارفع `index.html` و`data.json` و`config.js` إلى GitHub، وفعّل **Settings → Pages**، ثم أرسل الرابط والرمز للفريق.
+
+## تبويب الموردين
+- أضف الموردين وبياناتهم: الشخص المسؤول، الهاتف، البريد، شروط الدفع، أيام الآجل، أيام التوريد، مدة التوريد، الرقم الضريبي، المنطقة، ماذا يورّد، ملاحظات.
+- تُحفظ في تبويب **Suppliers** في الشيت.
 
 ## طريقة الاستخدام
 - التطبيق يفتح **للعرض فقط**. للتعديل اكتب اسمك ورمز الفريق ثم اضغط **تعديل**.

@@ -8,16 +8,42 @@ const SHEET_NAME = 'Planner';
 const HEAD = ['Ref', 'Item', 'Concept', 'Category', 'Supplier', 'Payment', 'Use / month', 'PAR', 'Stock now',
   'Unit price', 'Price per', 'Pack qty', 'Pack unit', 'To buy', 'Budget AED', 'Status', 'Filled by', 'Updated', 'data (do not edit)'];
 
-function sheet_() {
+const SUP_NAME = 'Suppliers';
+const SUP_HEAD = ['Id', 'Supplier', 'Contact person', 'Phone', 'Email', 'Payment terms', 'Credit days', 'Delivery days',
+  'Lead time (days)', 'TRN', 'Area / address', 'What they supply', 'Notes', 'Items', 'Month AED', 'Updated by', 'Updated', 'data (do not edit)'];
+
+function sheet_(name, head) {
+  name = name || SHEET_NAME; head = head || HEAD;
   const ss = SpreadsheetApp.getActive();
-  let sh = ss.getSheetByName(SHEET_NAME);
-  if (!sh) sh = ss.insertSheet(SHEET_NAME);
+  let sh = ss.getSheetByName(name);
+  if (!sh) sh = ss.insertSheet(name);
   if (sh.getLastRow() === 0) {
-    sh.appendRow(HEAD);
+    sh.appendRow(head);
     sh.setFrozenRows(1);
-    sh.getRange(1, 1, 1, HEAD.length).setFontWeight('bold');
+    sh.getRange(1, 1, 1, head.length).setFontWeight('bold');
   }
   return sh;
+}
+
+function readAll_(name, head) {
+  const sh = sheet_(name, head), n = sh.getLastRow() - 1, out = {};
+  if (n > 0) sh.getRange(2, 1, n, head.length).getValues().forEach(r => {
+    if (!r[0]) return;
+    try { out[r[0]] = JSON.parse(r[head.length - 1] || '{}'); } catch (e) {}
+  });
+  return out;
+}
+
+function upsert_(sh, id, row) {
+  const f = sh.getRange('A:A').createTextFinder(id).matchEntireCell(true).findNext();
+  if (f && f.getRow() > 1) sh.getRange(f.getRow(), 1, 1, row.length).setValues([row]);
+  else sh.appendRow(row);
+}
+
+function writeSup_(sh, id, d, v) {
+  upsert_(sh, id, [id, v.n || d.n || '', v.contact || '', v.phone ? "'" + v.phone : '', v.email || '', v.terms || '', v.days, v.deliv || '',
+    v.lead, v.trn ? "'" + v.trn : '', v.area || '', v.supplies || '', v.notes || '', v.items, v.v, d.who || '',
+    d.at ? new Date(d.at) : new Date(), JSON.stringify(d)]);
 }
 
 function out_(o) {
@@ -25,25 +51,13 @@ function out_(o) {
 }
 
 function doGet() {
-  const sh = sheet_();
-  const n = sh.getLastRow() - 1;
-  const lines = {};
-  if (n > 0) {
-    const v = sh.getRange(2, 1, n, HEAD.length).getValues();
-    v.forEach(r => {
-      if (!r[0]) return;
-      try { lines[r[0]] = JSON.parse(r[HEAD.length - 1] || '{}'); } catch (e) {}
-    });
-  }
-  return out_({ ok: true, lines: lines });
+  return out_({ ok: true, lines: readAll_(SHEET_NAME, HEAD), suppliers: readAll_(SUP_NAME, SUP_HEAD) });
 }
 
 function writeRow_(sh, id, d, v) {
   const row = [id, v.n || '', v.con || '', v.cat || '', v.sup || '', v.pay || '', v.use, v.par, v.st, v.p, v.u || '',
     v.pkN, v.pkU || '', v.q, v.v, v.status || '', d.who || '', d.at ? new Date(d.at) : new Date(), JSON.stringify(d)];
-  const f = sh.getRange('A:A').createTextFinder(id).matchEntireCell(true).findNext();
-  if (f && f.getRow() > 1) sh.getRange(f.getRow(), 1, 1, row.length).setValues([row]);
-  else sh.appendRow(row);
+  upsert_(sh, id, row);
 }
 
 function doPost(e) {
@@ -60,8 +74,10 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const sh = sheet_();
-    items.forEach(it => writeRow_(sh, String(it.id), it.data || {}, it.view || {}));
+    const sh = sheet_(), ss = sheet_(SUP_NAME, SUP_HEAD);
+    items.forEach(it => it.kind === 'sup'
+      ? writeSup_(ss, String(it.id), it.data || {}, it.view || {})
+      : writeRow_(sh, String(it.id), it.data || {}, it.view || {}));
   } finally {
     lock.releaseLock();
   }
