@@ -66,6 +66,13 @@ h1,h2,h3{font-family:var(--fk-serif);font-weight:600;margin:0}
 input.chg,select.chg{border-color:var(--fk-bronze);background:#f7efe4;box-shadow:0 0 0 2px rgba(154,107,63,.18)}
 input:disabled,select:disabled{opacity:1;color:var(--fk-text);background:transparent;border-color:transparent;-webkit-appearance:none;appearance:none}
 input.miss:disabled,select.miss:disabled{background:var(--fk-danger-bg);border-color:var(--fk-danger)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld input,.fld select{width:100%}
+h3.sec{font-family:var(--fk-sans);font-size:15px;font-weight:600;margin:0 0 12px}
+[dir=rtl] h3.sec{font-family:'IBM Plex Sans Arabic',sans-serif}
+tr.sup-row:hover td{background:#f7f1e8}
+.chip:disabled{cursor:default;opacity:.85}
 .btn-ok{min-height:30px;padding:3px 10px;font-size:12px}
 .btn-ok.done{background:var(--fk-success-bg);border-color:var(--fk-success-bg);color:var(--fk-success)}
 input,select,textarea{font-family:var(--fk-sans);background:var(--fk-card);border:1.5px solid var(--fk-line);border-radius:var(--fk-radius-sm);color:var(--fk-text);padding:6px 9px;font-size:13px;min-height:34px}
@@ -122,7 +129,7 @@ textarea{width:100%;min-height:120px}
 <script>
 const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;let pin='',pinNeeded=false,editMode=false,saving=false,editMsg='';
 const T={
-en:{app:'Procurement Planner',sub:'November 2026 · Al Matbakh Al Kuwaiti + Mayar',fill:'Fill in',sups:'Suppliers',sum:'Summary',addSup:'Add supplier',supSearch:'Search supplier…',contact:'Contact person',phone:'Phone',email:'Email',terms:'Payment terms',cash:'Cash',days:'Credit days',deliv:'Delivery days',delivPh:'e.g. Sun, Tue, Thu',lead:'Lead time (days)',trn:'TRN (VAT no.)',area:'Area / address',supplies:'What they supply',notes:'Notes',items:'Items',monthly:'Month AED',newSup:'New supplier name',supMissing:'suppliers missing details',fromLines:'typed in a line — add details',m_phone:'phone',m_terms:'terms',m_days:'credit days',supHint:'Red = missing phone or payment terms (and credit days for credit suppliers). Renaming a supplier also renames it on all its items.',how:'How it works',
+en:{app:'Procurement Planner',sub:'November 2026 · Al Matbakh Al Kuwaiti + Mayar',fill:'Fill in',sups:'Suppliers',sum:'Summary',addSup:'Add supplier',supSearch:'Search supplier…',contact:'Contact person',phone:'Phone',email:'Email',terms:'Payment terms',cash:'Cash',days:'Credit days',deliv:'Delivery days',delivPh:'e.g. Sun, Tue, Thu',lead:'Lead time (days)',trn:'TRN (VAT no.)',area:'Area / address',supplies:'What they supply',notes:'Notes',items:'Items',monthly:'Month AED',newSup:'New supplier name',supMissing:'suppliers missing details',fromLines:'typed in a line — add details',m_phone:'phone',m_terms:'terms',m_days:'credit days',snotes:'Notes',supHint:'',supHint2:'Click a supplier to open its page and add details. Renaming a supplier also renames it on all its items.',allSups:'All suppliers',complete:'Complete',perMonth:'this month',lastBy:'last edited by',dayW:'days',secContact:'Contact',secAddress:'Address',secTerms:'Payment & delivery',secBank:'Bank details',supName:'Supplier name',phone2:'Phone 2',emirate:'Emirate',address:'Address',addressPh:'Area, street, building',map:'Google Maps link',openMap:'Open map',minOrder:'Minimum order (AED)',licence:'Trade licence no.',bankName:'Bank',accName:'Account name',iban:'IBAN',accNo:'Account no.',swift:'SWIFT',bankNote:'Needed to pay credit suppliers by transfer. Check it against the supplier’s letter or invoice.',pickCat:'Choose at least one category.',itemsFrom:'Items from this supplier',openItems:'Open in Fill in',s_name:'name',s_phone:'phone',s_emirate:'emirate',s_terms:'terms',s_days:'credit days',s_cats:'categories',s_iban:'IBAN',how:'How it works',
  name:'Your name',namePh:'Type your name to start',needName:'Type your name first, so we know who filled each line.',
  live:'Saved for the whole team — every change is shared live.',local:'You can’t save to the shared list from this link. Your changes stay in this browser — when you finish, press “Send my updates” and send it to procurement.',
  loading:'Connecting to the shared list…',offline:'The shared list can’t be reached right now. Changes stay in this browser for now.',
@@ -143,7 +150,7 @@ en:{app:'Procurement Planner',sub:'November 2026 · Al Matbakh Al Kuwaiti + Maya
  how4:'When a line is right, press Confirm. If an item isn’t needed this month, set Use to 0 and confirm.',
  how5:'“Store” hints show the warehouse team’s November figure for the same item, for comparison.',
  notes:'Budget = To buy × Unit price. Amounts in AED.',basis:'Starting data: Abu Ali, October 2026 budget'},
-ar:{app:'مخطط المشتريات',sub:'نوفمبر 2026 · المطبخ الكويتي + ميار',fill:'التعبئة',sups:'الموردون',sum:'الملخص',addSup:'إضافة مورد',supSearch:'ابحث عن مورد…',contact:'الشخص المسؤول',phone:'الهاتف',email:'البريد',terms:'شروط الدفع',cash:'نقداً',days:'أيام الآجل',deliv:'أيام التوريد',delivPh:'مثال: الأحد، الثلاثاء، الخميس',lead:'مدة التوريد (أيام)',trn:'الرقم الضريبي',area:'المنطقة / العنوان',supplies:'ماذا يورّد',notes:'ملاحظات',items:'الأصناف',monthly:'الشهر درهم',newSup:'اسم المورد الجديد',supMissing:'موردون تنقصهم بيانات',fromLines:'مكتوب في سطر — أضف بياناته',m_phone:'الهاتف',m_terms:'شروط الدفع',m_days:'أيام الآجل',supHint:'الأحمر = ينقصه الهاتف أو شروط الدفع (وأيام الآجل للموردين بالآجل). تغيير اسم المورد يغيّره في كل أصنافه.',how:'طريقة العمل',
+ar:{app:'مخطط المشتريات',sub:'نوفمبر 2026 · المطبخ الكويتي + ميار',fill:'التعبئة',sups:'الموردون',sum:'الملخص',addSup:'إضافة مورد',supSearch:'ابحث عن مورد…',contact:'الشخص المسؤول',phone:'الهاتف',email:'البريد',terms:'شروط الدفع',cash:'نقداً',days:'أيام الآجل',deliv:'أيام التوريد',delivPh:'مثال: الأحد، الثلاثاء، الخميس',lead:'مدة التوريد (أيام)',trn:'الرقم الضريبي',area:'المنطقة / العنوان',supplies:'ماذا يورّد',notes:'ملاحظات',items:'الأصناف',monthly:'الشهر درهم',newSup:'اسم المورد الجديد',supMissing:'موردون تنقصهم بيانات',fromLines:'مكتوب في سطر — أضف بياناته',m_phone:'الهاتف',m_terms:'شروط الدفع',m_days:'أيام الآجل',snotes:'ملاحظات',supHint:'',supHint2:'اضغط على المورد لفتح صفحته وإضافة بياناته. تغيير اسم المورد يغيّره في كل أصنافه.',allSups:'كل الموردين',complete:'مكتمل',perMonth:'هذا الشهر',lastBy:'آخر تعديل',dayW:'يوم',secContact:'التواصل',secAddress:'العنوان',secTerms:'الدفع والتوريد',secBank:'البيانات البنكية',supName:'اسم المورد',phone2:'هاتف 2',emirate:'الإمارة',address:'العنوان',addressPh:'المنطقة، الشارع، المبنى',map:'رابط خرائط Google',openMap:'افتح الخريطة',minOrder:'الحد الأدنى للطلب (درهم)',licence:'رقم الرخصة التجارية',bankName:'البنك',accName:'اسم الحساب',iban:'الآيبان',accNo:'رقم الحساب',swift:'سويفت',bankNote:'مطلوبة للدفع للموردين بالآجل بالتحويل. طابقها مع خطاب المورد أو فاتورته.',pickCat:'اختر فئة واحدة على الأقل.',itemsFrom:'أصناف هذا المورد',openItems:'افتح في التعبئة',s_name:'الاسم',s_phone:'الهاتف',s_emirate:'الإمارة',s_terms:'شروط الدفع',s_days:'أيام الآجل',s_cats:'الفئات',s_iban:'الآيبان',how:'طريقة العمل',
  name:'اسمك',namePh:'اكتب اسمك للبدء',needName:'اكتب اسمك أولاً حتى نعرف من عبّأ كل سطر.',
  live:'محفوظ للفريق كله — كل تعديل يظهر للجميع مباشرة.',local:'لا يمكنك الحفظ في القائمة المشتركة من هذا الرابط. تعديلاتك تبقى في هذا المتصفح — عند الانتهاء اضغط «إرسال تحديثاتي» وأرسلها لقسم المشتريات.',
  loading:'جاري الاتصال بالقائمة المشتركة…',offline:'لا يمكن الوصول للقائمة المشتركة الآن. التعديلات محفوظة في هذا المتصفح مؤقتاً.',
@@ -165,11 +172,15 @@ ar:{app:'مخطط المشتريات',sub:'نوفمبر 2026 · المطبخ ا�
  how5:'تلميح «المستودع» يعرض رقم فريق المستودع لنوفمبر لنفس الصنف للمقارنة.',
  notes:'الميزانية = للشراء × سعر الوحدة. المبالغ بالدرهم.',basis:'البيانات الأولية: ميزانية أبو علي لأكتوبر 2026'}};
 const UNITS=[['PC','Piece','حبة'],['KG','KG','كيلو'],['G','Gram','غرام'],['L','Litre','لتر'],['ML','ML','مل'],['CTN','Carton','كرتون'],['BOX','Box','صندوق'],['BAG','Bag','كيس'],['PKT','Packet','باكيت'],['BTL','Bottle','قارورة'],['CAN','Can','علبة'],['JAR','Jar','مرطبان'],['TIN','Tin','تنكة'],['TRAY','Tray','طبق'],['BUCKET','Bucket','سطل'],['GALLON','Gallon','جالون'],['ROLL','Roll','رول'],['BUNDLE','Bundle','ربطة'],['DOZEN','Dozen','درزن'],['SET','Set','طقم']];
+const CATS=[['meat','Meat & poultry','لحوم ودواجن'],['seafood','Fish & seafood','أسماك ومأكولات بحرية'],['veg','Vegetables & fruit','خضار وفواكه'],['dairy','Dairy & eggs','ألبان وبيض'],['rice','Rice & grains','رز وحبوب'],['dry','Dry goods & spices','مواد جافة وبهارات'],['oil','Oils & ghee','زيوت وسمن'],['flour','Flour & bakery','طحين ومخبوزات'],['sauce','Sauces & canned','صلصات ومعلبات'],['frozen','Frozen food','مجمدات'],['bev','Drinks & water','مشروبات ومياه'],['coffee','Coffee & tea','قهوة وشاي'],['sweet','Desserts & sweets','حلويات'],['pack','Packaging & disposables','تغليف ومستهلكات'],['clean','Cleaning & hygiene','تنظيف ونظافة'],['fuel','Charcoal & gas','فحم وغاز'],['equip','Equipment & maintenance','معدات وصيانة'],['other','Other','أخرى']];
+const DAYS=[['sun','Sun','الأحد'],['mon','Mon','الإثنين'],['tue','Tue','الثلاثاء'],['wed','Wed','الأربعاء'],['thu','Thu','الخميس'],['fri','Fri','الجمعة'],['sat','Sat','السبت']];
+const EMIRATES=[['Dubai','دبي'],['Sharjah','الشارقة'],['Ajman','عجمان'],['Umm Al Quwain','أم القيوين'],['Ras Al Khaimah','رأس الخيمة'],['Fujairah','الفجيرة'],['Abu Dhabi','أبوظبي'],['Al Ain','العين'],['Oman','عُمان'],['Outside UAE','خارج الإمارات']];
+let supOpen=null;
 const U=c=>{const u=UNITS.find(x=>x[0]===c);return u?(lang==='ar'?u[2]:u[1]):(c||'')};
 function uSel(l,f,miss){const v=l[f]||'';return `<select class="us ${miss?'miss':''}" data-id="${esc(l.id)}" data-f="${f}"><option value="">—</option>${UNITS.map(u=>`<option value="${u[0]}" ${v===u[0]?'selected':''}>${lang==='ar'?u[2]:u[1]}</option>`).join('')}${v&&!UNITS.some(u=>u[0]===v)?`<option selected value="${esc(v)}">${esc(v)}</option>`:''}</select>`}
 const CON={'Al Matbakh':{en:'Al Matbakh',ar:'المطبخ الكويتي'},'Mayar':{en:'Mayar',ar:'ميار'}};
 let rowRank=null,rowRankKey=null,keepKey='',keepIds=null,supRank=null,supRankKey=null,lastTab='',lang='en',tab='fill',BASE=[],shared={},local={},supShared={},supLocal={},sq='',db=null,user=null,mode='loading',me='',uid=null,isOwner=false;
-let fl={q:'',st:'all',con:'',sup:'',pay:''};
+let fl={q:'',st:'all',con:'',sup:'',pay:'',cat:''};
 const t=k=>T[lang][k]??T.en[k]??k;
 const fmt=(n,d=0)=>(n==null||isNaN(n))?'–':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -187,12 +198,12 @@ function line(id){
 function lines(){return ids().map(line).filter(l=>!l.off)}
 const slug=n=>'S-'+String(n||'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50);
 let SBASE=[];
-function supRec(id){const b=SBASE.find(x=>x.id===id);return Object.assign({id,n:b?b.n:'',contact:'',phone:'',email:'',terms:b?b.terms:'',days:null,deliv:'',lead:null,trn:'',area:'',supplies:'',notes:''},supShared[id]||{},supLocal[id]||{})}
+function supRec(id){const b=SBASE.find(x=>x.id===id);return Object.assign({id,n:b?b.n:'',contact:'',phone:'',phone2:'',email:'',emirate:'',address:'',map:'',terms:b?b.terms:'',days:null,deliv:[],lead:null,minOrder:null,trn:'',licence:'',bankName:'',accName:'',iban:'',accNo:'',swift:'',cats:[],notes:''},supShared[id]||{},supLocal[id]||{})}
 function suppliers(){const ids=new Set(SBASE.map(b=>b.id));Object.keys(supShared).forEach(k=>ids.add(k));Object.keys(supLocal).forEach(k=>ids.add(k));
   const S=[...ids].map(supRec).filter(x=>!x.off);const names=new Set(S.map(x=>x.n.trim().toUpperCase()));
   lines().forEach(l=>{const n=String(l.sup||'').trim();if(n&&!names.has(n.toUpperCase())){names.add(n.toUpperCase());S.push(Object.assign(supRec(slug(n)),{n,implicit:true}))}});
   return S}
-function missingS(x){const m=[];if(!String(x.n||'').trim())m.push('name');if(!String(x.phone||'').trim())m.push('phone');if(!x.terms)m.push('terms');if(x.terms==='credit'&&!(+x.days>0))m.push('days');return m}
+function missingS(x){const m=[];if(!String(x.n||'').trim())m.push('name');if(!String(x.phone||'').trim())m.push('phone');if(!x.emirate)m.push('emirate');if(!x.terms)m.push('terms');if(x.terms==='credit'&&!(+x.days>0))m.push('days');if(!(x.cats||[]).length)m.push('cats');if(x.terms==='credit'&&!String(x.iban||'').trim())m.push('iban');return m}
 function editS(id,patch){
   if(SHEET&&!editMode)return false;
   if(!me){toast(t('needName'));return false}
@@ -240,7 +251,8 @@ async function saveAll(){const ids=Object.keys(local),sids=Object.keys(supLocal)
   else toast(r.error==='net'?t('net'):r.error==='nopin'?t('noPinSet'):t('oldScript'));
   saving=false;render()}
 function cancelEdits(){local={};supLocal={};ls('pp-local',local);ls('pp-slocal',supLocal);render()}
-function supView(x){const L=lines().filter(l=>l.sup===x.n);return {n:x.n,contact:x.contact,phone:x.phone,email:x.email,terms:x.terms,days:x.days,deliv:x.deliv,lead:x.lead,trn:x.trn,area:x.area,supplies:x.supplies,notes:x.notes,items:L.length,v:+L.reduce((a,l)=>a+calc(l).v,0).toFixed(2)}}
+function supView(x){const L=lines().filter(l=>l.sup===x.n);const tx=v=>v?"'"+v:'';const dl=Array.isArray(x.deliv)?x.deliv.map(d=>DAYS.find(z=>z[0]===d)?.[1]||d).join(', '):(x.deliv||'');
+  return {n:x.n,contact:x.contact,phone:x.phone,'Phone 2':tx(x.phone2),email:x.email,'Emirate':x.emirate,'Address':x.address,'Map link':x.map,terms:x.terms,days:x.days,deliv:dl,lead:x.lead,'Minimum order AED':x.minOrder,trn:x.trn,'Trade licence':tx(x.licence),'Bank':x.bankName,'Account name':x.accName,'IBAN':x.iban,'Account no.':tx(x.accNo),'SWIFT':x.swift,supplies:(x.cats||[]).map(c=>CATS.find(z=>z[0]===c)?.[1]||c).join(', '),notes:x.notes,items:L.length,v:+L.reduce((a,l)=>a+calc(l).v,0).toFixed(2)}}
 async function storeSet(id,body,kind){
   if(!SHEET)return db.collection(kind==='sup'?'suppliers':'lines').doc(id).set(body);
   const l=Object.assign(line(id),body),c=calc(l);
@@ -262,7 +274,7 @@ function render(){
   const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
   const same=lastTab===tab;lastTab=tab;const wy=window.scrollY,sc=[...P.querySelectorAll('.tbl-wrap')].map(e=>[e.scrollTop,e.scrollLeft]);
   P.innerHTML=tab==='fill'?vFill():tab==='sups'?vSups():tab==='sum'?vSum():vHow();
-  if(SHEET){if(!editMode)P.querySelectorAll('[data-f],[data-sf],button[data-act="ok"],button[data-act="add"],button[data-act="addsup"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+  if(SHEET){if(!editMode)P.querySelectorAll('[data-f],[data-sf],button[data-act="ok"],button[data-act="add"],button[data-act="addsup"],button[data-act="tog"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
     Object.entries(supLocal).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-sid="${CSS.escape(id)}"][data-sf="${f}"]`);if(el)el.classList.add('chg')}));
     Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`);if(el)el.classList.add('chg')}))}
   if(same){[...P.querySelectorAll('.tbl-wrap')].forEach((e,i)=>{if(sc[i]){e.scrollTop=sc[i][0];e.scrollLeft=sc[i][1]}});window.scrollTo(0,wy)}
@@ -342,33 +354,52 @@ function vSum(){
   <div style="display:flex;flex-direction:column;gap:14px"><div class="card"><h2>${t('byCon')}</h2><div class="list">${Object.entries(bc).map(([k,v])=>`<div class="li"><div class="grow">${CON[k]?CON[k][lang]:esc(k)}</div><b>AED ${fmt(v)}</b></div>`).join('')}</div>
    <div style="margin-top:12px"><button class="btn btn-accent" data-act="csv">${t('copyCsv')}</button></div></div>
   ${(isOwner||SHEET)&&mode==='live'?`<div class="card"><h2>${t('importT')}</h2><p style="color:var(--fk-text-2);font-size:13px;margin:0 0 8px">${t('importH')}</p><textarea id="imp"></textarea><div style="margin-top:8px"><button class="btn btn-primary" data-act="import">${t('imp')}</button></div></div>`:''}</div></div>`}
-function vSups(){
+function vSups(){return supOpen?vSupPage(supRec(supOpen)):vSupList()}
+function vSupList(){
   const L=lines(),S=suppliers();const st={};L.forEach(l=>{if(!l.sup)return;const k=l.sup.trim().toUpperCase();st[k]=st[k]||{n:0,v:0};st[k].n++;st[k].v+=calc(l).v});
-  let R=S;if(sq){const q=sq.toLowerCase();R=R.filter(x=>(x.n||'').toLowerCase().includes(q)||(x.contact||'').toLowerCase().includes(q)||(x.supplies||'').toLowerCase().includes(q))}
-  if(!supRank||supRankKey!==sq){supRankKey=sq;supRank={};[...R].sort((a,b)=>((st[(b.n||'').toUpperCase()]||{v:0}).v-(st[(a.n||'').toUpperCase()]||{v:0}).v)||((a.n||'')>(b.n||'')?1:-1)).forEach((x,i)=>supRank[x.id]=i)}
+  let R=S;if(sq){const q=sq.toLowerCase();R=R.filter(x=>(x.n||'').toLowerCase().includes(q)||(x.contact||'').toLowerCase().includes(q))}
+  if(fl.cat)R=R.filter(x=>(x.cats||[]).includes(fl.cat));
+  if(!supRank||supRankKey!==sq){supRankKey=sq;supRank={};[...S].sort((a,b)=>((st[(b.n||'').toUpperCase()]||{v:0}).v-(st[(a.n||'').toUpperCase()]||{v:0}).v)||((a.n||'')>(b.n||'')?1:-1)).forEach((x,i)=>supRank[x.id]=i)}
   const rk=x=>supRank[x.id]??-1;R.sort((a,b)=>rk(a)-rk(b)||(b.id>a.id?1:-1));
   const nm=S.filter(x=>missingS(x).length).length;
-  const inp=(x,f,miss,ph,w,type)=>`<input dir="auto" ${type?`type="${type}"`:''} class="${miss?'miss':''}" style="width:${w}px" data-sid="${esc(x.id)}" data-sf="${f}" value="${esc(x[f]??'')}" placeholder="${esc(ph||'')}">`;
-  return `${banner()}<div class="card"><div class="controls"><input id="sq" placeholder="${t('supSearch')}" value="${esc(sq)}" style="min-width:240px"><span class="badge ${nm?'b-bad':'b-ok'}">${nm} ${t('supMissing')}</span><span class="sp"></span><button class="btn btn-primary" data-act="addsup">+ ${t('addSup')}</button></div>
-   <p style="color:var(--fk-muted);font-size:12px;margin:8px 0 0">${t('supHint')}</p></div>
-  <div class="tbl-wrap"><table><thead><tr><th>${t('supplier')}</th><th>${t('contact')}</th><th>${t('phone')}</th><th>${t('email')}</th><th>${t('terms')}</th><th class="n">${t('days')}</th><th>${t('deliv')}</th><th class="n">${t('lead')}</th><th>${t('trn')}</th><th>${t('area')}</th><th>${t('supplies')}</th><th class="n">${t('items')}</th><th class="n">${t('monthly')}</th><th>${t('notes')}</th></tr></thead><tbody>
-  ${R.map(x=>{const m=missingS(x),k=(x.n||'').toUpperCase(),c=st[k]||{n:0,v:0};return `<tr class="${m.length?'r-miss':'r-ok'}">
-   <td class="item">${inp(x,'n',m.includes('name'),t('newSup'),200)}${x.implicit?`<small>${t('fromLines')}</small>`:''}</td>
-   <td>${inp(x,'contact',false,'',140)}</td><td>${inp(x,'phone',m.includes('phone'),t('m_phone'),130,'tel')}</td><td>${inp(x,'email',false,'',180,'email')}</td>
-   <td><select class="${m.includes('terms')?'miss':''}" data-sid="${esc(x.id)}" data-sf="terms"><option value="">${t('choose')}</option>${[['credit',t('creditW')],['pemo',t('pemoW')],['cash',t('cash')]].map(o=>`<option value="${o[0]}" ${x.terms===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></td>
-   <td class="n"><input class="num ${m.includes('days')?'miss':''}" type="number" min="0" data-sid="${esc(x.id)}" data-sf="days" value="${x.days??''}" style="width:70px"></td>
-   <td>${inp(x,'deliv',false,t('delivPh'),150)}</td>
-   <td class="n"><input class="num" type="number" min="0" data-sid="${esc(x.id)}" data-sf="lead" value="${x.lead??''}" style="width:70px"></td>
-   <td>${inp(x,'trn',false,'',140)}</td><td>${inp(x,'area',false,'',150)}</td><td>${inp(x,'supplies',false,'',170)}</td>
-   <td class="n">${c.n?`<button class="btn btn-ok" data-act="supitems" data-n="${esc(x.n)}">${c.n}</button>`:'0'}</td><td class="n"><b>${c.v?fmt(c.v):''}</b></td>
-   <td>${inp(x,'notes',false,'',200)}</td></tr>`}).join('')||`<tr><td colspan="14" class="empty">—</td></tr>`}
+  return `${banner()}<div class="card"><div class="controls"><input id="sq" placeholder="${t('supSearch')}" value="${esc(sq)}" style="min-width:240px">
+   <select id="fcat"><option value="">${t('supplies')}: ${t('all')}</option>${CATS.map(c=>`<option value="${c[0]}" ${fl.cat===c[0]?'selected':''}>${lang==='ar'?c[2]:c[1]}</option>`).join('')}</select>
+   <span class="badge ${nm?'b-bad':'b-ok'}">${nm} ${t('supMissing')}</span><span class="sp"></span><button class="btn btn-primary" data-act="addsup">+ ${t('addSup')}</button></div>
+   <p style="color:var(--fk-muted);font-size:12px;margin:8px 0 0">${t('supHint2')}</p></div>
+  <div class="tbl-wrap"><table><thead><tr><th>${t('supplier')}</th><th>${t('supplies')}</th><th>${t('terms')}</th><th>${t('phone')}</th><th>${t('emirate')}</th><th class="n">${t('items')}</th><th class="n">${t('monthly')}</th><th>${t('status')}</th></tr></thead><tbody>
+  ${R.map(x=>{const m=missingS(x),c=st[(x.n||'').toUpperCase()]||{n:0,v:0};return `<tr class="${m.length?'r-miss':'r-ok'} sup-row" data-open="${esc(x.id)}" style="cursor:pointer">
+   <td class="item">${esc(x.n)||`<span style="color:var(--fk-danger)">${t('newSup')}</span>`}${x.contact?`<small>${esc(x.contact)}</small>`:''}</td>
+   <td style="max-width:260px;white-space:normal">${(x.cats||[]).map(k=>{const c=CATS.find(z=>z[0]===k);return `<span class="badge b-pemo" style="margin:1px">${c?(lang==='ar'?c[2]:c[1]):esc(k)}</span>`}).join('')}</td>
+   <td>${x.terms?(x.terms==='credit'?t('creditW')+(x.days?` · ${x.days} ${t('dayW')}`:''):x.terms==='pemo'?t('pemoW'):t('cash')):''}</td>
+   <td dir="ltr">${esc(x.phone)}</td><td>${esc(emi(x.emirate))}</td>
+   <td class="n">${c.n||''}</td><td class="n"><b>${c.v?fmt(c.v):''}</b></td>
+   <td>${m.length?`<span class="badge b-bad">${t('needs')}: ${m.map(k=>t('s_'+k)).join(', ')}</span>`:`<span class="badge b-ok">✓ ${t('complete')}</span>`}</td></tr>`}).join('')||`<tr><td colspan="8" class="empty">—</td></tr>`}
   </tbody></table></div>`}
+function emi(e){const x=EMIRATES.find(z=>z[0]===e);return x?(lang==='ar'?x[1]:x[0]):(e||'')}
+function vSupPage(x){
+  const m=missingS(x),L=lines().filter(l=>l.sup&&l.sup===x.n),tot=L.reduce((a,l)=>a+calc(l).v,0);
+  const fld=(f,label,opt={})=>`<div class="fld"><label>${label}${opt.req?' <span style="color:var(--fk-danger)">*</span>':''}</label><input dir="${opt.ltr?'ltr':'auto'}" ${opt.type?`type="${opt.type}"`:''} class="${m.includes(opt.mk||f)?'miss':''}" data-sid="${esc(x.id)}" data-sf="${f}" value="${esc(x[f]??'')}" placeholder="${esc(opt.ph||'')}"></div>`;
+  const chips=(f,list)=>`<div class="chips">${list.map(c=>{const on=(x[f]||[]).includes(c[0]);return `<button class="chip ${on?'on':''}" data-act="tog" data-sid="${esc(x.id)}" data-tf="${f}" data-v="${c[0]}">${on?'✓ ':''}${lang==='ar'?c[2]:c[1]}</button>`}).join('')}</div>`;
+  return `${banner()}<div class="controls"><button class="btn" data-act="supback">${lang==='ar'?'→':'←'} ${t('allSups')}</button><span class="sp"></span>${m.length?`<span class="badge b-bad">${t('needs')}: ${m.map(k=>t('s_'+k)).join(', ')}</span>`:`<span class="badge b-ok">✓ ${t('complete')}</span>`}</div>
+  <div class="card"><h2 style="font-size:26px">${esc(x.n)||t('newSup')}</h2><div style="color:var(--fk-muted);font-size:13px">${L.length} ${t('items')} · AED ${fmt(tot)} ${t('perMonth')}${x.who?` · ${t('lastBy')} ${esc(x.who)}`:''}</div></div>
+  <div class="grid two">
+   <div class="card"><h3 class="sec">${t('secContact')}</h3><div class="form">${fld('n',t('supName'),{req:1,mk:'name'})}${fld('contact',t('contact'))}${fld('phone',t('phone'),{req:1,type:'tel',ltr:1,ph:'+971 5x xxx xxxx'})}${fld('phone2',t('phone2'),{type:'tel',ltr:1})}${fld('email',t('email'),{type:'email',ltr:1})}</div></div>
+   <div class="card"><h3 class="sec">${t('secAddress')}</h3><div class="form"><div class="fld"><label>${t('emirate')} <span style="color:var(--fk-danger)">*</span></label><select class="${m.includes('emirate')?'miss':''}" data-sid="${esc(x.id)}" data-sf="emirate"><option value="">${t('choose')}</option>${EMIRATES.map(e=>`<option value="${e[0]}" ${x.emirate===e[0]?'selected':''}>${lang==='ar'?e[1]:e[0]}</option>`).join('')}</select></div>${fld('address',t('address'),{ph:t('addressPh')})}${fld('map',t('map'),{ltr:1,ph:'https://maps.google.com/…'})}</div>${x.map&&/^https?:\/\//.test(x.map)?`<a href="${esc(x.map)}" target="_blank" rel="noopener" style="color:var(--fk-bronze);font-size:13px">${t('openMap')} ↗</a>`:''}</div>
+   <div class="card"><h3 class="sec">${t('secTerms')}</h3><div class="form"><div class="fld"><label>${t('terms')} <span style="color:var(--fk-danger)">*</span></label><select class="${m.includes('terms')?'miss':''}" data-sid="${esc(x.id)}" data-sf="terms"><option value="">${t('choose')}</option>${[['credit',t('creditW')],['pemo',t('pemoW')],['cash',t('cash')]].map(o=>`<option value="${o[0]}" ${x.terms===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+     ${x.terms==='credit'?fld('days',t('days'),{req:1,type:'number'}):''}${fld('lead',t('lead'),{type:'number'})}${fld('minOrder',t('minOrder'),{type:'number'})}${fld('trn',t('trn'),{ltr:1})}${fld('licence',t('licence'),{ltr:1})}</div>
+     <label style="display:block;margin:12px 0 6px">${t('deliv')}</label>${chips('deliv',DAYS)}</div>
+   <div class="card"><h3 class="sec">${t('secBank')}</h3><div class="form">${fld('bankName',t('bankName'))}${fld('accName',t('accName'))}${fld('iban',t('iban'),{req:x.terms==='credit',ltr:1,ph:'AE00 0000 0000 0000 0000 000'})}${fld('accNo',t('accNo'),{ltr:1})}${fld('swift',t('swift'),{ltr:1})}</div><p style="color:var(--fk-muted);font-size:12px;margin:10px 0 0">${t('bankNote')}</p></div>
+  </div>
+  <div class="card"><h3 class="sec">${t('supplies')} <span style="color:var(--fk-danger)">*</span></h3>${chips('cats',CATS)}${m.includes('cats')?`<p style="color:var(--fk-danger);font-size:12px;margin:8px 0 0">${t('pickCat')}</p>`:''}</div>
+  <div class="card"><h3 class="sec">${t('snotes')}</h3><textarea data-sid="${esc(x.id)}" data-sf="notes" style="min-height:70px">${esc(x.notes)}</textarea></div>
+  <div class="card"><h3 class="sec">${t('itemsFrom')} (${L.length})</h3>${L.length?`<div class="list">${L.slice(0,60).map(l=>{const c=calc(l);return `<div class="li"><div class="grow">${esc(l.n)}<div style="color:var(--fk-muted);font-size:12px">${fmt(l.p,2)} / ${U(l.u)||'—'}</div></div><b>${c.v?fmt(c.v):''}</b></div>`}).join('')}</div><div style="margin-top:10px"><button class="btn" data-act="supitems" data-n="${esc(x.n)}">${t('openItems')}</button></div>`:`<div class="empty">—</div>`}</div>`}
 function vHow(){return `<div class="card"><h2>${t('how')}</h2><ol class="steps">${['how1','how2','how3','how4','how5'].map(k=>`<li>${t(k)}</li>`).join('')}</ol>
   <p style="color:var(--fk-muted);font-size:13px">${t('notes')}</p></div>${banner()}`}
 
 // ---- events ----
-document.addEventListener('click',async e=>{const b=e.target.closest('button,[data-st]');if(!b)return;
-  if(b.dataset.tab){tab=b.dataset.tab;render();return}
+document.addEventListener('click',async e=>{const tr=e.target.closest('tr[data-open]');if(tr&&!e.target.closest('button,input,select')){supOpen=tr.dataset.open;render();window.scrollTo(0,0);return}
+  const b=e.target.closest('button,[data-st]');if(!b)return;
+  if(b.dataset.tab){if(b.dataset.tab==='sups'&&tab==='sups')supOpen=null;tab=b.dataset.tab;render();return}
   if(b.dataset.l){lang=b.dataset.l;ls('pp-lang',lang);render();return}
   if(b.dataset.st){fl.st=b.dataset.st;tab='fill';render();return}
   const a=b.dataset.act;
@@ -377,7 +408,9 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button,[da
   else if(a==='saveall'){saveAll()}
   else if(a==='canceledits'){cancelEdits()}
   else if(a==='doneedit'){editMode=false;render()}
-  else if(a==='addsup'){const id='S-N'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);if(editS(id,{n:'',terms:''})){sq='';render();const el=document.querySelector(`[data-sid="${id}"][data-sf="n"]`);el&&el.focus()}}
+  else if(a==='addsup'){const id='S-N'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);if(editS(id,{n:'',terms:''})){sq='';supOpen=id;render();window.scrollTo(0,0);const el=document.querySelector(`[data-sid="${id}"][data-sf="n"]`);el&&el.focus()}}
+  else if(a==='supback'){supOpen=null;render()}
+  else if(a==='tog'){const x=supRec(b.dataset.sid),f=b.dataset.tf,v=b.dataset.v;const arr=Array.isArray(x[f])?[...x[f]]:[];const i=arr.indexOf(v);if(i>=0)arr.splice(i,1);else arr.push(v);if(editS(b.dataset.sid,{[f]:arr}))render()}
   else if(a==='supitems'){fl.sup=b.dataset.n;fl.st='all';fl.q='';tab='fill';render()}
   else if(a==='useprice'){if(edit(b.dataset.id,{p:+b.dataset.v}))render()}
   else if(a==='add'){if(!me){toast(t('needName'));return}const id='N-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);edit(id,{n:'',con:fl.con||'Al Matbakh',cat:'Food',isNew:true});fl.st='all';fl.q='';render();const el=document.querySelector(`[data-id="${id}"][data-f="n"]`);el&&el.focus()}
@@ -393,8 +426,9 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button,[da
 document.addEventListener('change',e=>{const el=e.target;
   if(el.id==='pin'){if(SHEET)return;pin=el.value.trim();setTimeout(render,0);return}
   if(el.id==='me'){me=el.value.trim();ls('pp-me',me);if(!SHEET)setTimeout(render,0);return}
+  if(el.id==='fcat'){fl.cat=el.value;render();return}
   if(el.id==='fcon'){fl.con=el.value;render();return}if(el.id==='fsup'){fl.sup=el.value;render();return}if(el.id==='fpay'){fl.pay=el.value;render();return}
-  if(el.dataset.sid&&el.dataset.sf){const f=el.dataset.sf;let v=el.value;if(['days','lead'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,f==='notes'?300:120);
+  if(el.dataset.sid&&el.dataset.sf){const f=el.dataset.sf;let v=el.value;if(['days','lead','minOrder'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,f==='notes'?500:160);
     const cur=supRec(el.dataset.sid);if(cur[f]===v)return;editS(el.dataset.sid,{[f]:v});setTimeout(render,0);return}
   if(el.dataset.id&&el.dataset.f){const f=el.dataset.f;let v=el.value;
     if(['use','par','st','p','pkN'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,120);
