@@ -137,16 +137,16 @@ en:{app:'Procurement Planner',sub:'November 2026 · Al Matbakh Al Kuwaiti + Maya
  missing:'Missing',toconfirm:'To confirm',confirmed:'Confirmed',notneeded:'Not needed',all:'All',
  progress:'Progress',of:'of',lines:'lines',
  search:'Search item or supplier…',concept:'Concept',supplier:'Supplier',payment:'Payment',category:'Category',
- item:'Item',use:'Use / month',par:'PAR (safety)',stock:'Stock now',price:'Unit price',unit:'Price per',pack:'Each one contains',per:'per',buy:'To buy',bud:'Budget AED',status:'Status',
+ item:'Item',use:'Use / month',par:'Reserve (min)',stock:'Stock now',rop:'Reorder point',auto:'auto',daysLeft:'days left',sOk:'Stock OK',sOrder:'Order now',sBelow:'Below reserve',stockF:'Stock',ropNote:'Reorder point = Reserve + daily use × supplier lead time (2 days if not set). Calculated automatically.',price:'Unit price',unit:'Price per',pack:'Each one contains',per:'per',buy:'To buy',bud:'Budget AED',status:'Status',
  confirm:'Confirm',done:'Confirmed',undo:'Undo',add:'Add item',newItem:'New item name',food:'Food',nonfood:'Non-food',
  storeRef:'Store',use_:'use',pemoW:'Pemo',creditW:'Credit',choose:'Choose…',
- m_price:'price',m_unit:'unit',m_pack:'packing',m_sup:'supplier',m_pay:'payment',m_use:'monthly use',m_par:'PAR',m_name:'name',
+ m_price:'price',m_unit:'unit',m_pack:'packing',m_sup:'supplier',m_pay:'payment',m_use:'monthly use',m_par:'reserve',m_name:'name',
  needs:'Needs',bySup:'By supplier',byCon:'By concept',copyCsv:'Copy all (CSV)',topup:'Pemo top-up for the month',
  importT:'Import updates (owner)',importH:'Paste an update a team member sent you, then press Import. It saves to the shared list.',imp:'Import',imported:'Imported',
  copied:'Copied',saveErr:'Could not save — kept in this browser',
  how1:'Every line starts from Abu Ali’s October budget. Check it for November.',
  how2:'Red boxes are missing — fill them in (price, the unit the price is for, how it’s packed, supplier, payment, monthly use, PAR).',
- how3:'Update “Stock now” with today’s count. The app works out: To buy = Use + PAR − Stock.',
+ how3:'Update “Stock now” with today’s count. The app works out: To buy = Use + Reserve − Stock. The reorder point is automatic: Reserve + daily use × the supplier’s lead time. When stock reaches it, the line shows “Order now”.',
  how4:'When a line is right, press Confirm. If an item isn’t needed this month, set Use to 0 and confirm.',
  how5:'“Store” hints show the warehouse team’s November figure for the same item, for comparison.',
  notes:'Budget = To buy × Unit price. Amounts in AED.',basis:'Starting data: Abu Ali, October 2026 budget'},
@@ -158,16 +158,16 @@ ar:{app:'مخطط المشتريات',sub:'نوفمبر 2026 · المطبخ ا�
  missing:'ناقص',toconfirm:'بانتظار التأكيد',confirmed:'مؤكد',notneeded:'غير مطلوب',all:'الكل',
  progress:'التقدم',of:'من',lines:'سطر',
  search:'ابحث عن صنف أو مورد…',concept:'المفهوم',supplier:'المورد',payment:'الدفع',category:'الفئة',
- item:'الصنف',use:'الاستهلاك / شهر',par:'مخزون الأمان',stock:'المخزون الآن',price:'سعر الوحدة',unit:'السعر لكل',pack:'كل وحدة فيها',per:'لكل',buy:'للشراء',bud:'الميزانية درهم',status:'الحالة',
+ item:'الصنف',use:'الاستهلاك / شهر',par:'الاحتياطي (حد أدنى)',stock:'المخزون الآن',rop:'نقطة الطلب',auto:'تلقائي',daysLeft:'يوم متبقي',sOk:'المخزون تمام',sOrder:'اطلب الحين',sBelow:'تحت الاحتياطي',stockF:'المخزون',ropNote:'نقطة الطلب = الاحتياطي + الاستهلاك اليومي × مدة توريد المورد (يومان إذا غير محددة). تُحسب تلقائياً.',price:'سعر الوحدة',unit:'السعر لكل',pack:'كل وحدة فيها',per:'لكل',buy:'للشراء',bud:'الميزانية درهم',status:'الحالة',
  confirm:'تأكيد',done:'مؤكد',undo:'تراجع',add:'إضافة صنف',newItem:'اسم الصنف الجديد',food:'غذائي',nonfood:'غير غذائي',
  storeRef:'المستودع',use_:'استخدم',pemoW:'Pemo',creditW:'آجل',choose:'اختر…',
- m_price:'السعر',m_unit:'الوحدة',m_pack:'التعبئة',m_sup:'المورد',m_pay:'الدفع',m_use:'الاستهلاك',m_par:'مخزون الأمان',m_name:'الاسم',
+ m_price:'السعر',m_unit:'الوحدة',m_pack:'التعبئة',m_sup:'المورد',m_pay:'الدفع',m_use:'الاستهلاك',m_par:'الاحتياطي',m_name:'الاسم',
  needs:'ينقصه',bySup:'حسب المورد',byCon:'حسب المفهوم',copyCsv:'نسخ الكل (CSV)',topup:'شحن Pemo للشهر',
  importT:'استيراد التحديثات (للمالك)',importH:'الصق التحديث الذي أرسله أحد الفريق ثم اضغط استيراد. يُحفظ في القائمة المشتركة.',imp:'استيراد',imported:'تم الاستيراد',
  copied:'تم النسخ',saveErr:'تعذّر الحفظ — بقي في هذا المتصفح',
  how1:'كل سطر يبدأ من ميزانية أبو علي لشهر أكتوبر. راجعه لشهر نوفمبر.',
  how2:'الخانات الحمراء ناقصة — عبّئها (السعر، الوحدة التي يُحسب عليها السعر، طريقة التعبئة، المورد، الدفع، الاستهلاك الشهري، مخزون الأمان).',
- how3:'حدّث «المخزون الآن» بجرد اليوم. التطبيق يحسب: للشراء = الاستهلاك + مخزون الأمان − المخزون.',
+ how3:'حدّث «المخزون الآن» بجرد اليوم. التطبيق يحسب: للشراء = الاستهلاك + الاحتياطي − المخزون. نقطة الطلب تلقائية: الاحتياطي + الاستهلاك اليومي × مدة توريد المورد. عندما يصل المخزون لها يظهر «اطلب الحين».',
  how4:'إذا كان السطر صحيحاً اضغط تأكيد. إذا الصنف غير مطلوب هذا الشهر اجعل الاستهلاك 0 ثم أكّد.',
  how5:'تلميح «المستودع» يعرض رقم فريق المستودع لنوفمبر لنفس الصنف للمقارنة.',
  notes:'الميزانية = للشراء × سعر الوحدة. المبالغ بالدرهم.',basis:'البيانات الأولية: ميزانية أبو علي لأكتوبر 2026'}};
@@ -180,7 +180,7 @@ const U=c=>{const u=UNITS.find(x=>x[0]===c);return u?(lang==='ar'?u[2]:u[1]):(c|
 function uSel(l,f,miss){const v=l[f]||'';return `<select class="us ${miss?'miss':''}" data-id="${esc(l.id)}" data-f="${f}"><option value="">—</option>${UNITS.map(u=>`<option value="${u[0]}" ${v===u[0]?'selected':''}>${lang==='ar'?u[2]:u[1]}</option>`).join('')}${v&&!UNITS.some(u=>u[0]===v)?`<option selected value="${esc(v)}">${esc(v)}</option>`:''}</select>`}
 const CON={'Al Matbakh':{en:'Al Matbakh',ar:'المطبخ الكويتي'},'Mayar':{en:'Mayar',ar:'ميار'}};
 let rowRank=null,rowRankKey=null,keepKey='',keepIds=null,supRank=null,supRankKey=null,lastTab='',lang='en',tab='fill',BASE=[],shared={},local={},supShared={},supLocal={},sq='',db=null,user=null,mode='loading',me='',uid=null,isOwner=false;
-let fl={q:'',st:'all',con:'',sup:'',pay:'',cat:''};
+let fl={q:'',st:'all',con:'',sup:'',pay:'',cat:'',stk:''};
 const t=k=>T[lang][k]??T.en[k]??k;
 const fmt=(n,d=0)=>(n==null||isNaN(n))?'–':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -212,6 +212,9 @@ function editS(id,patch){
   if(mode==='live'&&!SHEET){const cur=Object.assign({},supShared[id]||{},{n:old.n,terms:old.terms},patch,{who:me,at});supShared[id]=cur;storeSet(id,cur,'sup').catch(()=>toast(t('saveErr')))}
   else{supLocal[id]=Object.assign({},supLocal[id]||{},old.implicit&&!supShared[id]&&!supLocal[id]?{n:old.n}:{},patch,{who:me,at});ls('pp-slocal',supLocal)}
   return true}
+let _lead=null;function leadOf(n){if(!_lead){_lead={};suppliers().forEach(x=>{if(+x.lead>0)_lead[(x.n||'').toUpperCase()]=+x.lead})}return _lead[String(n||'').toUpperCase()]||2}
+function ropOf(l){const lead=leadOf(l.sup);return +((+l.par||0)+(+l.use||0)/30*lead).toFixed(1)}
+function stockState(l){if(!(+l.use>0)&&!(+l.par>0))return '';const st=+l.st||0;if(st<(+l.par||0))return 'below';if(st<=ropOf(l))return 'order';return 'ok'}
 function calc(l){const q=Math.max(0,(+l.use||0)+(+l.par||0)-(+l.st||0));return {q:+q.toFixed(3),v:q*(+l.p||0)}}
 function missing(l){const m=[];
   if(l.isNew&&!String(l.n||'').trim())m.push('name');
@@ -233,7 +236,7 @@ async function flush(id){if(busy[id]||!queue[id])return;busy[id]=true;const body
   try{await storeSet(id,JSON.parse(JSON.stringify(body)))}
   catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,800+Math.random()*800));try{await storeSet(id,body)}catch(e2){fail(id,body,e2)}}else fail(id,body,e)}
   busy[id]=false;if(queue[id])flush(id)}
-function viewOf(id,body){const l=Object.assign(line(id),body),c=calc(l);return {n:l.n,con:l.con,cat:l.cat,sup:l.sup,pay:l.pay,use:l.use,par:l.par,st:l.st,p:l.p,u:l.u,pkN:l.pkN,pkU:l.pkU,q:c.q,v:+c.v.toFixed(2),status:status(l)}}
+function viewOf(id,body){const l=Object.assign(line(id),body),c=calc(l);return {n:l.n,con:l.con,cat:l.cat,sup:l.sup,pay:l.pay,use:l.use,par:l.par,st:l.st,p:l.p,u:l.u,pkN:l.pkN,pkU:l.pkU,'Reorder point':ropOf(l),'Stock state':stockState(l),q:c.q,v:+c.v.toFixed(2),status:status(l)}}
 async function post(o){try{const r=await fetch(CFG.SHEET_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)});return await r.json()}catch(e){return {ok:false,error:'net'}}}
 async function startEdit(){
   const n=document.getElementById('me'),pp=document.getElementById('pin');me=(n&&n.value.trim())||me;pin=(pp&&pp.value.trim())||'';ls('pp-me',me);
@@ -256,7 +259,7 @@ function supView(x){const L=lines().filter(l=>l.sup===x.n);const tx=v=>v?"'"+v:'
 async function storeSet(id,body,kind){
   if(!SHEET)return db.collection(kind==='sup'?'suppliers':'lines').doc(id).set(body);
   const l=Object.assign(line(id),body),c=calc(l);
-  const view={n:l.n,con:l.con,cat:l.cat,sup:l.sup,pay:l.pay,use:l.use,par:l.par,st:l.st,p:l.p,u:l.u,pkN:l.pkN,pkU:l.pkU,q:c.q,v:+c.v.toFixed(2),status:status(l)};
+  const view={n:l.n,con:l.con,cat:l.cat,sup:l.sup,pay:l.pay,use:l.use,par:l.par,st:l.st,p:l.p,u:l.u,pkN:l.pkN,pkU:l.pkU,'Reorder point':ropOf(l),'Stock state':stockState(l),q:c.q,v:+c.v.toFixed(2),status:status(l)};
   const r=await fetch(CFG.SHEET_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({pin,id,data:body,view})});
   const j=await r.json().catch(()=>({ok:false}));
   if(!j.ok){const e=new Error(j.error||'save');e.code=j.error==='pin'?'pin':'unavailable';throw e}}
@@ -269,6 +272,7 @@ function renderTop(){
   <div class="tabs">${['fill','sups','sum','how'].map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${t(k)}</button>`).join('')}</div><span class="sp"></span>
   <div class="lang"><button class="${lang==='en'?'on':''}" data-l="en">EN</button><button class="${lang==='ar'?'on':''}" data-l="ar">عربي</button></div>`}
 function render(){
+  _lead=null;
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
   renderTop();const P=document.getElementById('page');
   const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
@@ -312,7 +316,7 @@ function vFill(){
   let R=L;const q=fl.q.toLowerCase();
   if(q)R=R.filter(l=>(l.n||'').toLowerCase().includes(q)||(l.sup||'').toLowerCase().includes(q)||l.id.toLowerCase().includes(q));
   if(fl.st!=='all')R=R.filter(l=>status(l)===fl.st);
-  if(fl.con)R=R.filter(l=>l.con===fl.con);if(fl.sup)R=R.filter(l=>l.sup===fl.sup);if(fl.pay)R=R.filter(l=>(l.pay||'none')===fl.pay);
+  if(fl.con)R=R.filter(l=>l.con===fl.con);if(fl.sup)R=R.filter(l=>l.sup===fl.sup);if(fl.pay)R=R.filter(l=>(l.pay||'none')===fl.pay);if(fl.stk)R=R.filter(l=>fl.stk==='order'?['order','below'].includes(stockState(l)):stockState(l)===fl.stk);
   if(keepIds){const inR=new Set(R.map(l=>l.id));L.forEach(l=>{if(keepIds.has(l.id)&&!inR.has(l.id))R.push(l)})}keepIds=new Set(R.map(l=>l.id));
   if(!rowRank||rowRankKey!==fk){rowRankKey=fk;rowRank={};[...R].sort((a,b)=>(a.con>b.con?1:a.con<b.con?-1:0)||((a.sup||'~')>(b.sup||'~')?1:(a.sup||'~')<(b.sup||'~')?-1:0)||(a.n>b.n?1:a.n<b.n?-1:0)||(a.id>b.id?1:-1)).forEach((l,k)=>rowRank[l.id]=k)}
   const rr=l=>rowRank[l.id]??-1;R.sort((a,b)=>rr(a)-rr(b)||(b.id>a.id?1:-1));
@@ -325,9 +329,10 @@ function vFill(){
    <select id="fcon"><option value="">${t('concept')}: ${t('all')}</option>${Object.keys(CON).map(k=>`<option value="${k}" ${fl.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select>
    <select id="fsup"><option value="">${t('supplier')}: ${t('all')}</option>${sups.map(s=>`<option ${fl.sup===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
    <select id="fpay"><option value="">${t('payment')}: ${t('all')}</option><option value="pemo" ${fl.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${fl.pay==='credit'?'selected':''}>${t('creditW')}</option><option value="none" ${fl.pay==='none'?'selected':''}>${t('nopay')}</option></select>
+   <select id="fstk"><option value="">${t('stockF')}: ${t('all')}</option><option value="order" ${fl.stk==='order'?'selected':''}>${t('sOrder')}</option><option value="below" ${fl.stk==='below'?'selected':''}>${t('sBelow')}</option><option value="ok" ${fl.stk==='ok'?'selected':''}>${t('sOk')}</option></select>
    <span class="sp"></span><button class="btn btn-primary" data-act="add">+ ${t('add')}</button></div>
   <datalist id="sups">${[...new Set([...sups,...suppliers().map(x=>x.n).filter(Boolean)])].sort().map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
-  <div class="tbl-wrap"><table><thead><tr><th>${t('item')}</th><th>${t('supplier')}</th><th>${t('payment')}</th><th class="n">${t('use')}</th><th class="n">${t('par')}</th><th class="n">${t('stock')}</th><th class="n">${t('price')}</th><th>${t('unit')}</th><th>${t('pack')}</th><th class="n">${t('buy')}</th><th class="n">${t('bud')}</th><th>${t('status')}</th></tr></thead><tbody>
+  <div class="tbl-wrap"><table><thead><tr><th>${t('item')}</th><th>${t('supplier')}</th><th>${t('payment')}</th><th class="n">${t('use')}</th><th class="n">${t('par')}</th><th class="n">${t('stock')}</th><th class="n">${t('rop')} <span style="font-weight:400;color:var(--fk-muted)">(${t('auto')})</span></th><th class="n">${t('price')}</th><th>${t('unit')}</th><th>${t('pack')}</th><th class="n">${t('buy')}</th><th class="n">${t('bud')}</th><th>${t('status')}</th></tr></thead><tbody>
   ${shown.map(l=>{const m=missing(l),s=status(l),c=calc(l),ref=l.ref;
     return `<tr class="${s==='missing'?'r-miss':s==='confirmed'?'r-ok':''}">
     <td class="item">${l.isNew?`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${esc(l.id)}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}"><div style="display:flex;gap:4px;margin-top:4px"><select data-id="${esc(l.id)}" data-f="con">${Object.keys(CON).map(k=>`<option value="${k}" ${l.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select><select data-id="${esc(l.id)}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select></div>`:`${esc(l.n)}<small>${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · ${esc(l.id)}</small>`}</td>
@@ -335,7 +340,8 @@ function vFill(){
     <td><select class="${m.includes('pay')?'miss':''}" data-id="${esc(l.id)}" data-f="pay"><option value="">${t('choose')}</option><option value="pemo" ${l.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${l.pay==='credit'?'selected':''}>${t('creditW')}</option></select></td>
     <td class="n">${num(l,'use',m.includes('use'))}${ref&&ref.q?`<div class="hint">${t('storeRef')}: ${fmt(ref.q,ref.q%1?1:0)}</div>`:''}</td>
     <td class="n">${num(l,'par',m.includes('par'))}</td>
-    <td class="n">${num(l,'st',false)}</td>
+    <td class="n">${num(l,'st',false)}${+l.use>0?`<div class="hint">${fmt((+l.st||0)/(+l.use/30),0)} ${t('daysLeft')}</div>`:''}</td>
+    <td class="n">${(+l.use>0||+l.par>0)?`<div style="padding:6px 0;font-weight:600">${fmt(ropOf(l),ropOf(l)%1?1:0)}</div>${(k=>k?`<span class="badge ${k==='ok'?'b-ok':k==='order'?'b-warn':'b-bad'}">${t(k==='ok'?'sOk':k==='order'?'sOrder':'sBelow')}</span>`:'')(stockState(l))}`:''}</td>
     <td class="n">${num(l,'p',m.includes('price'))}${ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${fmt(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${esc(l.id)}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''}</td>
     <td>${uSel(l,'u',m.includes('unit'))}${ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''}</td>
     <td><div style="display:flex;gap:4px"><input class="num pkn ${m.includes('pack')&&!(+l.pkN>0)?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="pkN" value="${l.pkN==null?'':l.pkN}" placeholder="#">${uSel(l,'pkU',m.includes('pack')&&!l.pkU)}</div>${l.u&&+l.pkN>0&&l.pkU?`<div class="hint">1 ${U(l.u)} = ${fmt(l.pkN,l.pkN%1?2:0)} ${U(l.pkU)}</div>`:''}</td>
@@ -343,8 +349,8 @@ function vFill(){
     <td class="n"><b>${c.v?fmt(c.v):''}</b></td>
     <td>${s==='missing'?`<span class="badge b-bad">${t('needs')}: ${m.map(x=>t('m_'+(x==='price'?'price':x))).join(', ')}</span>`:
       `<button class="btn btn-ok ${l.ok?'done':''}" data-act="ok" data-id="${esc(l.id)}">${l.ok?'✓ '+t(s==='notneeded'?'notneeded':'done'):t('confirm')}</button>`}
-      ${l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:''}</td></tr>`}).join('')||`<tr><td colspan="12" class="empty">—</td></tr>`}
-  </tbody></table></div>${R.length>shown.length?`<div class="empty">${shown.length} / ${R.length}</div>`:''}<p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')}</p>`}
+      ${l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:''}</td></tr>`}).join('')||`<tr><td colspan="13" class="empty">—</td></tr>`}
+  </tbody></table></div>${R.length>shown.length?`<div class="empty">${shown.length} / ${R.length}</div>`:''}<p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')} ${t('ropNote')}</p>`}
 function vSum(){
   const L=lines();const by={},bc={};
   L.forEach(l=>{const v=calc(l).v;if(!v)return;const k=l.sup||'—';by[k]=by[k]||{v:0,n:0,pay:new Set()};by[k].v+=v;by[k].n++;by[k].pay.add(l.pay||'');bc[l.con]=(bc[l.con]||0)+v});
@@ -426,6 +432,7 @@ document.addEventListener('click',async e=>{const tr=e.target.closest('tr[data-o
 document.addEventListener('change',e=>{const el=e.target;
   if(el.id==='pin'){if(SHEET)return;pin=el.value.trim();setTimeout(render,0);return}
   if(el.id==='me'){me=el.value.trim();ls('pp-me',me);if(!SHEET)setTimeout(render,0);return}
+  if(el.id==='fstk'){fl.stk=el.value;render();return}
   if(el.id==='fcat'){fl.cat=el.value;render();return}
   if(el.id==='fcon'){fl.con=el.value;render();return}if(el.id==='fsup'){fl.sup=el.value;render();return}if(el.id==='fpay'){fl.pay=el.value;render();return}
   if(el.dataset.sid&&el.dataset.sf){const f=el.dataset.sf;let v=el.value;if(['days','lead','minOrder'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,f==='notes'?500:160);
