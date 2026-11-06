@@ -397,3 +397,11 @@ function doPost(e) {
   after.forEach(x => { try { requestAlerts_(x[0], x[1], me); } catch (e) {} });
   return out_({ ok: true, saved: items.length });
 }
+
+
+/* Run once if Google asks for permission again (connects to Forka Apps to check sign-ins). */
+function authorize() {
+  UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { muteHttpExceptions: true });
+  CacheService.getScriptCache().put('auth-check', '1', 60);
+  return 'Permissions OK';
+}
