@@ -59,6 +59,15 @@ function setup() {
 }
 
 /* ---------------- people ---------------- */
+function contacts_() {          // everyone listed in the Users tab (for alerts), PIN or not
+  const sh = SpreadsheetApp.getActive().getSheetByName('Users');
+  if (!sh || sh.getLastRow() < 2) return [];
+  return sh.getRange(2, 1, sh.getLastRow() - 1, 7).getValues().map(r => ({
+    name: String(r[0]).trim(), sides: String(r[2]).toLowerCase().split(/[,\s]+/).filter(Boolean),
+    email: String(r[3]).trim(), wa: String(r[4]).replace(/[^\d+]/g, ''),
+    alerts: String(r[5]).toLowerCase().split(/[,\s]+/).filter(Boolean)
+  })).filter(x => x.name);
+}
 function users_() {
   const sh = SpreadsheetApp.getActive().getSheetByName('Users');
   if (!sh || sh.getLastRow() < 2) return [];
@@ -77,7 +86,35 @@ function fail_() {
   else p.setProperty('FAILS', String(n));
 }
 // Returns {name, sides} or an error code.
-function who_(pin, side) {
+/* ---------------- sign-in through erp.forka.com ---------------- */
+// People sign in once at erp.forka.com (Google email or Forka Apps PIN). The app passes that sign-in here,
+// and this server asks the Forka Apps accounts server who it is and which Procurement sections they may open.
+const ERP_ACCOUNTS_URL = 'https://script.google.com/macros/s/AKfycbwUO5mC1oZrKiSJfF-kpeIFUPjfzB5VToNVn9EH-ecmDadFs9xsU1oDFHTgJ2FSg6vP/exec';
+const ERP_ONLY = true;           // true = Procurement PINs are switched off; sign-in only through erp.forka.com
+function erpWho_(tok) {
+  tok = String(tok || '');
+  if (!/^[A-Za-z0-9-]{20,120}$/.test(tok)) return { error: 'erp' };
+  const cache = CacheService.getScriptCache(), k = 'erp:' + tok, hit = cache.get(k);
+  let me = hit ? JSON.parse(hit) : null;
+  if (!me) {
+    const r = UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { method: 'post', contentType: 'text/plain', payload: JSON.stringify({ action: 'me', token: tok }), muteHttpExceptions: true, followRedirects: true });
+    let j = {}; try { j = JSON.parse(r.getContentText()); } catch (e) { return { error: 'erp' }; }
+    if (!j.ok || !j.me) return { error: 'erp' };
+    if (!(j.me.apps && j.me.apps.proc)) return { error: 'noproc' };
+    me = { name: j.me.name, email: j.me.email, sides: (j.me.sides || []).filter(x => SIDES.indexOf(x) >= 0) };
+    cache.put(k, JSON.stringify(me), 300);          // re-checked with Forka Apps every 5 minutes
+  }
+  return me;
+}
+
+function who_(pin, side, erp) {
+  if (erp) {
+    const me = erpWho_(erp);
+    if (me.error) return me;
+    if (side && me.sides.indexOf(side) < 0) return { error: 'side' };
+    return me;
+  }
+  if (ERP_ONLY) return { error: 'erp' };
   if (locked_()) return { error: 'locked' };
   const U = users_();
   if (!U.length) {                                    // transition: old team PIN
@@ -132,7 +169,7 @@ function loadAll_(me) {
     if (n === 'Activity') { if (me.sides.indexOf('ceo') >= 0) tabs.Activity = activity_(); return; }
     if (sh.getLastRow() > 0 && header_(sh).indexOf(DATA_COL) >= 0) tabs[n] = readAll_(sh);
   });
-  if (me.sides.indexOf('ceo') >= 0) tabs.People = users_().map(u => ({ name: u.name, sides: u.sides, email: u.email, wa: u.wa, alerts: u.alerts }));
+  if (me.sides.indexOf('ceo') >= 0) tabs.People = (ERP_ONLY ? contacts_() : users_()).map(u => ({ name: u.name, sides: u.sides, email: u.email, wa: u.wa, alerts: u.alerts }));
   return { ok: true, me: me, lines: tabs[SHEETS.line] || {}, suppliers: tabs[SHEETS.sup] || {}, tabs: tabs };
 }
 function col_(sh, head, label) {
@@ -238,7 +275,7 @@ function activity_() {
 
 /* ---------------- alerts ---------------- */
 function alert_(ev, subject, body, onlyName) {
-  const to = users_().filter(u => u.alerts.indexOf(ev) >= 0 && (!onlyName || u.name.toLowerCase() === String(onlyName).toLowerCase()));
+  const to = (ERP_ONLY ? contacts_() : users_()).filter(u => u.alerts.indexOf(ev) >= 0 && (!onlyName || u.name.toLowerCase() === String(onlyName).toLowerCase()));
   const url = props_().getProperty('APP_URL') || '';
   to.forEach(u => {
     if (u.email) { try { MailApp.sendEmail({ to: u.email, subject: 'Forka Procurement — ' + subject, body: body + (url ? '\n\nOpen the app: ' + url : ''), name: 'Forka Procurement' }); } catch (e) {} }
@@ -313,7 +350,7 @@ function upload_(me, u) {
 
 /* ---------------- web app ---------------- */
 function doGet() {
-  if (users_().length) return out_({ ok: false, error: 'login' });   // data only after a PIN
+  if (ERP_ONLY || users_().length) return out_({ ok: false, error: 'login' });   // data only after sign-in
   const tabs = {};
   SpreadsheetApp.getActive().getSheets().forEach(sh => {
     if (PRIVATE_TABS.indexOf(sh.getName()) >= 0) return;
@@ -325,7 +362,7 @@ function doGet() {
 function doPost(e) {
   let b;
   try { b = JSON.parse(e.postData.contents); } catch (err) { return out_({ ok: false, error: 'bad' }); }
-  const me = who_(b.pin, b.side);
+  const me = who_(b.pin, b.side, b.erp);
   if (me.error) return out_({ ok: false, error: me.error });
   if (b.check) return out_({ ok: true, me: { name: me.name, sides: me.sides, role: me.team ? 'team' : 'admin' } });
   if (b.load) return out_(loadAll_(me));
