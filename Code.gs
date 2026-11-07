@@ -97,8 +97,11 @@ function erpWho_(tok) {
   const cache = CacheService.getScriptCache(), k = 'erp:' + tok, hit = cache.get(k);
   let me = hit ? JSON.parse(hit) : null;
   if (!me) {
-    const r = UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { method: 'post', contentType: 'text/plain', payload: JSON.stringify({ action: 'me', token: tok }), muteHttpExceptions: true, followRedirects: true });
-    let j = {}; try { j = JSON.parse(r.getContentText()); } catch (e) { return { error: 'erp' }; }
+    const ask = action => { const r = UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { method: 'post', contentType: 'text/plain', payload: JSON.stringify({ action: action, token: tok }), muteHttpExceptions: true, followRedirects: true });
+      try { return JSON.parse(r.getContentText()); } catch (e) { return { ok: false, error: 'bad' }; } };
+    // "who" is the light answer (the person only). Older accounts servers only know "me".
+    let j = ask('who');
+    if (!j.ok && (j.error === 'action' || j.error === 'role' || j.error === 'bad')) j = ask('me');
     if (!j.ok || !j.me) return { error: 'erp' };
     if (!(j.me.apps && j.me.apps.proc)) return { error: 'noproc' };
     me = { name: j.me.name, email: j.me.email, sides: (j.me.sides || []).filter(x => SIDES.indexOf(x) >= 0) };
@@ -161,16 +164,21 @@ function readOne_(sh, id) {
   if (!f || f.getRow() < 2 || dc < 0) return null;
   try { return JSON.parse(sh.getRange(f.getRow(), dc + 1).getValue() || '{}'); } catch (e) { return null; }
 }
-function loadAll_(me) {
-  const tabs = {};
+/* A stamp that changes on every save. The app sends back the stamp it has; if nothing changed,
+   the answer is "same" and no tab of the Sheet is read. */
+function stamp_() { return props_().getProperty('PVER') || '0'; }
+function bump_() { props_().setProperty('PVER', Date.now().toString(36) + Math.random().toString(36).slice(2, 6)); }
+// wantCeo: Activity and People are read only when the CEO has those pages open.
+function loadAll_(me, wantCeo) {
+  const tabs = {}, ceo = me.sides.indexOf('ceo') >= 0 && !!wantCeo;
   SpreadsheetApp.getActive().getSheets().forEach(sh => {
     const n = sh.getName();
     if (n === 'Users') return;
-    if (n === 'Activity') { if (me.sides.indexOf('ceo') >= 0) tabs.Activity = activity_(); return; }
+    if (n === 'Activity') { if (ceo) tabs.Activity = activity_(); return; }
     if (sh.getLastRow() > 0 && header_(sh).indexOf(DATA_COL) >= 0) tabs[n] = readAll_(sh);
   });
-  if (me.sides.indexOf('ceo') >= 0) tabs.People = (ERP_ONLY ? contacts_() : users_()).map(u => ({ name: u.name, sides: u.sides, email: u.email, wa: u.wa, alerts: u.alerts }));
-  return { ok: true, me: me, lines: tabs[SHEETS.line] || {}, suppliers: tabs[SHEETS.sup] || {}, tabs: tabs };
+  if (ceo) tabs.People = (ERP_ONLY ? contacts_() : users_()).map(u => ({ name: u.name, sides: u.sides, email: u.email, wa: u.wa, alerts: u.alerts }));
+  return { ok: true, me: me, ver: stamp_(), lines: tabs[SHEETS.line] || {}, suppliers: tabs[SHEETS.sup] || {}, tabs: tabs };
 }
 function col_(sh, head, label) {
   let i = head.indexOf(label);
@@ -364,9 +372,12 @@ function doPost(e) {
   try { b = JSON.parse(e.postData.contents); } catch (err) { return out_({ ok: false, error: 'bad' }); }
   const me = who_(b.pin, b.side, b.erp);
   if (me.error) return out_({ ok: false, error: me.error });
-  if (b.check) return out_({ ok: true, me: { name: me.name, sides: me.sides, role: me.team ? 'team' : 'admin' } });
-  if (b.load) return out_(loadAll_(me));
-  if (b.upload) return out_(upload_(me, b.upload));
+  if (b.check && !b.load) return out_({ ok: true, me: { name: me.name, sides: me.sides, role: me.team ? 'team' : 'admin' } });
+  if (b.load) {
+    if (b.ver && b.ver === stamp_()) return out_({ ok: true, same: true, ver: b.ver, me: me });
+    return out_(loadAll_(me, b.ceo));
+  }
+  if (b.upload) { const u = upload_(me, b.upload); if (u.ok) bump_(); return out_(u); }
 
   const items = Array.isArray(b.batch) ? b.batch : [{ id: b.id, data: b.data, view: b.view, kind: b.kind }];
   const okId = /^[A-Za-z0-9_\-.~:@+]{1,60}$/;
@@ -391,6 +402,7 @@ function doPost(e) {
     });
     const a = SpreadsheetApp.getActive().getSheetByName('Activity');
     if (a && acts.length) a.getRange(a.getLastRow() + 1, 1, acts.length, 6).setValues(acts);
+    bump_();
   } finally {
     lock.releaseLock();
   }
