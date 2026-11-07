@@ -31,9 +31,12 @@ const LABELS = {
   Suppliers: { id: 'Id', n: 'Supplier', contact: 'Contact person', phone: 'Phone', email: 'Email', terms: 'Payment terms', days: 'Credit days',
     deliv: 'Delivery days', lead: 'Lead time (days)', trn: 'TRN', area: 'Area / address', supplies: 'What they supply', notes: 'Notes',
     items: 'Items', v: 'Month AED' }
+,
+  OmanItems: null, OmanSuppliers: null
 };
+LABELS.OmanItems = LABELS.Planner; LABELS.OmanSuppliers = LABELS.Suppliers;
 const TEXT_KEYS = ['phone', 'trn'];
-const SIDES = ['plan', 'ops', 'dept', 'fin', 'ceo'];
+const SIDES = ['plan', 'ops', 'dept', 'fin', 'ceo', 'oman'];   // oman = the Oman store section
 const MAX_TRIES = 15;            // wrong PINs in a row → logins locked 10 minutes
 
 function out_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
