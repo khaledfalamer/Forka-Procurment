@@ -642,11 +642,18 @@ async function storeSet(id,body,kind){
 /* VER: the server's change stamp from the last download. A refresh sends it back; "same" = nothing to download or redraw.
    CEO lists (People, Activity) are only asked for while one of those pages is open. */
 let VER='',PRELOAD=null;const SAME={same:true};
+/* The last download is kept in this browser (IndexedDB) for the same Forka Apps sign-in, so the app opens at once
+   from it; the server is asked in the background and any change is picked up a moment later. */
+const IDB={p:null,open(){return this.p||(this.p=new Promise(res=>{try{const q=indexedDB.open('forka-procurement',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}}))},
+  async get(k){const d=await this.open();if(!d)return null;return new Promise(res=>{try{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)}catch(e){res(null)}})},
+  async set(k,v){const d=await this.open();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}};
+function keepSnap(j){if(ERP&&j&&j.ok&&j.lines&&j.me)IDB.set('snap',{erp:ERP,r:j})}
 const wantCeo=()=>side==='ceo'&&(tab==='people'||tab==='activity');
 async function sheetLoad(light){
   if(PRELOAD){const j0=PRELOAD;PRELOAD=null;return applyLoad(j0)}
   let j=await post({pin,side,load:true,ver:light&&!wantCeo()?VER:'',ceo:wantCeo()});
   if(j.ok&&j.same){applyMe(j.me);return SAME}
+  keepSnap(j);
   if(!j.ok&&(j.error==='id'||j.error==='bad')){const r=await fetch(CFG.SHEET_URL+(CFG.SHEET_URL.includes('?')?'&':'?')+'t='+Date.now());j=await r.json()}  // old v3 script: open read
   if(!j.ok){const e=new Error('load');e.err=j.error;e.code=['pin','locked','nopin'].includes(j.error)?'pin':j.error==='net'?'net':'load';throw e}
   return applyLoad(j)}
@@ -1758,10 +1765,13 @@ document.addEventListener('input',e=>{const id=e.target.id;
   lang=ls('pp-lang')||'en';me=ls('pp-me')||'';local=ls('pp-local')||{};side='plan';tab='fill';
   PEOPLE=ls('pp-people')||{};ACT=ls('pp-activity')||{};OUTBOX=ls('pp-outbox')||{};
   supLocal=ls('pp-slocal')||{};recLocal=Object.assign({Evaluations:{},Deliveries:{},GRN:{},Transfers:{},Requests:{},POs:{}},ls('pp-rlocal')||{});
-  try{const d=await (await fetch('data.json')).json();BASE=d.lines;const seen={};BASE.forEach(l=>{const n=(l.sup||'').trim();if(!n)return;const id=slug(n);if(!seen[id]){seen[id]={id,n,c:{}}}seen[id].c[l.pay||'']=(seen[id].c[l.pay||'']||0)+1});SBASE=Object.values(seen).map(x=>({id:x.id,n:x.n,terms:(x.c.pemo||0)>(x.c.credit||0)?'pemo':(x.c.credit?'credit':'')}))}catch(e){document.getElementById('page').innerHTML='<div class="empty">data.json</div>';return}
   try{pin=sessionStorage.getItem('pp-pin')||''}catch(_){pin=''}
-  // Opening from Forka Apps: one call checks the sign-in and downloads the data together.
-  if(SHEET&&ERP&&!pin){const r0=await post({load:true,side:''});if(r0.ok){ERP_SIDES=(r0.me&&r0.me.sides)||[];if(r0.lines){PRELOAD=r0}applyMe(r0.me);if(ERP_SIDES.length===1){await erpEnter(ERP_SIDES[0])}}else if(r0.error==='erp'||r0.error==='noproc'){ERP='';try{sessionStorage.removeItem('pp-erp')}catch(_){}pin='';gateMsg=r0.error==='noproc'?t('erpNone'):t('erpExpired')}}
+  // Opening from Forka Apps: ask the server now, while data.json downloads (both at once, not one after the other).
+  const BG=SHEET&&ERP&&!pin?post({load:true,side:''}):null, SNAPP=SHEET&&ERP?IDB.get('snap'):null;
+  try{const d=await (await fetch('data.json')).json();BASE=d.lines;const seen={};BASE.forEach(l=>{const n=(l.sup||'').trim();if(!n)return;const id=slug(n);if(!seen[id]){seen[id]={id,n,c:{}}}seen[id].c[l.pay||'']=(seen[id].c[l.pay||'']||0)+1});SBASE=Object.values(seen).map(x=>({id:x.id,n:x.n,terms:(x.c.pemo||0)>(x.c.credit||0)?'pemo':(x.c.credit?'credit':'')}))}catch(e){document.getElementById('page').innerHTML='<div class="empty">data.json</div>';return}
+  const s0=SNAPP?await SNAPP:null,SNAP=s0&&s0.erp===ERP&&s0.r&&s0.r.me?s0.r:null;
+  // Opening from Forka Apps: one call checks the sign-in and downloads the data together (or the saved copy opens at once).
+  if(BG){const r0=SNAP||await BG;if(!SNAP)keepSnap(r0);if(r0.ok){ERP_SIDES=(r0.me&&r0.me.sides)||[];if(r0.lines){PRELOAD=r0}applyMe(r0.me);if(ERP_SIDES.length===1){await erpEnter(ERP_SIDES[0])}}else if(r0.error==='erp'||r0.error==='noproc'){ERP='';try{sessionStorage.removeItem('pp-erp')}catch(_){}pin='';gateMsg=r0.error==='noproc'?t('erpNone'):t('erpExpired')}}
   let ok='';try{ok=sessionStorage.getItem('pp-ok')||''}catch(_){}
   if(SIDES[ok]&&(!SHEET||pin)){if(unlocked!==ok){setRegion(ok==='oman'?'oman':'uae');unlocked=ok;side=ok;tab=sideTabs()[0]||SIDES[ok][0]}}else if(!(SHEET&&ERP&&mode==='live')){pin=''}
   if(SHEET&&!pin)mode='login';
@@ -1771,8 +1781,17 @@ document.addEventListener('input',e=>{const id=e.target.id;
         if(first){mode='live';editMode=myRole!=='viewer'}else if(myRole==='viewer')editMode=false;
         const ae=document.activeElement;if(!(ae&&ae.tagName==='INPUT'&&(ae.dataset.f||ae.dataset.sf)))render()}
       catch(e){if(e.code==='pin'){signOut(errMsg(e.err));return}if(first){mode='offline';render()}}};
-    if(mode==='live'){}else if(!pin){mode='login';render()}else{mode='loading';render();await go(true)}
+    if(mode==='live'){}else if(!pin){mode='login';render()}
+    else if(SNAP&&!PRELOAD){PRELOAD=SNAP;await go(true);go(false)}  // open from the saved copy, then check the server
+    else{mode='loading';render();await go(true)}
     REFRESH=go;
+    // Opened from the saved copy: when the server answers, check access is unchanged and pick up any changes.
+    if(BG&&SNAP)BG.then(r=>{
+      if(!r.ok){if(r.error==='erp'||r.error==='noproc'){erpGone();if(r.error==='noproc'){gateMsg=t('erpNone');render()}}return}
+      keepSnap(r);ERP_SIDES=(r.me&&r.me.sides)||[];applyMe(r.me);
+      if(unlocked&&ERP_SIDES.indexOf(unlocked)<0){erpGone();return}       // access to this section was removed
+      if(r.ver!==VER){if(pin&&mode!=='login')go(false);else PRELOAD=r.lines?r:null}
+      if(mode==='login')render()});
     setInterval(()=>{if(!document.hidden)go(false)},30000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)go(false)});return}
   const timer=setTimeout(()=>{if(mode==='loading'){mode='offline';render()}},10000);
