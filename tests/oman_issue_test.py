@@ -47,6 +47,11 @@ async def main():
             check('Nothing is saved to the UAE tabs', not any(k in kinds for k in ('Transfers', None, 'line')), kinds)
             await pg.evaluate("lang='ar';render()"); await pg.wait_for_timeout(150)
             check('In Arabic it is called إذن الصرف', 'إذن الصرف' in ' '.join(await pg.locator('#top .tab').all_inner_texts()))
+            for lg in ('ar', 'en'):
+                await pg.evaluate(f"lang='{lg}';tab='grn';render()"); await pg.wait_for_timeout(150)
+                if await pg.locator('[data-act=newgrn]').count(): await pg.click('[data-act=newgrn]'); await pg.wait_for_timeout(200)
+                boxes = await pg.evaluate("""()=>[...document.querySelectorAll('input.cal')].filter(e=>e.offsetWidth).map(e=>{const s=getComputedStyle(e);return s.backgroundPositionX.startsWith('9px')?s.paddingLeft:s.paddingRight})""")
+                check(f'Receiving note date ({lg}): the date leaves room for the calendar icon', boxes and all(x == '30px' for x in boxes), boxes)
             check('No page errors', not errs, errs[:3])
             await b.close()
     finally:
