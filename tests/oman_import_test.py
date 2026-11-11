@@ -44,7 +44,7 @@ async def main():
             await pg.evaluate("goSide('oman');setOmSub('plan');tab='sum';render()"); await pg.wait_for_timeout(300)
             await pg.fill('#imp', json.dumps(FILE)); await pg.click('[data-act=import]'); await pg.wait_for_timeout(300)
             t = await pg.inner_text('#toast')
-            check('In Oman: 52 items and 29 suppliers are added as unsaved changes', 'Added 52 items and 29 suppliers' in t and await pg.evaluate('Object.keys(local).length') == 52 and await pg.evaluate('Object.keys(supLocal).length') == 29, t)
+            check('In Oman: 52 items and 29 suppliers are added and saved straight away', 'Added and saved 52 items and 29 suppliers' in t, t)
             await pg.evaluate("tab='sups';render()"); await pg.wait_for_timeout(200)
             body = await pg.inner_text('body')
             check('The suppliers show in Oman > Suppliers, with missing details marked', 'Tammra' in body and 'Bet Al Sahl' in body)
@@ -53,7 +53,7 @@ async def main():
             names = await pg.eval_on_selector_all('[data-f=n]', 'e=>e.map(x=>x.value)')
             check('The items show in Oman > Inventory (52 lines)', len(names) == 52 and any(n.startswith('Garlic (توم)') for n in names), len(names))
             await pg.screenshot(path=str(SHOTS / 'oman_items.png'))
-            await pg.evaluate('saveAll()'); await pg.wait_for_timeout(800)
+            await pg.wait_for_timeout(1500)
             kinds = {}
             for it in SAVED: kinds[it.get('kind')] = kinds.get(it.get('kind'), 0) + 1
             check('Save sends them to the Oman tabs (OmanItems, OmanSuppliers), not the UAE ones', kinds == {'OmanItems': 52, 'OmanSuppliers': 29}, kinds)
