@@ -368,6 +368,11 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 
 /* mobile: large Forka header fits */
 @media (max-width:600px){.fk-lock.big{gap:12px}.fk-lock.big svg{width:52px;height:52px}.fk-lock.big .fk-k{font-size:14px}.fk-lock.big .fk-n{font-size:32px;white-space:normal}}
+
+/* Procurement colour: terracotta from the Procurement logo; logo file in the header */
+:root{--fk-bronze:#BD5038;--fk-bronze-hover:#A9452F;--fk-bronze-light:#C96650;--fk-bronze-soft:#f6e1da}
+.plogo{border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none}.plogo img{height:38px;width:auto;display:block}
+@media(max-width:600px){.plogo img{height:30px}}
 </style>
 </head>
 <body>
@@ -745,7 +750,7 @@ function statusBar(){
   return me?`<span class="st"><b>${esc(me)}</b></span>`:''}
 function renderTop(){
   const el=document.getElementById('top');if(!unlocked){el.innerHTML='';el.style.display='none';return}el.style.display='';
-  el.innerHTML=`<div class="t1">${fkLock(t('landSub'),'','data-act="exit" title="'+t('exit')+'" style="cursor:pointer"')}<span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
+  el.innerHTML=`<div class="t1"><button class="plogo" data-act="exit" title="${t('exit')}" aria-label="Forka Procurement"><img src="logos/forka-procurement-logo.png" alt="Forka Procurement"></button><span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
   <span class="sp"></span>${eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''}${langSw('lang')}${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button></div>
   <div class="t2"><div class="tabs">${sideTabs().map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}${k==='prq'&&rqNewCount()?` <span class="tcount">${rqNewCount()}</span>`:''}${k==='appr'&&rqApprCount()?` <span class="tcount">${rqApprCount()}</span>`:''}${k==='pon'&&rqGoCount()?` <span class="tcount soft">${rqGoCount()}</span>`:''}</button>`).join('')}</div><span class="sp"></span><div class="status">${statusBar()}</div></div>${eff()==='fin'&&notifOpen?notifPanel():''}`}
 function render(){
