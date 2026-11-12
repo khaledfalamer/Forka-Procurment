@@ -28,7 +28,7 @@ async def main():
             await pg.goto(BASE + '/#erp=' + TOK); await pg.wait_for_timeout(1500)
             await pg.evaluate("erpEnter('oman')"); await pg.wait_for_function("mode==='live'", timeout=8000); await pg.wait_for_timeout(300)
             await pg.evaluate("setOmSub('ops');tab='grn';render()"); await pg.wait_for_timeout(200)
-            tabs = await pg.locator('#top .tab').all_inner_texts()
+            tabs = await pg.locator('#pside .tab').all_inner_texts()
             check('Oman > Operations has Issue vouchers (next to Receiving and Stock movements)', 'Issue vouchers' in tabs, tabs)
             await pg.click('[data-tab=req]'); await pg.wait_for_timeout(200)
             check('The page explains it: from the Oman store to the restaurant kitchen', 'restaurant kitchen' in await pg.inner_text('#page'))
@@ -46,7 +46,7 @@ async def main():
             check('...and takes the issued quantity off the Oman store stock (10 - 3 = 7)', rice and rice[-1]['data'].get('st') == 7, rice[-1:] if rice else kinds)
             check('Nothing is saved to the UAE tabs', not any(k in kinds for k in ('Transfers', None, 'line')), kinds)
             await pg.evaluate("lang='ar';render()"); await pg.wait_for_timeout(150)
-            check('In Arabic it is called إذن الصرف', 'إذن الصرف' in ' '.join(await pg.locator('#top .tab').all_inner_texts()))
+            check('In Arabic it is called إذن الصرف', 'إذن الصرف' in ' '.join(await pg.locator('#pside .tab').all_inner_texts()))
             for lg in ('ar', 'en'):
                 await pg.evaluate(f"lang='{lg}';tab='grn';render()"); await pg.wait_for_timeout(150)
                 if await pg.locator('[data-act=newgrn]').count(): await pg.click('[data-act=newgrn]'); await pg.wait_for_timeout(200)

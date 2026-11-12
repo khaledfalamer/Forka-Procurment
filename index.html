@@ -373,12 +373,48 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 :root{--fk-bronze:#BD5038;--fk-bronze-hover:#A9452F;--fk-bronze-light:#C96650;--fk-bronze-soft:#f6e1da}
 .plogo{border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;flex:none}.plogo img{height:38px;width:auto;display:block}
 @media(max-width:600px){.plogo img{height:30px}}
+
+/* ===== Left menu (same layout as Forka Hire): terracotta for the current page ===== */
+#papp{direction:ltr}#pmain{min-width:0}[dir=rtl] #pmain{direction:rtl}body.has-pside #pmain{margin-left:250px}body.pside-mini.has-pside #pmain{margin-left:72px}
+#pside{display:none}#pscrim{display:none}
+body.has-pside #pside{display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;width:250px;box-sizing:border-box;background:#fdfbf7;border-right:1px solid #ece4d6;padding:14px 12px;z-index:30}
+[dir=rtl] #pside{direction:rtl}
+.ps-top{display:flex;align-items:center;gap:8px;padding:2px 4px 12px;border-bottom:1px solid #efe8dc;margin-bottom:10px;min-height:46px}
+.ps-top .plogo{flex:1;min-width:0}.ps-top .plogo img{height:34px;max-width:180px;object-fit:contain;object-position:left}
+.ps-mini{border:0;background:none;color:#8a7f72;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}.ps-mini:hover{background:#f3ece1;color:#2b2b2b}[dir=rtl] .ps-mini svg{transform:scaleX(-1)}
+.ps-side{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8a7f72;font-weight:600;padding:4px 12px 8px}[dir=rtl] .ps-side{letter-spacing:0}
+#pside .ps-nav{display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;overflow-x:hidden;margin:0;width:auto!important;order:0!important}
+#pside .tab{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:0;border-bottom:0;color:#5e564d;font-weight:500;font-size:14px;background:none;cursor:pointer;white-space:nowrap;position:relative;min-height:0;text-align:start;width:100%}
+#pside .tab .ni{width:20px;height:20px;flex:none}#pside .tab:hover{background:#f6efe3;color:#2b2b2b}
+#pside .tab.on{background:#f8e6e0;color:#2b2b2b;font-weight:600;border-bottom:0}
+#pside .tab.on:before{content:"";position:absolute;inset-inline-start:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:#BD5038}
+#pside .tab.on .ni{color:#BD5038}#pside .tab .tcount{margin-inline-start:auto}
+#pside .tab:focus-visible,.ps-apps:focus-visible,.ps-mini:focus-visible{outline:2px solid #BD5038;outline-offset:1px}
+.ps-foot{border-top:1px solid #efe8dc;padding-top:10px;margin-top:8px}
+.ps-apps{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:#5e564d;text-decoration:none;font-weight:500;white-space:nowrap}.ps-apps:hover{background:#f6efe3;color:#2b2b2b}
+body.has-pside .top{padding-left:250px}
+.top .t1 .plogo{display:none}.crumb{display:flex;align-items:center;gap:10px;min-width:0;overflow:hidden;white-space:nowrap}.crumb .cr-sep{color:#c4b9a9}.crumb .cr-pg{font:600 18px 'EB Garamond','IBM Plex Sans Arabic',serif;color:#2b2b2b;overflow:hidden;text-overflow:ellipsis}[dir=rtl] .crumb .cr-pg{font-family:'IBM Plex Sans Arabic',sans-serif;font-size:16px}
+.top .status{display:flex;align-items:center;gap:10px;font-size:12.5px}
+.ps-burger{display:none;border:0;background:none;color:#2b2b2b;width:38px;height:38px;border-radius:9px;align-items:center;justify-content:center;cursor:pointer;flex:none}
+body.pside-mini.has-pside #pside{width:72px;padding-inline:10px}body.pside-mini #pside .lb,body.pside-mini .ps-side{display:none}
+body.pside-mini .ps-top{flex-direction:column;padding-inline:0}body.pside-mini .ps-top .plogo img{height:30px;max-width:34px;object-fit:cover;object-position:left}
+body.pside-mini .ps-mini svg{transform:scaleX(-1)}[dir=rtl] body.pside-mini .ps-mini svg{transform:none}
+body.pside-mini #pside .tab,body.pside-mini .ps-apps{justify-content:center;padding:11px 0}body.pside-mini #pside .tab .tcount{position:absolute;top:2px;right:4px;margin:0;font-size:10px}
+body.pside-mini.has-pside .top{padding-left:72px}
+@media(max-width:860px){
+  body.has-pside #pside{width:min(84vw,280px)!important;transform:translateX(-102%);transition:transform .22s ease;box-shadow:0 10px 40px rgba(0,0,0,.18);z-index:40}
+  body.pside-open #pside{transform:none}body.pside-open #pscrim{display:block;position:fixed;inset:0;background:rgba(35,33,31,.35);z-index:35}
+  body.pside-mini #pside .lb,body.pside-mini .ps-side{display:revert}body.pside-mini #pside .tab,body.pside-mini .ps-apps{justify-content:flex-start;padding:10px 12px}
+  .ps-mini{display:none}.ps-burger{display:flex}body.has-pside .top,body.pside-mini.has-pside .top{padding-left:0}body.has-pside #pmain,body.pside-mini.has-pside #pmain{margin-left:0}
+  .crumb .sidetag,.crumb .cr-sep{display:none}.top .status{display:none}
+}
 </style>
 </head>
 <body>
 
 <div class="top" id="top"></div>
-<div class="page" id="page"><div class="empty">Loading…</div></div>
+<div id="papp"><aside id="pside" aria-label="Procurement menu"></aside><div id="pscrim" onclick="pSide(false)"></div>
+<div id="pmain"><div class="page" id="page"><div class="empty">Loading…</div></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script>
@@ -748,11 +784,24 @@ function statusBar(){
     return `${who}${saving||(nl&&!waitInv)?`<span class="st st-chg" id="svst">${t('saving')}</span>`:nl?`<span class="st st-chg">${nl} ${t('unsaved')}</span>`:`<span class="st st-muted" id="svst">✓ ${t('allSaved')}</span>`}`}
   if(mode==='live')return `${me?`<span class="st"><b>${esc(me)}</b></span>`:''}<span class="st"><i class="dot-live"></i>${t('live')}</span>${nl?`<button class="btn btn-sm" data-act="send">${t('send')} (${nl})</button>`:''}`;
   return me?`<span class="st"><b>${esc(me)}</b></span>`:''}
+const TAB_IC={prq:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg>`,pon:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4M12 8v4l3 2"/></svg>`,lpo:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4M9 12h6M9 16h4"/></svg>`,fill:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4v8l-8 4-8-4Z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg>`,sups:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg>`,ana:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/></svg>`,sum:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>`,how:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .9-1 1.6v.4M12 17h.01"/></svg>`,rnew:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/></svg>`,rmine:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h4"/></svg>`,appr:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M8.8 12l2.2 2.2 4.4-4.4"/></svg>`,people:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="3"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="8" r="2.4"/><path d="M16 13.5c2.8 0 5 1.6 5 4.5"/></svg>`,activity:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>`,moves:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h12l-3-3M17 17H5l3 3"/></svg>`,req:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2Z"/><path d="M9 8h6M9 12h6"/></svg>`,grn:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7Z"/><path d="M9 11l2 2 4-4"/></svg>`,pay:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2M3 9h18"/></svg>`,soa:`<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>`};
+function tabName(k){return t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}
+function tabCount(k){return k==='prq'&&rqNewCount()?`<span class="tcount">${rqNewCount()}</span>`:k==='appr'&&rqApprCount()?`<span class="tcount">${rqApprCount()}</span>`:k==='pon'&&rqGoCount()?`<span class="tcount soft">${rqGoCount()}</span>`:''}
+/* Left menu: stays on the LEFT in English and Arabic; collapses to icons (remembered); a slide-out drawer on phones */
+function pSide(on){document.body.classList.toggle('pside-open',!!on)}
+function pMini(on){const b=document.body;on=on===undefined?!b.classList.contains('pside-mini'):on;b.classList.toggle('pside-mini',on);try{localStorage.setItem('pp-side',on?'mini':'full')}catch(_){}}
+try{if(localStorage.getItem('pp-side')==='mini')document.addEventListener('DOMContentLoaded',()=>document.body.classList.add('pside-mini'))}catch(_){}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')pSide(false)});
 function renderTop(){
-  const el=document.getElementById('top');if(!unlocked){el.innerHTML='';el.style.display='none';return}el.style.display='';
-  el.innerHTML=`<div class="t1"><button class="plogo" data-act="exit" title="${t('exit')}" aria-label="Forka Procurement"><img src="logos/forka-procurement-logo.png" alt="Forka Procurement"></button><span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
-  <span class="sp"></span>${eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''}${langSw('lang')}${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button></div>
-  <div class="t2"><div class="tabs">${sideTabs().map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}${k==='prq'&&rqNewCount()?` <span class="tcount">${rqNewCount()}</span>`:''}${k==='appr'&&rqApprCount()?` <span class="tcount">${rqApprCount()}</span>`:''}${k==='pon'&&rqGoCount()?` <span class="tcount soft">${rqGoCount()}</span>`:''}</button>`).join('')}</div><span class="sp"></span><div class="status">${statusBar()}</div></div>${eff()==='fin'&&notifOpen?notifPanel():''}`}
+  const el=document.getElementById('top'),sd=document.getElementById('pside');
+  if(!unlocked){el.innerHTML='';el.style.display='none';sd.innerHTML='';document.body.classList.remove('has-pside');return}el.style.display='';document.body.classList.add('has-pside');
+  const sideName=t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')+(side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):'');
+  sd.innerHTML=`<div class="ps-top"><button class="plogo" data-act="exit" title="${t('exit')}" aria-label="Forka Procurement"><img src="logos/forka-procurement-logo.png" alt="Forka Procurement"></button><button class="ps-mini" onclick="pMini()" aria-label="Collapse menu" title="Collapse menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></div>
+  <div class="ps-side">${esc(sideName)}</div>
+  <nav class="tabs ps-nav">${sideTabs().map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}" title="${esc(tabName(k))}"${tab===k?' aria-current="page"':''}>${TAB_IC[k]||''}<span class="lb">${tabName(k)}</span>${tabCount(k)}</button>`).join('')}</nav>
+  ${CFG.ERP_URL?`<div class="ps-foot"><a class="ps-apps" href="${esc(CFG.ERP_URL)}" title="Forka Apps"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg><span class="lb">Forka Apps</span></a></div>`:''}`;
+  el.innerHTML=`<div class="t1"><button class="ps-burger" onclick="pSide(true)" aria-label="Menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="crumb"><span class="sidetag">${esc(sideName)}</span><span class="cr-sep" aria-hidden="true">›</span><span class="cr-pg">${esc(sideTabs().includes(tab)?tabName(tab):'')}</span></div>
+  <span class="sp"></span><div class="status">${statusBar()}</div>${eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''}${langSw('lang')}${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button></div>${eff()==='fin'&&notifOpen?notifPanel():''}`}
 function render(){
   _lead=null;
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
@@ -1777,7 +1826,7 @@ document.addEventListener('click',async e=>{const tr=e.target.closest('tr[data-o
   const pu=e.target.closest('[data-psup]');if(pu){payF.sup=pu.dataset.psup;payF.st='topay';render();return}
   const b=e.target.closest('button,[data-st]');if(!b)return;
   if(b.dataset.tab&&tab==='fill'&&invEdit&&SHEET&&Object.keys(local).length&&b.dataset.tab!=='fill'){const go=b.dataset.tab;confirmBox(t('leaveQ'),t('saveYes'),async()=>{if(await saveAll({inv:true,loud:true})){tab=go;render();window.scrollTo(0,0)}},t('stay'),1);return}
-  if(b.dataset.tab){if(b.dataset.tab==='sups'&&tab==='sups')supOpen=null;if(b.dataset.tab==='req')reqOpen=billOpen=null;if(b.dataset.tab==='grn'&&tab==='grn')grnOpen=null;tab=b.dataset.tab;rqOpenId=null;render();window.scrollTo(0,0);if(wantCeo()&&REFRESH)REFRESH(false);return}
+  if(b.dataset.tab){pSide(false);if(b.dataset.tab==='sups'&&tab==='sups')supOpen=null;if(b.dataset.tab==='req')reqOpen=billOpen=null;if(b.dataset.tab==='grn'&&tab==='grn')grnOpen=null;tab=b.dataset.tab;rqOpenId=null;render();window.scrollTo(0,0);if(wantCeo()&&REFRESH)REFRESH(false);return}
   if(b.dataset.rst!==undefined){reqF.st=b.dataset.rst;render();return}
   if(b.dataset.l){lang=b.dataset.l;ls('pp-lang',lang);render();return}
   if(b.dataset.st){fl.st=b.dataset.st;tab='fill';render();return}
