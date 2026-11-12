@@ -142,3 +142,8 @@ html[dir="rtl"] .fs-drawer .fs-sec { letter-spacing: 0; }
   .fs-hide-sm { display: none !important; }
 }
 @media print { .fs-head, .fs-menu, .fs-bottom, .fs-drawer, .fs-scrim { display: none !important; } }
+/* boxes inside the light header (search, "View as", selects) */
+.fs-head select, .fs-head input[type=search], .fs-head input[type=text] { background: #fff !important; color: #2B2B2B !important; border: 1px solid #E3D8C7 !important; border-radius: 8px; }
+.fs-head select option { color: #2B2B2B; background: #fff; }
+.fs-head label, .fs-head .vlab { color: #6F665C !important; }
+.fs-head .search svg, .fs-head .search .fs-ic { color: #8A7F72 !important; }
