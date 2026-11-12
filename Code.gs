@@ -92,7 +92,7 @@ function fail_() {
 /* ---------------- sign-in through erp.forka.com ---------------- */
 // People sign in once at erp.forka.com (Google email or Forka Apps PIN). The app passes that sign-in here,
 // and this server asks the Forka Apps accounts server who it is and which Procurement sections they may open.
-const ERP_ACCOUNTS_URL = 'https://script.google.com/macros/s/AKfycbwUO5mC1oZrKiSJfF-kpeIFUPjfzB5VToNVn9EH-ecmDadFs9xsU1oDFHTgJ2FSg6vP/exec';
+const ERP_ACCOUNTS_URL = 'https://forka-apps-443945615318.me-central1.run.app/accounts';
 const ERP_ONLY = true;           // true = Procurement PINs are switched off; sign-in only through erp.forka.com
 function erpWho_(tok) {
   tok = String(tok || '');
