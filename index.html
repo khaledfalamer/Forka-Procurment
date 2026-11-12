@@ -339,6 +339,16 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 .rmx{position:absolute;top:8px;inset-inline-end:6px;width:26px;height:26px;border-radius:50%;border:1px solid var(--fk-danger,#a33a2c);background:#fff;color:var(--fk-danger,#a33a2c);font-size:13px;line-height:1;cursor:pointer;padding:0}
 .rmx:hover{background:var(--fk-danger,#a33a2c);color:#fff}
 .dt{unicode-bidi:isolate;white-space:nowrap}
+
+/* Forka app header: the four-petal mark, FORKA above the app name */
+.fk-lock{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:inherit}
+.fk-lock>div{text-align:start}
+.fk-lock svg{width:30px;height:30px;flex:none;display:block}
+.fk-lock .fk-k{display:block;font:600 9.5px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.14em;color:#c8c3b9;text-transform:uppercase}
+.fk-lock .fk-n{display:block;font:600 20px/1.05 'EB Garamond','IBM Plex Sans Arabic',serif;color:#f6f3ee;margin-top:3px;letter-spacing:0;text-transform:none}
+.fk-lock.on-light .fk-k{color:#8a7f72}.fk-lock.on-light .fk-n{color:#2b2b2b}
+@media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:8.5px}}
+.fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:15px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -348,6 +358,8 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script>
+let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="${m}"><rect width="64" height="64" fill="#fff"/><circle cx="32" cy="32" r="12.5" fill="#000"/></mask></defs><g mask="url(#${m})"><rect width="30" height="30" rx="7" fill="#4d7b8a"/><rect x="34" width="30" height="30" rx="7" fill="#d9a650"/><rect y="34" width="30" height="30" rx="7" fill="#829980"/><rect x="34" y="34" width="30" height="30" rx="7" fill="#ba5c45"/></g><circle cx="32" cy="32" r="9" fill="#876b45"/></svg>`}
+function fkLock(name,cls,attrs){return `<div class="fk-lock ${cls||''}" ${attrs||''}>${fkMark()}<div><span class="fk-k">FORKA</span><span class="fk-n">${name}</span></div></div>`}
 const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;
 let REFRESH=null,ERP='',ERP_SIDES=null;(function(){try{const m=location.hash.match(/erp=([A-Za-z0-9-]{20,120})/);if(m){sessionStorage.setItem('pp-erp',m[1]);history.replaceState(null,'',location.pathname+location.search)}ERP=sessionStorage.getItem('pp-erp')||''}catch(_){}})();let pin='',pinNeeded=false,editMode=false,saving=false,editMsg='',myRole='';
 const EDIT_SEL='[data-f],[data-sf],button[data-act="ok"],button[data-act="rmitem"],button[data-act="invedit"],button[data-act="add"],button[data-act="addsup"],button[data-act="tog"],button[data-act="rate"],button[data-act="ontime"],button[data-act="neweval"],button[data-act="newdeliv"],button[data-act="newgrn"],button[data-act="gset"],button[data-act="gdel"],button[data-act="mdel"],button[data-act="gstatus"],button[data-act="gstock"],[data-gl],[data-media],[data-scan],#gadd,[data-rf],button[data-act="useprice"]';
@@ -612,7 +624,7 @@ async function startEdit(){
 function applyMe(m){const was=myRole;if(m&&m.email)myEmail=String(m.email);if(m&&m.role){myRole=m.role;myBranch=m.branch||'';if(m.name){me=m.name;ls('pp-me',me)}}else if(!myRole)myRole='team';}
 function signOut(msg){pin='';try{sessionStorage.removeItem('pp-pin')}catch(_){}editMode=false;myRole='';myBranch='';reqOpen=null;billOpen=null;shared={};supShared={};recShared={Evaluations:{},Deliveries:{},GRN:{},Transfers:{},Requests:{},POs:{}};supOpen=null;grnOpen=null;mode='login';editMsg=msg||'';unlocked=null;gateMsg=msg||'';if(msg&&gateSide)gateSide=gateSide;else gateSide=null;try{sessionStorage.removeItem('pp-ok')}catch(_){}render()}
 function errMsg(e){if(e==='erp'){setTimeout(erpGone,0);return t('erpExpired')}return e==='side'?t('pinNoSide'):e==='pin'?t('wrongPin'):e==='nopin'?t('noPinSet'):e==='net'?t('net'):e==='locked'?t('errLocked'):e==='role'?t('errRole'):e==='split'?t('errSplit'):e==='notready'?t('errNotready'):e==='paid'?t('errPaid'):t('oldScript')}
-function loginView(){return `<div class="card login"><div class="logo">Forka</div><h2>${t('loginT')}</h2><p style="color:var(--fk-text-2);font-size:13px">${t('loginH')}</p>
+function loginView(){return `<div class="card login"><div style="margin-bottom:14px">${fkLock(t('landSub'),'on-light')}</div><h2>${t('loginT')}</h2><p style="color:var(--fk-text-2);font-size:13px">${t('loginH')}</p>
   <form data-login="1" onsubmit="return false" class="controls"><input id="pin" type="password" inputmode="numeric" placeholder="${t('yourPin')}" autocomplete="current-password" style="width:180px"><button class="btn btn-accent" data-act="startedit">${t('signIn')}</button></form>
   ${editMsg?`<div style="color:${editMsg===t('checking')?'var(--fk-muted)':'var(--fk-danger)'};font-size:13px;margin-top:8px">${esc(editMsg)}</div>`:''}</div>`}
 const BANKF=['bankName','accName','iban','accNo','swift'];
@@ -714,7 +726,7 @@ function statusBar(){
   return me?`<span class="st"><b>${esc(me)}</b></span>`:''}
 function renderTop(){
   const el=document.getElementById('top');if(!unlocked){el.innerHTML='';el.style.display='none';return}el.style.display='';
-  el.innerHTML=`<div class="t1"><div class="brand"><span class="logo" data-act="exit" title="${t('exit')}">Forka</span><span class="appname">${t('landSub')}</span></div><span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
+  el.innerHTML=`<div class="t1">${fkLock(t('landSub'),'','data-act="exit" title="'+t('exit')+'" style="cursor:pointer"')}<span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
   <span class="sp"></span>${eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''}${langSw('lang')}${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button></div>
   <div class="t2"><div class="tabs">${sideTabs().map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}${k==='prq'&&rqNewCount()?` <span class="tcount">${rqNewCount()}</span>`:''}${k==='appr'&&rqApprCount()?` <span class="tcount">${rqApprCount()}</span>`:''}${k==='pon'&&rqGoCount()?` <span class="tcount soft">${rqGoCount()}</span>`:''}</button>`).join('')}</div><span class="sp"></span><div class="status">${statusBar()}</div></div>${eff()==='fin'&&notifOpen?notifPanel():''}`}
 function render(){
@@ -1095,7 +1107,7 @@ const brName=k=>{const b=BRANCHES.find(x=>x[0]===k);return b?(lang==='ar'?b[2]:b
 let side='plan',myBranch='',reqOpen=null,billOpen=null,reqF={st:'',br:''},mvF={m:'',q:''};
 function roleNow(){return SHEET?myRole:'admin'}
 function langSw(cls){return `<div class="${cls}"><button class="${lang==='en'?'on':''}" data-l="en">EN</button><button class="${lang==='ar'?'on':''}" data-l="ar">عربي</button></div>`}
-function markHtml(){return `<div class="mark"><div class="w">Forka</div><div class="rule"></div><div class="s">${t('landSub')}</div></div>`}
+function markHtml(){return `<div class="mark">${fkLock(t('landSub'),'big on-light')}</div>`}
 function vLanding(){
   if(SHEET&&CFG.ERP_URL&&!ERP)return `<div class="gate">${langSw('gate-lang')}${markHtml()}<div class="pinbox"><h2>${t('erpT')}</h2><p>${t('erpH')}</p>${gateMsg?`<div class="err">${esc(gateMsg)}</div>`:''}<a class="go" style="display:block;text-align:center;text-decoration:none" href="${esc(CFG.ERP_URL)}">${t('erpGo')}</a></div></div>`;
   const ok=k=>!ERP||!ERP_SIDES||ERP_SIDES.includes(k);
