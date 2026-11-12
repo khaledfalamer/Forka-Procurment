@@ -344,12 +344,12 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 .fk-lock{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:inherit}
 .fk-lock>div{text-align:start}
 .docno{direction:ltr;unicode-bidi:isolate;display:inline-block}
-.fk-lock svg{width:30px;height:30px;flex:none;display:block}
-.fk-lock .fk-k{display:block;font:600 9.5px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.14em;color:#c8c3b9;text-transform:uppercase}
+.fk-lock svg{width:34px;height:34px;flex:none;display:block}
+.fk-lock .fk-k{display:block;font:600 12px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.2em;color:#c8c3b9;text-transform:uppercase}
 .fk-lock .fk-n{display:block;font:600 20px/1.05 'EB Garamond','IBM Plex Sans Arabic',serif;color:#f6f3ee;margin-top:3px;letter-spacing:0;text-transform:none}
 .fk-lock.on-light .fk-k{color:#8a7f72}.fk-lock.on-light .fk-n{color:#2b2b2b}
-@media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:8.5px}}
-.fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:15px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
+@media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:10.5px}}
+.fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:21px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -359,7 +359,7 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script>
-let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="${m}"><rect width="64" height="64" fill="#fff"/><circle cx="32" cy="32" r="12.5" fill="#000"/></mask></defs><g mask="url(#${m})"><rect width="30" height="30" rx="7" fill="#4d7b8a"/><rect x="34" width="30" height="30" rx="7" fill="#d9a650"/><rect y="34" width="30" height="30" rx="7" fill="#829980"/><rect x="34" y="34" width="30" height="30" rx="7" fill="#ba5c45"/></g><circle cx="32" cy="32" r="9" fill="#876b45"/></svg>`}
+let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 118 118" aria-hidden="true"><defs><mask id="${m}"><rect width="118" height="118" fill="#fff"/><circle cx="59" cy="59" r="22" fill="#000"/></mask></defs><g mask="url(#${m})"><rect x="7" y="7" width="48" height="48" rx="12" fill="#BD5038"/><rect x="63" y="7" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.85"/><rect x="7" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.68"/><rect x="63" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.95"/></g><circle cx="59" cy="59" r="15.8" fill="#BD5038"/></svg>`}
 function fkLock(name,cls,attrs){return `<div class="fk-lock ${cls||''}" ${attrs||''}>${fkMark()}<div><span class="fk-k">FORKA</span><span class="fk-n">${name}</span></div></div>`}
 const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;
 let REFRESH=null,ERP='',ERP_SIDES=null;(function(){try{const m=location.hash.match(/erp=([A-Za-z0-9-]{20,120})/);if(m){sessionStorage.setItem('pp-erp',m[1]);history.replaceState(null,'',location.pathname+location.search)}ERP=sessionStorage.getItem('pp-erp')||''}catch(_){}})();let pin='',pinNeeded=false,editMode=false,saving=false,editMsg='',myRole='';
