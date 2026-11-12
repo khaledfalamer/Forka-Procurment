@@ -48,7 +48,7 @@ async def main():
             check('Header has the app switcher', await pg.locator('#top .fs-head [data-fs=apps]').count() == 1)
             await pg.click('#top [data-fs=apps]'); await pg.wait_for_timeout(100)
             apps = await pg.inner_text('#top [data-fs-pop=apps]')
-            check('App switcher lists Forka Apps, Hire, Boards, Procurement', all(x in apps for x in ('Hire', 'Boards', 'Procurement')), apps)
+            check('App switcher lists App, Hire, Board, Procurement (brand names)', all(x in apps for x in ('Hire', 'Board', 'Procurement')), apps)
             await pg.keyboard.press('Escape')
             who = await pg.inner_text('#top .fs-user')
             check('Header shows the user name and role', 'Khaled Alamer' in who and 'Admin' in who, who)
