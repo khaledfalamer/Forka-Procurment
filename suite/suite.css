@@ -20,30 +20,30 @@ html[dir="rtl"] { --fs-sans: 'IBM Plex Sans Arabic', 'Inter Tight', system-ui, s
 .fs-focus :focus-visible { outline: 3px solid var(--fs-focus); outline-offset: 2px; border-radius: 6px; }
 .fs-hit { min-width: 44px; min-height: 44px; }
 
-/* ---------- suite header ---------- */
+/* ---------- suite header (light paper, the app's colour line; the brand lock-up: mark, FORKA above the app name) ---------- */
 .fs-head { position: sticky; top: 0; z-index: var(--fs-head-z); height: var(--fs-head-h); display: flex; align-items: center; gap: 8px;
-  padding: 0 12px; background: #2B2723; color: #F4EFE7; font: 500 14px/1.2 var(--fs-sans); border-bottom: 3px solid var(--fs-accent); }
+  padding: 0 12px; background: #FDFBF7; color: #2B2B2B; font: 500 14px/1.2 var(--fs-sans); border-bottom: 3px solid var(--fs-accent); }
 .fs-head button, .fs-head a { font: inherit; color: inherit; }
 .fs-iconbtn { flex: none; display: inline-grid; place-items: center; width: 44px; height: 44px; border: 0; background: none; border-radius: 10px; cursor: pointer; color: inherit; position: relative; }
-.fs-iconbtn:hover { background: rgba(255,255,255,.08); }
-.fs-mark { flex: none; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 4px 6px; border-radius: 8px; }
-.fs-mark b { font: 600 19px/1 var(--fs-serif); letter-spacing: .01em; }
-html[dir="rtl"] .fs-mark b { font-family: 'EB Garamond', Georgia, serif; }
-.fs-switch { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.06); cursor: pointer; }
-.fs-switch:hover { background: rgba(255,255,255,.12); }
-.fs-appname { font: 600 16px/1.2 var(--fs-sans); white-space: nowrap; padding-inline-start: 4px; min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
-.fs-appname::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--fs-accent); margin-inline-end: 8px; vertical-align: middle; }
+.fs-iconbtn:hover { background: rgba(140,106,63,.12); }
+.fs-lock { flex: 0 1 auto; min-width: 0; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding: 4px 6px; border-radius: 8px; white-space: nowrap; }
+.fs-lock svg { flex: none; display: block; }
+.fs-lockt { display: grid; text-align: start; min-width: 0; }
+.fs-k { font: 600 11.5px/1 'Inter Tight', system-ui, sans-serif; letter-spacing: .2em; color: #8A7F72; text-transform: uppercase; }
+.fs-n { font: 600 20px/1.05 'EB Garamond', 'IBM Plex Sans Arabic', serif; color: #2B2B2B; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; }
+.fs-switch { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 999px; border: 1px solid #E3D8C7; background: #fff; color: #5E564D; cursor: pointer; }
+.fs-switch:hover { background: rgba(140,106,63,.08); }
 .fs-slot { display: flex; align-items: center; gap: 4px; min-width: 0; }
 .fs-grow { flex: 1; min-width: 0; }
-.fs-lang { flex: none; display: inline-flex; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; overflow: hidden; direction: ltr; }
-.fs-lang button { border: 0; background: none; padding: 0 10px; min-width: 44px; height: 36px; cursor: pointer; color: #E8E1D6; }
-.fs-lang button[aria-pressed="true"] { background: #F4EFE7; color: #2B2723; font-weight: 600; }
+.fs-lang { flex: none; display: inline-flex; border: 1px solid #E3D8C7; border-radius: 999px; overflow: hidden; direction: ltr; background: #fff; }
+.fs-lang button { border: 0; background: none; padding: 0 10px; min-width: 44px; height: 36px; cursor: pointer; color: #6F665C; }
+.fs-lang button[aria-pressed="true"] { background: var(--fs-accent); color: #fff; font-weight: 600; }
 .fs-user { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 6px 0 4px; border: 0; background: none; border-radius: 999px; cursor: pointer; }
-.fs-user:hover { background: rgba(255,255,255,.08); }
-.fs-av { width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; background: #DCE7DD; color: #3F6A47; font: 700 13px/1 var(--fs-sans); flex: none; }
+.fs-user:hover { background: rgba(140,106,63,.1); }
+.fs-av { width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; background: #EFE6D6; color: #6B5233; font: 700 13px/1 var(--fs-sans); flex: none; }
 .fs-who { display: grid; text-align: start; line-height: 1.15; }
-.fs-who small { color: #C9C1B5; font-size: 12px; }
-.fs-dot { position: absolute; top: 9px; inset-inline-end: 9px; width: 9px; height: 9px; border-radius: 50%; background: #E0705D; border: 2px solid #2B2723; }
+.fs-who small { color: #6F665C; font-size: 12px; }
+.fs-dot { position: absolute; top: 9px; inset-inline-end: 9px; width: 9px; height: 9px; border-radius: 50%; background: #D0563F; border: 2px solid #FDFBF7; }
 .fs-burger { display: none; }
 
 /* pop-overs (app switcher, user menu, More) */
@@ -56,7 +56,7 @@ html[dir="rtl"] .fs-mark b { font-family: 'EB Garamond', Georgia, serif; }
 .fs-pop .fs-cur { background: var(--fs-soft); font-weight: 600; }
 .fs-pop small { display: block; color: var(--fs-ink2); font-size: 12.5px; }
 .fs-pop hr { border: 0; border-top: 1px solid var(--fs-border); margin: 6px 4px; }
-.fs-pop .fs-appic { width: 32px; height: 32px; border-radius: 9px; display: inline-grid; place-items: center; color: #fff; flex: none; }
+.fs-pop .fs-appic { width: 32px; height: 32px; display: inline-grid; place-items: center; flex: none; }
 .fs-pop .fs-head-info { padding: 8px 10px 10px; }
 .fs-pop .fs-head-info b { display: block; }
 
@@ -129,10 +129,11 @@ html[dir="rtl"] .fs-drawer .fs-sec { letter-spacing: 0; }
 
 /* ---------- responsive frame ---------- */
 @media (max-width: 1023px) {
-  .fs-who, .fs-switch .fs-switch-label, .fs-mark b { display: none; }
+  .fs-who, .fs-switch .fs-switch-label { display: none; }
 }
 @media (max-width: 639px) {
   .fs-head { gap: 4px; padding: 0 6px; }
+  .fs-lock { gap: 8px; padding: 2px; } .fs-lock svg { width: 26px; height: 26px; } .fs-n { font-size: 17px; } .fs-k { font-size: 10.5px; }
   .fs-burger { display: inline-grid; }
   .fs-menu { display: none; }
   .fs-bottom.fs-has { display: flex; }

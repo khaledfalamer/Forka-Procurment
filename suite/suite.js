@@ -32,10 +32,10 @@
 
   // ---------- words (English / Arabic) ----------
   const W = {
-    en: { apps: 'Switch app', home: 'Forka Apps home', homeName: 'Forka Apps', hire: 'Hire', boards: 'Boards', proc: 'Procurement', menu: 'Menu', more: 'More', close: 'Close', signout: 'Sign out',
+    en: { apps: 'Switch app', home: 'Forka App home', homeName: 'App', hire: 'Hire', boards: 'Board', proc: 'Procurement', menu: 'Menu', more: 'More', close: 'Close', signout: 'Sign out',
       alerts: 'Alerts', lang: 'Language', account: 'Your account', ceo: 'CEO', manager: 'Manager', staff: 'Staff', d_hire: 'Roles, candidates, approvals',
       d_boards: 'Tasks, projects, chat', d_proc: 'Requests, orders, stock', d_home: 'All your apps', noaccess: 'Ask the CEO for access' },
-    ar: { apps: 'تبديل التطبيق', home: 'الصفحة الرئيسية لتطبيقات فوركا', homeName: 'تطبيقات فوركا', hire: 'التوظيف', boards: 'اللوحات', proc: 'المشتريات', menu: 'القائمة', more: 'المزيد', close: 'إغلاق',
+    ar: { apps: 'تبديل التطبيق', home: 'الصفحة الرئيسية لتطبيقات فوركا', homeName: 'التطبيقات', hire: 'التوظيف', boards: 'اللوحات', proc: 'المشتريات', menu: 'القائمة', more: 'المزيد', close: 'إغلاق',
       signout: 'تسجيل الخروج', alerts: 'التنبيهات', lang: 'اللغة', account: 'حسابك', ceo: 'الرئيس التنفيذي', manager: 'مدير', staff: 'موظف',
       d_hire: 'الوظائف والمرشحون والموافقات', d_boards: 'المهام والمشاريع والمحادثة', d_proc: 'الطلبات وأوامر الشراء والمخزون', d_home: 'كل تطبيقاتك',
       noaccess: 'اطلب الصلاحية من الرئيس التنفيذي' },
@@ -51,10 +51,10 @@
   }
   function token() { try { return localStorage.getItem('fa-token') || ''; } catch (e) { return ''; } }
   const APPS = [
-    { id: 'home', color: '#8C6A3F', url: () => ERP },
-    { id: 'hire', color: '#3D7C8C', url: () => ERP + 'hiring/', need: 'hire' },
-    { id: 'boards', color: '#5E7D60', url: () => ERP + 'boards/' },
-    { id: 'proc', color: '#B37A16', url: () => 'https://procurement.forka.com/' + (SAME && token() ? '#erp=' + encodeURIComponent(token()) : ''), need: 'proc' },
+    { id: 'home', color: '#896B45', url: () => ERP },
+    { id: 'hire', color: '#E0A037', url: () => ERP + 'hiring/', need: 'hire' },
+    { id: 'boards', color: '#397F8F', url: () => ERP + 'boards/' },
+    { id: 'proc', color: '#BD5038', url: () => 'https://procurement.forka.com/' + (SAME && token() ? '#erp=' + encodeURIComponent(token()) : ''), need: 'proc' },
   ];
   const allowed = (a, p) => !a.need || !p || (p.level === 'ceo' && p.status !== 'blocked') || !!(p.apps && p.apps[a.need]);
   const initials = n => String(n || '').split(/[\s@._-]+/).filter(Boolean).map(x => x[0]).join('').slice(0, 2).toUpperCase() || '?';
@@ -66,15 +66,14 @@
     const p = me(), u = o.user || (p ? { name: p.name, role: w(p.level) } : null);
     const appsList = APPS.map(a => {
       const ok = allowed(a, p), cur = a.id === o.app;
-      return ok ? `<a href="${esc(a.url())}" class="${cur ? 'fs-cur' : ''}" ${cur ? 'aria-current="page"' : ''} data-fs-app="${a.id}"><span class="fs-appic" style="background:${a.color}">${icon(a.id === 'home' ? 'apps' : a.id, 18)}</span><span>${esc(w(a.id))}<small>${esc(w('d_' + a.id))}</small></span></a>`
+      return ok ? `<a href="${esc(a.url())}" class="${cur ? 'fs-cur' : ''}" ${cur ? 'aria-current="page"' : ''} data-fs-app="${a.id}"><span class="fs-appic">${mark(a.id, 32)}</span><span>${esc(w(a.id))}<small>${esc(w('d_' + a.id))}</small></span></a>`
         : `<span style="display:flex;gap:10px;padding:8px 10px;opacity:.6"><span class="fs-appic" style="background:#A8A29A">${icon('lock', 18)}</span><span>${esc(w(a.id))}<small>${esc(w('noaccess'))}</small></span></span>`;
     }).join('');
     return `<header class="fs-head" role="banner">
   ${o.menu ? `<button class="fs-iconbtn fs-burger" data-fs="burger" aria-label="${esc(w('menu'))}">${icon('menu', 22)}</button>` : ''}
-  <a class="fs-mark" href="${esc(ERP)}" aria-label="Forka">${mark()}<b>Forka</b></a>
+  <a class="fs-lock" href="${esc(o.homeHref || (APPS.find(a => a.id === o.app) || APPS[0]).url())}" aria-label="Forka ${esc(w(o.app === 'home' ? 'homeName' : o.app))}">${mark(o.app, 34)}<span class="fs-lockt"><span class="fs-k">FORKA</span><span class="fs-n">${esc(w(o.app === 'home' ? 'homeName' : o.app))}</span></span></a>
   <span style="position:relative"><button class="fs-switch" data-fs="apps" aria-haspopup="true" aria-expanded="false" aria-label="${esc(w('apps'))}">${icon('apps', 16)}<span class="fs-switch-label">${esc(w('apps'))}</span>${icon('down', 14)}</button>
     <div class="fs-pop" data-fs-pop="apps" hidden role="menu" style="top:44px;inset-inline-start:0">${appsList}</div></span>
-  <span class="fs-appname">${esc(w(o.app === 'home' ? 'homeName' : o.app))}</span>
   <span class="fs-grow"></span>
   ${o.search ? `<span class="fs-slot fs-hide-sm">${o.search}</span>` : ''}
   ${o.extra ? `<span class="fs-slot">${o.extra}</span>` : ''}
@@ -85,7 +84,13 @@
       ${(o.userItems || []).map(x => `<button type="button" ${x.attrs || ''}>${icon(x.icon || 'user', 18)}${esc(x.label)}</button>`).join('')}${(o.userItems || []).length ? '<hr>' : ''}<a href="${esc(ERP)}">${icon('home', 18)}${esc(w('home'))}</a>${o.app === 'home' && o.signout !== false ? `<button data-fs="signout">${icon('out', 18)}${esc(w('signout'))}</button>` : `<a href="${esc(ERP)}#signout">${icon('out', 18)}${esc(w('signout'))}</a>`}</div></span>` : ''}
 </header>`;
   }
-  const mark = () => `<svg width="28" height="28" viewBox="0 0 34 34" aria-hidden="true"><rect x="2" y="2" width="14" height="14" rx="4" fill="#3D7C8C"/><rect x="18" y="2" width="14" height="14" rx="4" fill="#E3A33B"/><rect x="2" y="18" width="14" height="14" rx="4" fill="#7C9A7E"/><rect x="18" y="18" width="14" height="14" rx="4" fill="#C8553D"/><circle cx="17" cy="17" r="5.5" fill="#8C6A3F" stroke="#2B2723" stroke-width="2.5"/></svg>`;
+  // The Forka four-petal mark: the App mark has the four brand colours; each app's mark is its own colour.
+  let mk = 0;
+  function mark(app, size = 34) {
+    const c = { home: null, hire: '#E0A037', boards: '#397F8F', proc: '#BD5038' }[app] || null, id = 'fsm' + (++mk);
+    const sq = c ? [[7, 7, c, 1], [63, 7, c, .85], [7, 63, c, .68], [63, 63, c, .95]] : [[7, 7, '#397F8F', 1], [63, 7, '#E0A037', 1], [7, 63, '#77987D', 1], [63, 63, '#BD5038', 1]];
+    return `<svg width="${size}" height="${size}" viewBox="0 0 118 118" aria-hidden="true" focusable="false"><defs><mask id="${id}"><rect width="118" height="118" fill="#fff"/><circle cx="59" cy="59" r="22" fill="#000"/></mask></defs><g mask="url(#${id})">${sq.map(q => `<rect x="${q[0]}" y="${q[1]}" width="48" height="48" rx="12" fill="${q[2]}"${q[3] < 1 ? ` fill-opacity="${q[3]}"` : ''}/>`).join('')}</g><circle cx="59" cy="59" r="15.8" fill="${c || '#896B45'}"/></svg>`;
+  }
 
   // ---------- module menu ----------
   // items: [{ html: '<a ...>Label</a>' }] or [{ label, on, badge, attrs }] (attrs = the app's own click attributes, e.g. onclick="go('x')")
@@ -175,5 +180,5 @@
     fitMenus();
   }
 
-  window.FS = { header, menu, bottom, after, fitMenus, openDrawer, closeAll, icon, me, token, initials, ERP, onLang: null, onSignOut: null, drawerHTML: null, drawerAppend: null, _app: null };
+  window.FS = { header, menu, bottom, after, fitMenus, openDrawer, closeAll, icon, mark, me, token, initials, ERP, onLang: null, onSignOut: null, drawerHTML: null, drawerAppend: null, _app: null };
 })();

@@ -330,15 +330,15 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 .fk-lock{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;color:inherit}
 .fk-lock>div{text-align:start}
 .docno{direction:ltr;unicode-bidi:isolate;display:inline-block}
-.fk-lock svg{width:30px;height:30px;flex:none;display:block}
-.fk-lock .fk-k{display:block;font:600 9.5px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.14em;color:#c8c3b9;text-transform:uppercase}
+.fk-lock svg{width:34px;height:34px;flex:none;display:block}
+.fk-lock .fk-k{display:block;font:600 12px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.2em;color:#c8c3b9;text-transform:uppercase}
 .fk-lock .fk-n{display:block;font:600 20px/1.05 'EB Garamond','IBM Plex Sans Arabic',serif;color:#f6f3ee;margin-top:3px;letter-spacing:0;text-transform:none}
 .fk-lock.on-light .fk-k{color:#8a7f72}.fk-lock.on-light .fk-n{color:#2b2b2b}
 @media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:8.5px}}
 .fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:15px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
 
-/* ===== Forka suite header and module menu (suite/suite.css), Procurement accent saffron ===== */
-:root{--fs-accent:#B37A16;
+/* ===== Forka suite header and module menu (suite/suite.css), Procurement accent terracotta ===== */
+:root{--fs-accent:#BD5038;
   --fk-charcoal:var(--fs-ink);--fk-paper:var(--fs-canvas);--fk-card:var(--fs-surface);--fk-line:var(--fs-border);
   --fk-bronze:var(--fs-bronze);--fk-bronze-hover:var(--fs-bronze-d);--fk-text:var(--fs-ink);--fk-text-2:var(--fs-ink2);
   --fk-success:var(--fs-success);--fk-success-bg:var(--fs-success-bg);--fk-warning:var(--fs-warning);--fk-warning-bg:var(--fs-warning-bg);
@@ -346,11 +346,10 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
   --fk-radius:var(--fs-r-lg);--fk-radius-sm:var(--fs-r-sm)}
 #top{background:none;color:inherit}
 #top .fs-head{position:static}
-#top .fs-appname{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
 #top .fs-slot{flex:0 1 auto}
-#top .sidetag{border-color:rgba(179,122,22,.75)}
+#top .sidetag{border-color:rgba(189,80,56,.6)}
 #top .exitb{min-height:36px}
-#top .fs-lang,#top .fs-user,#top .fs-head .bell,#top .fs-switch,#top .fs-mark{flex:none}
+#top .fs-lang,#top .fs-user,#top .fs-head .bell,#top .fs-switch{flex:none}
 .t2-side .exitb{color:var(--fs-ink);border-color:var(--fs-border);background:var(--fs-surface)}
 .t2 .fs-more-btn{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--fs-ink2);font:inherit;cursor:pointer;white-space:nowrap}
 .t2 .fs-more-btn:hover,.t2 .fs-more-btn[aria-expanded=true]{background:var(--fs-soft);color:var(--fs-ink)}
@@ -370,6 +369,22 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 @media (max-width:1023px){#top .fs-switch-label{display:none}}
 @media (max-width:860px){.t2{flex-wrap:wrap;gap:4px 12px}.t2 .status{width:100%;margin:0;border-top:1px solid var(--fs-border);padding:8px 0}}
 @media (max-width:639px){#top .fs-slot{display:none}.t2{padding:0 12px}.t2-side{display:flex;align-items:center;gap:8px;width:100%;padding-top:8px}.t2-side .sidetag{color:var(--fs-ink);border-color:var(--fs-accent)}.t2 .status{border-top:0;padding-top:4px}}
+
+.sidetag{color:#8c6a3f;border-color:rgba(140,106,63,.45)}.exitb{color:#2b2b2b;border-color:#d9cfc0}.exitb:hover{background:#2b2b2b;color:#fff}
+.bell{color:#2b2b2b;border-color:#d9cfc0}.t2 .tab.on{border-bottom-color:#BD5038}
+/* Start screen: iPhone-style icons */
+.doors{grid-template-columns:repeat(5,140px);gap:34px 26px;direction:inherit;margin-top:46px}.omhome .doors{grid-template-columns:repeat(3,140px)}
+.gate .doors .door:last-child:nth-child(odd){grid-column:auto;justify-self:auto}
+.door{width:140px;gap:10px}.door button{width:96px;height:96px;border-radius:24px;border:0;padding:0;background:linear-gradient(160deg,#cf6a52,#A9452F);color:#fff;box-shadow:0 6px 16px rgba(169,69,47,.25);position:relative;display:flex;align-items:center;justify-content:center;font-size:0;letter-spacing:0}
+.door button svg{width:44px;height:44px}.door button:hover,.door button:focus-visible{transform:translateY(-2px);box-shadow:0 10px 22px rgba(169,69,47,.32);outline:none}
+.door button:focus-visible{outline:3px solid rgba(189,80,56,.35);outline-offset:3px}.door button:active{transform:translateY(1px);box-shadow:0 3px 8px rgba(169,69,47,.25)}
+.door .dlab{font-size:15px;font-weight:600;color:#2b2b2b;text-align:center}[dir=rtl] .door .dlab{font-family:'IBM Plex Sans Arabic',sans-serif}
+.door .dot{position:absolute;top:-6px;inset-inline-end:-6px;background:#2b2b2b;color:#fff;border-radius:99px;font-size:13px;font-weight:700;padding:2px 8px;border:2px solid var(--fk-bg,#f6f3ee);font-family:'Inter Tight',sans-serif}
+@media (max-width:620px){.doors,.omhome .doors{grid-template-columns:repeat(3,96px);gap:26px 20px}.door{width:96px}.door button{width:76px;height:76px;border-radius:19px}.door button svg{width:36px;height:36px}.door .dlab{font-size:13.5px}}
+
+/* mobile: large Forka header fits */
+@media (max-width:600px){.fk-lock.big{gap:12px}.fk-lock.big svg{width:52px;height:52px}.fk-lock.big .fk-k{font-size:14px}.fk-lock.big .fk-n{font-size:32px;white-space:normal}}
+
 </style>
 </head>
 <body>
@@ -380,7 +395,7 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 <script src="suite/suite.js"></script>
 <script src="config.js"></script>
 <script>
-let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="${m}"><rect width="64" height="64" fill="#fff"/><circle cx="32" cy="32" r="12.5" fill="#000"/></mask></defs><g mask="url(#${m})"><rect width="30" height="30" rx="7" fill="#4d7b8a"/><rect x="34" width="30" height="30" rx="7" fill="#d9a650"/><rect y="34" width="30" height="30" rx="7" fill="#829980"/><rect x="34" y="34" width="30" height="30" rx="7" fill="#ba5c45"/></g><circle cx="32" cy="32" r="9" fill="#876b45"/></svg>`}
+let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 118 118" aria-hidden="true"><defs><mask id="${m}"><rect width="118" height="118" fill="#fff"/><circle cx="59" cy="59" r="22" fill="#000"/></mask></defs><g mask="url(#${m})"><rect x="7" y="7" width="48" height="48" rx="12" fill="#BD5038"/><rect x="63" y="7" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.85"/><rect x="7" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.68"/><rect x="63" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.95"/></g><circle cx="59" cy="59" r="15.8" fill="#BD5038"/></svg>`}
 function fkLock(name,cls,attrs){return `<div class="fk-lock ${cls||''}" ${attrs||''}>${fkMark()}<div><span class="fk-k">FORKA</span><span class="fk-n">${name}</span></div></div>`}
 const CFG=window.FORKA_CONFIG||{};const SHEET=!!CFG.SHEET_URL;
 let REFRESH=null,ERP='',ERP_SIDES=null;(function(){try{const m=location.hash.match(/erp=([A-Za-z0-9-]{20,120})/);if(m){sessionStorage.setItem('pp-erp',m[1]);history.replaceState(null,'',location.pathname+location.search)}ERP=sessionStorage.getItem('pp-erp')||''}catch(_){}})();let pin='',pinNeeded=false,editMode=false,saving=false,editMsg='',myRole='';
@@ -1138,7 +1153,11 @@ const SIDES={plan:['prq','pon','lpo','fill','sups','ana','sum','how'],dept:['rne
 const OMSUB={plan:['lpo','fill','sups','ana','sum'],ops:['grn','req','moves'],fin:['pay','soa']};let omSub=null;try{omSub=sessionStorage.getItem('pp-om')||null}catch(_){}
 function eff(){return side==='oman'?(omSub||'oman'):side}
 function setOmSub(v){omSub=v;try{v?sessionStorage.setItem('pp-om',v):sessionStorage.removeItem('pp-om')}catch(_){}poOpen=null;poDoc=false;grnDoc=false;reqOpen=billOpen=grnOpen=supOpen=null;notifOpen=false;if(v)tab=OMSUB[v][0]}
-function vOmHome(){const d=(k,cap)=>`<div class="door"><button data-omdoor="${k}">${t({plan:'omPlan',ops:'omOps',fin:'omFin'}[k])}</button><p>${t(cap)}</p></div>`;
+const DOOR_IC={"plan": "<path d=\"M3 4h2l2.4 11h10.2L20 8H6.2\"/><circle cx=\"9\" cy=\"19\" r=\"1.4\"/><circle cx=\"17\" cy=\"19\" r=\"1.4\"/>", "ops": "<path d=\"M3 8l9-5 9 5v8l-9 5-9-5z\"/><path d=\"M3 8l9 5 9-5M12 13v8\"/>", "dept": "<rect x=\"5\" y=\"4\" width=\"14\" height=\"17\" rx=\"2\"/><path d=\"M9 4V3h6v1M9 10h6M9 14h6M9 18h4\"/>", "fin": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M3 10h18M7 15h3\"/>", "oman": "<path d=\"M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z\"/><circle cx=\"12\" cy=\"9.5\" r=\"2.5\"/>"};
+function doorIcon(k){return `<svg viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${DOOR_IC[k]||''}</svg>`}
+function doorBadge(k){try{if(k==='plan'){const n=recs('Requests').filter(r=>(r.status||'new')==='new').length;return n}if(k==='fin'){return notes().due.length}}catch(_){}return 0}
+function doorHtml(attr,k,label,cap,badge){const n=badge?doorBadge(k):0;return `<div class="door"><button ${attr} aria-label="${esc(label)}" title="${esc(cap||'')}">${doorIcon(k)}${n?`<b class="dot">${n}</b>`:''}</button><span class="dlab">${esc(label)}</span></div>`}
+function vOmHome(){const d=(k,cap)=>doorHtml(`data-omdoor="${k}"`,k,t({plan:'omPlan',ops:'omOps',fin:'omFin'}[k]),t(cap),false);
   return `<div class="omhome"><div class="mark"><div class="w">${t('sideOman')}</div><div class="rule"></div><div class="s">${t('landOman')}</div></div><p class="hint" style="text-align:center;max-width:560px;margin:22px auto 0;white-space:normal">${t('omHomeH')}</p><div class="doors">${d('plan','landOmPlan')}${d('ops','landOmOps')}${d('fin','landOmFin')}</div></div>`}
 const DEMO_PIN={plan:'1111',ops:'2222',fin:'3333',dept:'4444',ceo:'5555',oman:'6666'};let unlocked=null,gateSide=null,gateMsg='';
 let BRANCHES=[['sharjah','Sharjah','الشارقة'],['fujairah','Fujairah','الفجيرة'],['uaq','Umm Al Quwain','أم القيوين'],['mayar','Mayar Cafe','ميار كافيه']];
@@ -1150,7 +1169,7 @@ function markHtml(){return `<div class="mark">${fkLock(t('landSub'),'big on-ligh
 function vLanding(){
   if(SHEET&&CFG.ERP_URL&&!ERP)return `<div class="gate">${langSw('gate-lang')}${markHtml()}<div class="pinbox"><h2>${t('erpT')}</h2><p>${t('erpH')}</p>${gateMsg?`<div class="err">${esc(gateMsg)}</div>`:''}<a class="go" style="display:block;text-align:center;text-decoration:none" href="${esc(CFG.ERP_URL)}">${t('erpGo')}</a></div></div>`;
   const ok=k=>!ERP||!ERP_SIDES||ERP_SIDES.includes(k);
-  const d=(k,lbl,cap)=>ok(k)?`<div class="door"><button data-door="${k}">${t(lbl)}</button><p>${t(cap)}</p></div>`:'';return `<div class="gate">${langSw('gate-lang')}${ok('ceo')?`<button class="gate-ceo" data-door="ceo">${t('landCeo')}</button>`:''}${markHtml()}
+  const d=(k,lbl,cap)=>ok(k)?doorHtml(`data-door="${k}"`,k,t(lbl),t(cap),true):'';return `<div class="gate">${langSw('gate-lang')}${ok('ceo')?`<button class="gate-ceo" data-door="ceo">${t('landCeo')}</button>`:''}${markHtml()}
   ${ERP&&ERP_SIDES&&!ERP_SIDES.length?`<div class="err" style="text-align:center">${t('erpNone')}</div>`:''}<div class="doors">${d('plan','sidePlan','landPlan')}${d('ops','sideOps','landOps')}${d('dept','btnReq','capReq')}${d('fin','btnPay','capPay')}${d('oman','sideOman','landOman')}</div>
   <div class="gate-foot">${t('landFoot')}</div></div>`}
 function vPin(){const sd=gateSide;return `<div class="gate">${langSw('gate-lang')}${markHtml()}
