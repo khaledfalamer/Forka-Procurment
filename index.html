@@ -368,6 +368,108 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 
 /* mobile: large Forka header fits */
 @media (max-width:600px){.fk-lock.big{gap:12px}.fk-lock.big svg{width:52px;height:52px}.fk-lock.big .fk-k{font-size:14px}.fk-lock.big .fk-n{font-size:32px;white-space:normal}}
+/* ===== Inventory workspace (tab "fill"): scoped to .ivbar/.ivsum/.ivfil/.inv/.invdr ===== */
+.ivi{width:16px;height:16px;flex:none;vertical-align:-3px}
+.ivbar{position:sticky;top:var(--invtop,0px);z-index:5;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;background:var(--fk-paper);padding:10px 0 8px;margin:-6px 0 -6px;border-bottom:1px solid var(--fk-line)}
+.ivbar h2{font-size:24px;margin:0}
+.ivcount{color:var(--fk-muted);font-size:13px}
+.ivsave{display:inline-flex;gap:10px;align-items:center;font-size:13px}
+.ivsave .st-muted{color:var(--fk-success)}
+.ivmode{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#BD5038;border:1px solid rgba(189,80,56,.45);border-radius:999px;padding:2px 9px}
+[dir=rtl] .ivmode{letter-spacing:0}
+.ivacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ivacts .btn{display:inline-flex;align-items:center;gap:6px}
+.ivmw{position:relative}
+.ivmenu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:30;background:var(--fk-card);border:1px solid var(--fk-line);border-radius:12px;box-shadow:0 12px 32px rgba(35,33,31,.16);padding:8px;min-width:230px;max-height:60vh;overflow:auto}
+.ivmi{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;font-weight:500;color:var(--fk-text);font-size:13px;cursor:pointer}
+.ivmi:hover{background:var(--fk-paper)}.ivmi input{min-height:0;width:16px;height:16px;accent-color:var(--fk-bronze)}
+.ivmi small{margin-inline-start:auto;color:var(--fk-muted);font-size:11px}
+.ivlock{margin:0}
+.ivsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ivsum .card{padding:12px 16px}.ivsum .num{font-size:24px}
+.ivsumb{text-align:start;font-family:inherit;color:inherit;cursor:pointer}
+.ivsumb:hover{border-color:var(--fk-bronze-light)}.ivsumb.on{border-color:var(--fk-bronze);box-shadow:0 0 0 1px var(--fk-bronze)}
+.ivwrap{white-space:normal}
+.ivn{unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.ivfil #q{min-width:220px;flex:1 1 220px;max-width:340px}
+.ivfil select{max-width:100%}.ivfil #fsup{max-width:260px}
+.ivviews{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--fk-muted)}
+.ivviews select{max-width:200px}.ivviews input{width:170px}
+.ivdel{display:inline-flex;align-items:center;color:var(--fk-danger)}
+/* table box: scrolls on its own, sized to the screen under the sticky title */
+.tbl-wrap.inv{max-height:calc(100vh - var(--invtop,0px) - 76px);min-height:320px;overscroll-behavior:contain}
+.inv table{width:max-content;min-width:100%}
+.inv th.pin1,.inv td.pin1{position:sticky;inset-inline-start:0;z-index:1;background:var(--fk-card);width:250px;min-width:250px;max-width:250px}
+.inv th.pin2,.inv td.pin2{position:sticky;inset-inline-start:var(--pin1w,250px);z-index:1;background:var(--fk-card);box-shadow:inset -1px 0 0 var(--fk-line)}
+[dir=rtl] .inv th.pin2,[dir=rtl] .inv td.pin2{box-shadow:inset 1px 0 0 var(--fk-line)}
+.inv thead th.pin1,.inv thead th.pin2{z-index:3;background:var(--fk-paper)}
+.inv td.item{padding-inline-end:34px}.inv.editing td.item{padding-inline-end:62px}
+.inv .ivname{display:block;overflow-wrap:anywhere}
+.ivopen{position:absolute;top:7px;inset-inline-end:4px;width:26px;height:26px;border:1px solid transparent;border-radius:7px;background:none;color:var(--fk-muted);cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.inv.editing .ivopen{inset-inline-end:34px}
+.ivopen:hover,.ivopen:focus-visible{color:var(--fk-bronze);border-color:var(--fk-line);background:var(--fk-paper);outline:none}
+[dir=rtl] .ivopen svg{transform:scaleX(-1)}
+.inv tbody tr[data-inv]{cursor:pointer}
+.inv tbody tr[data-inv]:hover td{background:#faf6ef}
+.inv .ivrop{padding:6px 0;font-weight:600}
+.inv .ivst{min-width:130px}
+.ivpk{display:flex;gap:4px}
+/* editable vs read-only: in edit mode editable cells are tinted and their fields look like inputs */
+.inv.editing td.ed{background:#fbf7f1}
+.inv.editing tbody tr[data-inv]:hover td.ed{background:#f7f0e5}
+.inv.editing td input:not(:disabled),.inv.editing td select:not(:disabled),.invdr.editing input:not(:disabled),.invdr.editing select:not(:disabled){background:#fff;border-color:#d6ccbd}
+.inv:not(.editing) td input:disabled,.inv:not(.editing) td select:disabled{padding-inline:2px}
+.inv td input.miss:disabled,.inv td select.miss:disabled{padding-inline:9px}
+/* row drawer: opens from the inline-end side (right in English, left in Arabic) */
+.invdr{position:fixed;top:0;bottom:0;inset-inline-end:0;width:min(440px,100vw);z-index:40;background:var(--fk-card);border-inline-start:1px solid var(--fk-line);box-shadow:-14px 0 40px rgba(35,33,31,.16);display:flex;flex-direction:column}
+[dir=rtl] .invdr{box-shadow:14px 0 40px rgba(35,33,31,.16)}
+.ivdh{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:18px 20px 12px;border-bottom:3px solid #BD5038}
+.ivdh h2{font-size:22px;overflow-wrap:anywhere}
+.ivdk{color:var(--fk-muted);font-size:12px;margin-bottom:2px}
+.ivx{border:1px solid var(--fk-line);background:var(--fk-card);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--fk-text-2);flex:none}
+.ivx:hover,.ivx:focus-visible{border-color:var(--fk-bronze);color:var(--fk-bronze);outline:none}
+.ivdb{flex:1;overflow:auto;padding:6px 20px 16px}
+.ivdb section{padding:12px 0;border-bottom:1px solid var(--fk-line)}.ivdb section:last-child{border-bottom:0}
+.ivdb h3{font-family:var(--fk-sans);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--fk-text-2);margin:0 0 8px}
+[dir=rtl] .ivdb h3{font-family:'IBM Plex Sans Arabic',sans-serif;letter-spacing:0}
+.ivf{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:start;padding:5px 0}
+.ivl{font-size:12.5px;color:var(--fk-text-2);font-weight:600;padding-top:8px}
+.ivf.ro .ivl{padding-top:2px}
+.ivv input:not(.cyc):not(.pkn),.ivv select:not(.smsel):not(.us){width:100%}
+.ivv input.num{text-align:end}
+.ivv .ivpk{gap:6px}.ivv .ivpk input.pkn{flex:1 1 auto;min-width:0;width:auto}.ivv .ivpk select{flex:0 0 auto}
+.inv tbody tr.ivsel[data-inv] td,.inv.editing tbody tr.ivsel[data-inv] td.ed{background:#f3e9da}
+.ivv .hint{white-space:normal}
+.ivconv{margin-top:6px;padding:8px 10px;background:var(--fk-paper);border-radius:8px;font-weight:600;font-size:13px}
+.ivdf{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--fk-line);background:var(--fk-paper);font-size:13px}
+.ivdf .st-muted{color:var(--fk-success)}
+/* phones: one card per item (name, stock now, reorder point, to buy, status); tap opens the drawer */
+@media (max-width:639px){
+ .ivbar h2{font-size:21px}
+ .ivsum{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ivsum .card{padding:10px 12px}.ivsum .num{font-size:19px}.ivsum .hint{display:none}.ivsum .lbl{font-size:11.5px}
+ .ivfil #fsup{max-width:none}
+ .ivfil #q{max-width:none;min-width:0;flex-basis:100%}
+ .ivfil select{flex:1 1 140px;min-width:0}
+ .ivviews select{max-width:none;flex:1 1 140px}
+ .tbl-wrap.inv{max-height:calc(100vh - var(--invtop,0px) - 70px)}
+ .inv table{display:block;width:100%;min-width:0}
+ .inv thead{display:none}
+ .inv tbody{display:block}
+ .inv tbody tr[data-inv]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px;padding:12px 14px;border-bottom:1px solid var(--fk-line)}
+ .inv tbody tr.r-miss{box-shadow:inset 3px 0 0 var(--fk-danger)}.inv tbody tr.r-ok{box-shadow:inset 3px 0 0 var(--fk-success)}
+ [dir=rtl] .inv tbody tr.r-miss{box-shadow:inset -3px 0 0 var(--fk-danger)}[dir=rtl] .inv tbody tr.r-ok{box-shadow:inset -3px 0 0 var(--fk-success)}
+ .inv tbody td{display:block;border:0;padding:0;background:none!important;box-shadow:none!important;position:static!important;width:auto!important;min-width:0!important;max-width:none!important}
+ .inv tbody td.item{grid-column:1/-1;position:relative!important;padding-inline-end:36px}
+ .inv.editing tbody td.item{padding-inline-end:66px}
+ .inv tbody td:not(.item):not(.cm){display:none}
+ .inv tbody td.cm{text-align:start}
+ .inv tbody td.cm::before{content:attr(data-lbl);display:block;font-size:11px;color:var(--fk-muted);font-weight:600;margin-bottom:2px}
+ .inv tbody td.ivst{grid-column:1/-1}
+ .inv tbody td.ivst::before{content:none}
+ .inv td input.num{width:100%;max-width:110px;text-align:start}
+ .inv .hint{white-space:normal}
+ .ivf{grid-template-columns:1fr;gap:4px}.ivl{padding-top:0}
+}
 </style>
 </head>
 <body>
@@ -754,7 +856,7 @@ function render(){
   renderTop();const P=document.getElementById('page');
   if(!unlocked){P.innerHTML=gateSide?vPin():vLanding();lastTab='';const pp=document.getElementById('pin');if(pp)pp.focus();return}
   if(side==='oman'&&!omSub){P.innerHTML=vOmHome();lastTab='';return}
-  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
+  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f,dr:!!ae.closest('.invdr')}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
   const same=lastTab===tab;lastTab=tab;const wy=window.scrollY,sc=[...P.querySelectorAll('.tbl-wrap')].map(e=>[e.scrollTop,e.scrollLeft]);
   if(!sideTabs().includes(tab))tab=sideTabs()[0];
   if(tab==='lpo'&&!poOpen)poAutoRestock();
@@ -763,10 +865,11 @@ function render(){
     Object.entries(supLocal).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-sid="${CSS.escape(id)}"][data-sf="${f}"]`);if(el)el.classList.add('chg')}));
     Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`);if(el)el.classList.add('chg')}))}
   if(tab==='fill'&&!invEdit)P.querySelectorAll('.inv [data-f],.inv button[data-act="ok"],.inv button[data-act="useprice"]').forEach(e=>e.disabled=true);
+  if(tab==='fill')invAfter(P);
   calPrep(P);if(calEl&&!document.body.contains(calEl))calClose();
   if(eff()==='fin'&&grnOpen)P.querySelectorAll('input,select,textarea,button').forEach(el=>{if(!['gback'].includes(el.dataset.act)&&!(el.dataset.act==='gstatus'&&el.dataset.v==='paid'))el.disabled=true});
   if(same){[...P.querySelectorAll('.tbl-wrap')].forEach((e,i)=>{if(sc[i]){e.scrollTop=sc[i][0];e.scrollLeft=sc[i][1]}});window.scrollTo(0,wy)}
-  if(af){const el=af.elid?document.getElementById(af.elid):af.sid?P.querySelector(`[data-sid="${CSS.escape(af.sid)}"][data-sf="${af.sf}"]`):P.querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){el.focus({preventScroll:true});try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
+  if(af){const el=af.elid?document.getElementById(af.elid):af.sid?P.querySelector(`[data-sid="${CSS.escape(af.sid)}"][data-sf="${af.sf}"]`):(af.dr&&P.querySelector('.invdr')||P).querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){el.focus({preventScroll:true});try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
 }
 function banner(){
   const nl=Object.keys(local).length+Object.keys(supLocal).length+recPending();
@@ -795,6 +898,101 @@ function head(L){
   <div class="card"><div class="controls"><b>${t('progress')}</b><span class="muted" style="color:var(--fk-muted)">${c.confirmed+c.notneeded} ${t('of')} ${n}</span></div>
    <div class="prog">${['confirmed','notneeded','toconfirm','missing'].map(k=>`<i style="width:${c[k]/n*100}%;background:${col[k]}"></i>`).join('')}</div>
    <div class="legend">${['missing','toconfirm','confirmed','notneeded'].map(k=>`<span data-st="${k}"><i class="dot" style="background:${col[k]}"></i>${t(k)} <b>${c[k]}</b></span>`).join('')}</div></div>`}
+/* ===== Inventory workspace: summary, filters, saved views, chosen columns (Item and Stock now pinned), row drawer.
+   Only the rows near the visible part of the table are drawn (windowing), so every item is reachable without a page cap.
+   Formulas, locks, confirms, saving and permissions are the same as before (calc, ropOf, stockState, edit, EDIT_SEL, canEl). */
+Object.assign(T.en,{ivCols:'Columns',ivPinned:'always shown',ivViews:'Saved views',ivViewPick:'Saved views',ivSaveView:'Save view',ivViewName:'Name for this view',ivViewOk:'Save',ivViewNo:'Cancel',ivDelView:'Delete view',ivViewSaved:'View saved',ivViewDel:'View deleted',ivReorder:'Items to reorder',ivReorderH:'At or below the reorder point',ivDone:'Lines confirmed',ivDetails:'Details',ivClose:'Close',ivConv:'Conversion',ivUsage:'Usage and reserve',ivSupply:'Supply',ivSm:'Supply mode',ivNowT:'Stock and order',ivPrice:'Price',ivNameT:'New item',ivCount:'{n} items',ivLead:'Supplier lead time: {n} days',ivNoConv:'Set the unit and the pack to see the conversion.',ivLocked:'Locked. Press Edit to change items, stock counts or prices.',ivPay:'Pemo {a} · Credit {b} · Not set {c}',ivEditing:'Editing',ivOpen:'Open details',ivPerDay:'{q} {u} per day',ivDaysLeft:'Days left'});
+Object.assign(T.ar,{ivCols:'الأعمدة',ivPinned:'يظهر دائماً',ivViews:'العروض المحفوظة',ivViewPick:'العروض المحفوظة',ivSaveView:'حفظ العرض',ivViewName:'اسم هذا العرض',ivViewOk:'حفظ',ivViewNo:'إلغاء',ivDelView:'حذف العرض',ivViewSaved:'تم حفظ العرض',ivViewDel:'تم حذف العرض',ivReorder:'أصناف تحتاج طلب',ivReorderH:'عند نقطة الطلب أو أقل',ivDone:'سطور مؤكدة',ivDetails:'التفاصيل',ivClose:'إغلاق',ivConv:'التحويل',ivUsage:'الاستهلاك والاحتياطي',ivSupply:'التوريد',ivSm:'طريقة التوريد',ivNowT:'المخزون والطلب',ivPrice:'السعر',ivNameT:'صنف جديد',ivCount:'{n} صنف',ivLead:'مدة توريد المورد: {n} أيام',ivNoConv:'حدد الوحدة والعبوة لترى التحويل.',ivLocked:'مقفل. اضغط تعديل لتغيير الأصناف أو الجرد أو الأسعار.',ivPay:'Pemo {a} · آجل {b} · غير محدد {c}',ivEditing:'وضع التعديل',ivOpen:'فتح التفاصيل',ivPerDay:'{q} {u} في اليوم',ivDaysLeft:'الأيام المتبقية'});
+const IV_ALL=120,IV_BUF=900,IV_MIN=60;
+const IV_COLS=['item','stock','sup','sm','pay','use','par','rop','buy','p','unit','pack','bud','status'];
+const IV_DEF=['item','stock','sup','rop','buy','p','bud','status'],IV_PIN=['item','stock'];
+let invOpen=null,ivMenu=false,ivNaming=false,invR=[],invWin={a:0,b:0},invH={},invHK='',invAvg=0;
+const IVI={
+ cols:'<path d="M4 5h16v14H4z"/><path d="M9.5 5v14M14.5 5v14"/>',
+ open:'<path d="M4 5h16v14H4z"/><path d="M14 5v14"/><path d="M9 10l2 2-2 2"/>',
+ x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ view:'<path d="M7 4h10v16l-5-4-5 4z"/>',
+ trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'};
+const ivI=k=>`<svg class="ivi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IVI[k]}</svg>`;
+function ivCols(){const s=ls2('pp-inv-cols');const on=Array.isArray(s)?s:IV_DEF;return IV_COLS.filter(k=>IV_PIN.includes(k)||on.includes(k)||(ivCard()&&['rop','buy','status'].includes(k)))}
+function ivViews(){const v=ls2('pp-inv-views');return Array.isArray(v)?v:[]}
+const IV_FK=['q','st','con','sup','pay','stk'];
+function ivFl(){const o={};IV_FK.forEach(k=>o[k]=fl[k]);return o}
+function ivCurView(){const c=JSON.stringify(ivFl());return ivViews().findIndex(v=>JSON.stringify(Object.assign({q:'',st:'all',con:'',sup:'',pay:'',stk:''},v.fl))===c)}
+function ivColName(k){return k==='sm'?t('ivSm'):t({item:'item',stock:'stock',sup:'supplier',pay:'payment',use:'use',par:'par',rop:'rop',buy:'buy',p:'price',unit:'unit',pack:'pack',bud:'bud',status:'status'}[k])}
+function ivCard(){try{return matchMedia('(max-width:639px)').matches}catch(_){return false}}
+function ivHt(id){return invH[id]||invAvg||(ivCard()?150:64)}
+function ivRange(st,h){const n=invR.length;if(n<=IV_ALL)return {a:0,b:n};
+  let y=0,a=-1,b=n;for(let i=0;i<n;i++){const hh=ivHt(invR[i].id);if(a<0&&y+hh>=st-IV_BUF)a=i;if(y>st+h+IV_BUF){b=i;break}y+=hh}
+  if(a<0)a=Math.max(0,n-IV_MIN);if(b-a<IV_MIN)b=Math.min(n,a+IV_MIN);if(b-a<IV_MIN)a=Math.max(0,b-IV_MIN);return {a,b}}
+function ivPad(a,b){let t0=0,t1=0;for(let i=0;i<a;i++)t0+=ivHt(invR[i].id);for(let i=b;i<invR.length;i++)t1+=ivHt(invR[i].id);return [t0,t1]}
+const ivNum=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}" aria-label="${esc(ivColName(f==='st'?'stock':f==='p'?'p':f))}">`;
+const ivB=(n,d)=>`<bdi class="ivn">${fmt(n,d)}</bdi>`;
+function ivConvTxt(l){return l.u&&+l.pkN>0&&l.pkU?`1 ${U(l.u)} = ${ivB(+l.pkN,l.pkN%1?2:0)} ${U(l.pkU)}`:''}
+function ivRopHtml(l){return smOf(l)?`<span class="badge b-pemo">${smOf(l)==='direct'?t('smDirect'):fill(t('smCycleB'),{n:cycOf(l)})}</span>`:(+l.use>0||+l.par>0)?`<div class="ivrop">${ivB(ropOf(l),ropOf(l)%1?1:0)}</div>${(k=>k?`<span class="badge ${k==='ok'?'b-ok':k==='order'?'b-warn':'b-bad'}">${t(k==='ok'?'sOk':k==='order'?'sOrder':'sBelow')}</span>`:'')(stockState(l))}`:''}
+function ivStatusHtml(l,s,m){return (s==='missing'?`<span class="badge b-bad ivneed">${t('needs')}: ${m.map(x=>t('m_'+(x==='price'?'price':x))).join(', ')}</span>`:
+  `<button class="btn btn-ok ${l.ok?'done':''}" data-act="ok" data-id="${esc(l.id)}">${l.ok?'✓ '+t(s==='notneeded'?'notneeded':'done'):t('confirm')}</button>`)+
+  (l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:'')}
+function ivSmHtml(l){return `<div class="smrow"><select class="smsel" data-id="${esc(l.id)}" data-f="sm" title="${t('smT')}" aria-label="${t('smT')}"><option value="">${t('smStore')}</option><option value="direct" ${smOf(l)==='direct'?'selected':''}>${t('smDirect')}</option><option value="cycle" ${smOf(l)==='cycle'?'selected':''}>${t('smCycle')}</option></select>${smOf(l)==='cycle'?`<input class="num cyc" type="number" min="1" step="1" data-id="${esc(l.id)}" data-f="cyc" value="${cycOf(l)}" title="${t('smDays')}" aria-label="${t('smDays')}"><span class="hint">${t('smDays')}</span>`:''}</div>`}
+function ivPayHtml(l,m){return `<select class="${m.includes('pay')?'miss':''}" data-id="${esc(l.id)}" data-f="pay" aria-label="${t('payment')}"><option value="">${t('choose')}</option><option value="pemo" ${l.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${l.pay==='credit'?'selected':''}>${t('creditW')}</option></select>`}
+function ivPackHtml(l,m){return `<div class="ivpk"><input class="num pkn ${m.includes('pack')&&!(+l.pkN>0)?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="pkN" value="${l.pkN==null?'':l.pkN}" placeholder="#" aria-label="${t('pack')}">${uSel(l,'pkU',m.includes('pack')&&!l.pkU)}</div>`}
+function ivCell(k,l,m,s,c){const ref=l.ref,id=esc(l.id),sm=smOf(l);
+  switch(k){
+  case 'item':return `<td class="item pin1" data-k="item">${invEdit?`<button class="rmx" data-act="rmitem" data-id="${id}" title="${t('rmItem')}" aria-label="${t('rmItem')}">✕</button>`:''}${l.isNew?`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${id}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}"><div style="display:flex;gap:4px;margin-top:4px"><select data-id="${id}" data-f="con">${Object.keys(CON).map(x=>`<option value="${x}" ${l.con===x?'selected':''}>${CON[x][lang]}</option>`).join('')}</select><select data-id="${id}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select></div>`:`<span class="ivname">${esc(l.n)}</span><small>${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · <bdi>${id}</bdi></small>`}<button class="ivopen" data-act="invopen" data-id="${id}" title="${t('ivOpen')}" aria-label="${t('ivOpen')}">${ivI('open')}</button></td>`;
+  case 'stock':return `<td class="n pin2 ed cm" data-k="stock" data-lbl="${t('stock')}">${sm==='direct'?`<span class="hint">${t('smDirectS')}</span>`:ivNum(l,'st',false)+(!sm&&+l.use>0?`<div class="hint">${ivB((+l.st||0)/(+l.use/30),0)} ${t('daysLeft')}</div>`:'')}</td>`;
+  case 'sup':return `<td class="ed" data-k="sup"><input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${id}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}" aria-label="${t('supplier')}"></td>`;
+  case 'sm':return `<td class="ed" data-k="sm">${ivSmHtml(l)}</td>`;
+  case 'pay':return `<td class="ed" data-k="pay">${ivPayHtml(l,m)}</td>`;
+  case 'use':return `<td class="n ed" data-k="use">${ivNum(l,'use',m.includes('use'))}${sm==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:''}${ref&&ref.q?`<div class="hint">${t('storeRef')}: ${ivB(ref.q,ref.q%1?1:0)}</div>`:''}</td>`;
+  case 'par':return `<td class="n ${sm?'':'ed'}" data-k="par">${sm?'<span class="hint">-</span>':ivNum(l,'par',m.includes('par'))}</td>`;
+  case 'rop':return `<td class="n cm" data-k="rop" data-lbl="${t('rop')}">${ivRopHtml(l)}</td>`;
+  case 'buy':return `<td class="n cm" data-k="buy" data-lbl="${t('buy')}"><b>${c.q?ivB(c.q,c.q%1?2:0):''}</b></td>`;
+  case 'p':return `<td class="n ed" data-k="p">${ivNum(l,'p',m.includes('price'))}${ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${ivB(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${id}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''}</td>`;
+  case 'unit':return `<td class="ed" data-k="unit">${uSel(l,'u',m.includes('unit'))}${ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''}</td>`;
+  case 'pack':return `<td class="ed" data-k="pack">${ivPackHtml(l,m)}${ivConvTxt(l)?`<div class="hint">${ivConvTxt(l)}</div>`:''}</td>`;
+  case 'bud':return `<td class="n" data-k="bud"><b>${c.v?ivB(c.v):''}</b></td>`;
+  case 'status':return `<td class="cm ivst" data-k="status">${ivStatusHtml(l,s,m)}</td>`}}
+function ivRow(l){const m=missing(l),s=status(l),c=calc(l);
+  return `<tr class="${s==='missing'?'r-miss':s==='confirmed'?'r-ok':''}${invOpen===l.id?' ivsel':''}" data-inv="${esc(l.id)}">${ivCols().map(k=>ivCell(k,l,m,s,c)).join('')}</tr>`}
+function ivSummary(L){let tot=0,pe=0,cr=0,np=0,ro=0,dn=0;
+  L.forEach(l=>{const v=calc(l).v;tot+=v;if(l.pay==='pemo')pe+=v;else if(l.pay==='credit')cr+=v;else np+=v;if(['order','below'].includes(stockState(l)))ro++;const s=status(l);if(s==='confirmed'||s==='notneeded')dn++});
+  const n=L.length;
+  return `<div class="ivsum">
+   <div class="card stat"><div class="lbl">${t('budget')}</div><div class="num">${ivB(tot)}<small>AED</small></div><div class="hint ivwrap">${fill(t('ivPay'),{a:fmt(pe),b:fmt(cr),c:`<span style="color:${np?'var(--fk-danger)':'inherit'}">${fmt(np)}</span>`})}</div></div>
+   <div class="card stat" id="stval"><div class="lbl">${t('stVal')}</div><div class="num">${ivB(stockVal(L).v)}<small>AED</small></div><div class="hint">${t('stValH')}</div></div>
+   <button class="card stat ivsumb ${fl.stk==='order'?'on':''}" data-act="ivreorder"><div class="lbl">${t('ivReorder')}</div><div class="num" style="color:${ro?'var(--fk-danger)':'inherit'}">${ivB(ro)}</div><div class="hint">${t('ivReorderH')}</div></button>
+   <div class="card stat"><div class="lbl">${t('ivDone')}</div><div class="num">${ivB(dn)}<small>/ <bdi>${fmt(n)}</bdi></small></div><div class="prog" style="margin:8px 0 0"><i style="width:${n?dn/n*100:0}%;background:var(--fk-success)"></i></div></div></div>`}
+function ivColMenu(){const on=ivCols();return `<div class="ivmenu" role="menu">${IV_COLS.map(k=>`<label class="ivmi"><input type="checkbox" data-ivcol="${k}" ${on.includes(k)?'checked':''} ${IV_PIN.includes(k)?'disabled':''}><span>${ivColName(k)}</span>${IV_PIN.includes(k)?`<small>${t('ivPinned')}</small>`:''}</label>`).join('')}</div>`}
+function ivDrawer(l){const m=missing(l),s=status(l),c=calc(l),ref=l.ref,id=esc(l.id),sm=smOf(l);
+  const F=(lbl,html,cls)=>`<div class="ivf ${cls||''}"><span class="ivl">${lbl}</span><div class="ivv">${html}</div></div>`;
+  const nU=nUnsaved();
+  return `<aside class="invdr ${invEdit?'editing':''}" role="dialog" aria-label="${t('ivDetails')}: ${esc(l.n||t('newItem'))}" data-dr="${id}">
+  <div class="ivdh"><div style="min-width:0"><div class="ivdk">${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · <bdi>${id}</bdi></div><h2>${esc(l.n)||t('ivNameT')}</h2></div><button class="ivx" data-act="invclose" title="${t('ivClose')}" aria-label="${t('ivClose')}">${ivI('x')}</button></div>
+  <div class="ivdb">
+   ${l.isNew?`<section><h3>${t('ivNameT')}</h3>${F(t('item'),`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${id}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}">`)}${F(t('concept'),`<select data-id="${id}" data-f="con">${Object.keys(CON).map(x=>`<option value="${x}" ${l.con===x?'selected':''}>${CON[x][lang]}</option>`).join('')}</select>`)}${F(t('food')+' / '+t('nonfood'),`<select data-id="${id}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select>`)}</section>`:''}
+   <section><h3>${t('ivNowT')}</h3>
+    ${F(t('stock'),sm==='direct'?`<span class="hint">${t('smDirectS')}</span>`:ivNum(l,'st',false))}
+    ${!sm&&+l.use>0?F(t('ivDaysLeft'),`<b>${ivB((+l.st||0)/(+l.use/30),0)}</b> ${t('daysLeft')}`,'ro'):''}
+    ${F(t('rop')+` <span class="hint">(${t('auto')})</span>`,ivRopHtml(l)||'<span class="hint">—</span>','ro')}
+    ${F(t('buy'),`<b>${c.q?ivB(c.q,c.q%1?2:0):'0'}</b> ${esc(U(l.u||''))}`,'ro')}
+    ${F(t('bud'),`<b>${ivB(c.v,c.v%1?2:0)}</b>`,'ro')}</section>
+   <section><h3>${t('ivUsage')}</h3>
+    ${F(t('use'),ivNum(l,'use',m.includes('use'))+(+l.use>0?`<div class="hint">${fill(t('ivPerDay'),{q:`<bdi>${fmt(+l.use/30,(+l.use/30)%1?1:0)}</bdi>`,u:esc(U(l.u||''))})}</div>`:'')+(sm==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:'')+(ref&&ref.q?`<div class="hint">${t('storeRef')}: ${ivB(ref.q,ref.q%1?1:0)}</div>`:''))}
+    ${F(t('par'),sm?'<span class="hint">-</span>':ivNum(l,'par',m.includes('par')))}</section>
+   <section><h3>${t('ivConv')}</h3>
+    ${F(t('unit'),uSel(l,'u',m.includes('unit'))+(ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''))}
+    ${F(t('pack'),ivPackHtml(l,m))}
+    <div class="ivconv">${ivConvTxt(l)||`<span class="hint">${t('ivNoConv')}</span>`}</div></section>
+   <section><h3>${t('ivSupply')}</h3>
+    ${F(t('supplier'),`<input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${id}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}">`+(l.sup?`<div class="hint">${fill(t('ivLead'),{n:leadOf(l.sup)})}</div>`:''))}
+    ${F(t('ivSm'),ivSmHtml(l))}
+    ${F(t('payment'),ivPayHtml(l,m))}</section>
+   <section><h3>${t('ivPrice')}</h3>
+    ${F(t('price'),ivNum(l,'p',m.includes('price'))+(ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${ivB(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${id}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''))}</section>
+   <section><h3>${t('status')}</h3><div class="ivst">${ivStatusHtml(l,s,m)}</div></section>
+  </div>
+  <div class="ivdf">${nU?`<span class="st st-chg"><span>${ivB(nU)} ${t('unsaved')}</span></span>`:`<span class="st st-muted">${ivI('check')}<span>${t('allSaved')}</span></span>`}<span class="sp"></span>${invEdit?`<button class="btn btn-accent" data-act="invsave">${t('saveS')}${nU?' ('+nU+')':''}</button>`:''}<button class="btn" data-act="invclose">${t('ivClose')}</button></div></aside>`}
 function vFill(){
   const L=lines();const sups=[...new Set(L.map(l=>l.sup).filter(Boolean))].sort();
   const fk=JSON.stringify(fl);if(fk!==keepKey){keepKey=fk;keepIds=null}
@@ -805,39 +1003,79 @@ function vFill(){
   if(keepIds){const inR=new Set(R.map(l=>l.id));L.forEach(l=>{if(keepIds.has(l.id)&&!inR.has(l.id))R.push(l)})}keepIds=new Set(R.map(l=>l.id));
   if(!rowRank||rowRankKey!==fk){rowRankKey=fk;rowRank={};[...R].sort((a,b)=>(a.con>b.con?1:a.con<b.con?-1:0)||((a.sup||'~')>(b.sup||'~')?1:(a.sup||'~')<(b.sup||'~')?-1:0)||(a.n>b.n?1:a.n<b.n?-1:0)||(a.id>b.id?1:-1)).forEach((l,k)=>rowRank[l.id]=k)}
   const rr=l=>rowRank[l.id]??-1;R.sort((a,b)=>rr(a)-rr(b)||(b.id>a.id?1:-1));
-  const shown=R.slice(0,400);
-  const num=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}">`;
+  // windowing: draw only the rows around the visible part of the table box
+  const cols=ivCols(),hk=[lang,invEdit?1:0,ivCard()?1:0,cols.join(',')].join('|');if(hk!==invHK){invHK=hk;invH={};invAvg=0}
+  invR=R;const ow=document.querySelector('#page .tbl-wrap.inv');invWin=ivRange(ow?ow.scrollTop:0,ow?ow.clientHeight:Math.max(400,innerHeight-200));
+  const [pt,pb]=ivPad(invWin.a,invWin.b),shown=R.slice(invWin.a,invWin.b);
+  const nU=nUnsaved(),vw=ivViews(),cv=ivCurView();
+  if(invOpen&&(!L.some(l=>l.id===invOpen)))invOpen=null;
   return `${SHEET?'':`<div class="card"><div class="controls"><label for="me">${t('name')}</label><input id="me" value="${esc(me)}" placeholder="${t('namePh')}" style="min-width:220px;${me?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">${SHEET&&(CFG.PIN===true||pinNeeded||pin)?`<label for="pin">${t('pin')}</label><input id="pin" type="password" value="${esc(pin)}" style="width:110px;${pin?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">`:''}<span class="sp"></span><span style="color:var(--fk-muted);font-size:12px">${t('basis')}</span></div></div>`}
-  ${banner()}${head(L)}
-  <div class="controls"><input id="q" placeholder="${t('search')}" value="${esc(fl.q)}" style="min-width:230px">
+  ${banner()}
+  <div class="ivbar ${invEdit?'editing':''}"><h2>${t('fill')}</h2><span class="ivcount">${fill(t('ivCount'),{n:`<bdi>${fmt(R.length)}</bdi>`})}</span>
+   <span class="ivsave">${nU?`<span class="st st-chg"><span>${ivB(nU)} ${t('unsaved')}</span></span>`:`<span class="st st-muted">${ivI('check')}<span>${t('allSaved')}</span></span>`}${invEdit?`<span class="ivmode">${t('ivEditing')}</span>`:''}</span>
+   <span class="sp"></span>
+   <div class="ivacts"><div class="ivmw"><button class="btn" data-act="ivcols" aria-haspopup="true" aria-expanded="${ivMenu}">${ivI('cols')} ${t('ivCols')}</button>${ivMenu?ivColMenu():''}</div>
+   ${invEdit?`<button class="btn btn-primary" data-act="add">+ ${t('add')}</button><button class="btn" data-act="invcancel">${t('cancelS')}</button><button class="btn btn-accent" data-act="invsave">${t('saveS')}${nU?' ('+nU+')':''}</button>`
+     :`<button class="btn btn-accent" data-act="invedit">${t('editInv')}</button>`}</div></div>
+  ${invEdit?'':`<p class="hint ivlock">${t('editInvH')}</p>`}
+  ${ivSummary(L)}
+  <div class="controls ivfil"><input id="q" type="search" placeholder="${t('search')}" value="${esc(fl.q)}" aria-label="${t('search')}">
    <div class="chips">${['all','missing','toconfirm','confirmed','notneeded'].map(k=>`<button class="chip ${fl.st===k?'on':''}" data-st="${k}">${t(k)}</button>`).join('')}</div>
-   <select id="fcon"><option value="">${t('concept')}: ${t('all')}</option>${Object.keys(CON).map(k=>`<option value="${k}" ${fl.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select>
-   <select id="fsup"><option value="">${t('supplier')}: ${t('all')}</option>${sups.map(s=>`<option ${fl.sup===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
-   <select id="fpay"><option value="">${t('payment')}: ${t('all')}</option><option value="pemo" ${fl.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${fl.pay==='credit'?'selected':''}>${t('creditW')}</option><option value="none" ${fl.pay==='none'?'selected':''}>${t('nopay')}</option></select>
-   <select id="fstk"><option value="">${t('stockF')}: ${t('all')}</option><option value="order" ${fl.stk==='order'?'selected':''}>${t('sOrder')}</option><option value="below" ${fl.stk==='below'?'selected':''}>${t('sBelow')}</option><option value="ok" ${fl.stk==='ok'?'selected':''}>${t('sOk')}</option></select>
-   <span class="sp"></span>${invEdit?`<button class="btn btn-primary" data-act="add">+ ${t('add')}</button><button class="btn" data-act="invcancel">${t('cancelS')}</button><button class="btn btn-accent" data-act="invsave">${t('saveS')}${nUnsaved()?' ('+nUnsaved()+')':''}</button>`
-     :`<button class="btn btn-accent" data-act="invedit">${t('editInv')}</button>`}</div>
-  ${invEdit?'':`<p class="hint" style="margin:-4px 0 10px">${t('editInvH')}</p>`}
+   <select id="fcon" aria-label="${t('concept')}"><option value="">${t('concept')}: ${t('all')}</option>${Object.keys(CON).map(k=>`<option value="${k}" ${fl.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select>
+   <select id="fsup" aria-label="${t('supplier')}"><option value="">${t('supplier')}: ${t('all')}</option>${sups.map(s=>`<option ${fl.sup===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
+   <select id="fpay" aria-label="${t('payment')}"><option value="">${t('payment')}: ${t('all')}</option><option value="pemo" ${fl.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${fl.pay==='credit'?'selected':''}>${t('creditW')}</option><option value="none" ${fl.pay==='none'?'selected':''}>${t('nopay')}</option></select>
+   <select id="fstk" aria-label="${t('stockF')}"><option value="">${t('stockF')}: ${t('all')}</option><option value="order" ${fl.stk==='order'?'selected':''}>${t('sOrder')}</option><option value="below" ${fl.stk==='below'?'selected':''}>${t('sBelow')}</option><option value="ok" ${fl.stk==='ok'?'selected':''}>${t('sOk')}</option></select>
+   <span class="ivviews">${ivI('view')}<select id="ivview" aria-label="${t('ivViews')}"><option value="">${t('ivViewPick')}${vw.length?' ('+vw.length+')':''}</option>${vw.map((v,i)=>`<option value="${i}" ${cv===i?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
+   ${ivNaming?`<input id="ivvname" maxlength="40" placeholder="${t('ivViewName')}" aria-label="${t('ivViewName')}"><button class="btn btn-sm btn-accent" data-act="ivviewok">${t('ivViewOk')}</button><button class="btn btn-sm" data-act="ivviewno">${t('ivViewNo')}</button>`
+     :`<button class="btn btn-sm" data-act="ivsaveview">${t('ivSaveView')}</button>${cv>=0?`<button class="btn btn-sm ivdel" data-act="ivdelview" title="${t('ivDelView')}" aria-label="${t('ivDelView')}">${ivI('trash')}</button>`:''}`}</span></div>
   <datalist id="sups">${[...new Set([...sups,...suppliers().map(x=>x.n).filter(Boolean)])].sort().map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
-  <div class="tbl-wrap inv ${invEdit?'editing':''}"><table><thead><tr><th>${t('item')}</th><th>${t('supplier')}</th><th>${t('payment')}</th><th class="n">${t('use')}</th><th class="n">${t('par')}</th><th class="n">${t('stock')}</th><th class="n">${t('rop')} <span style="font-weight:400;color:var(--fk-muted)">(${t('auto')})</span></th><th class="n">${t('price')}</th><th>${t('unit')}</th><th>${t('pack')}</th><th class="n">${t('buy')}</th><th class="n">${t('bud')}</th><th>${t('status')}</th></tr></thead><tbody>
-  ${shown.map(l=>{const m=missing(l),s=status(l),c=calc(l),ref=l.ref;
-    return `<tr class="${s==='missing'?'r-miss':s==='confirmed'?'r-ok':''}">
-    <td class="item">${invEdit?`<button class="rmx" data-act="rmitem" data-id="${esc(l.id)}" title="${t('rmItem')}" aria-label="${t('rmItem')}">✕</button>`:''}${l.isNew?`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${esc(l.id)}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}"><div style="display:flex;gap:4px;margin-top:4px"><select data-id="${esc(l.id)}" data-f="con">${Object.keys(CON).map(k=>`<option value="${k}" ${l.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select><select data-id="${esc(l.id)}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select></div>`:`${esc(l.n)}<small>${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · ${esc(l.id)}</small>`}</td>
-    <td><input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${esc(l.id)}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}"><div class="smrow"><select class="smsel" data-id="${esc(l.id)}" data-f="sm" title="${t('smT')}"><option value="">${t('smStore')}</option><option value="direct" ${smOf(l)==='direct'?'selected':''}>${t('smDirect')}</option><option value="cycle" ${smOf(l)==='cycle'?'selected':''}>${t('smCycle')}</option></select>${smOf(l)==='cycle'?`<input class="num cyc" type="number" min="1" step="1" data-id="${esc(l.id)}" data-f="cyc" value="${cycOf(l)}" title="${t('smDays')}"><span class="hint">${t('smDays')}</span>`:''}</div></td>
-    <td><select class="${m.includes('pay')?'miss':''}" data-id="${esc(l.id)}" data-f="pay"><option value="">${t('choose')}</option><option value="pemo" ${l.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${l.pay==='credit'?'selected':''}>${t('creditW')}</option></select></td>
-    <td class="n">${num(l,'use',m.includes('use'))}${smOf(l)==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:''}${ref&&ref.q?`<div class="hint">${t('storeRef')}: ${fmt(ref.q,ref.q%1?1:0)}</div>`:''}</td>
-    <td class="n">${smOf(l)?'<span class="hint">-</span>':num(l,'par',m.includes('par'))}</td>
-    <td class="n">${smOf(l)==='direct'?`<span class="hint">${t('smDirectS')}</span>`:num(l,'st',false)+(!smOf(l)&&+l.use>0?`<div class="hint">${fmt((+l.st||0)/(+l.use/30),0)} ${t('daysLeft')}</div>`:'')}</td>
-    <td class="n">${smOf(l)?`<span class="badge b-pemo">${smOf(l)==='direct'?t('smDirect'):fill(t('smCycleB'),{n:cycOf(l)})}</span>`:(+l.use>0||+l.par>0)?`<div style="padding:6px 0;font-weight:600">${fmt(ropOf(l),ropOf(l)%1?1:0)}</div>${(k=>k?`<span class="badge ${k==='ok'?'b-ok':k==='order'?'b-warn':'b-bad'}">${t(k==='ok'?'sOk':k==='order'?'sOrder':'sBelow')}</span>`:'')(stockState(l))}`:''}</td>
-    <td class="n">${num(l,'p',m.includes('price'))}${ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${fmt(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${esc(l.id)}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''}</td>
-    <td>${uSel(l,'u',m.includes('unit'))}${ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''}</td>
-    <td><div style="display:flex;gap:4px"><input class="num pkn ${m.includes('pack')&&!(+l.pkN>0)?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="pkN" value="${l.pkN==null?'':l.pkN}" placeholder="#">${uSel(l,'pkU',m.includes('pack')&&!l.pkU)}</div>${l.u&&+l.pkN>0&&l.pkU?`<div class="hint">1 ${U(l.u)} = ${fmt(l.pkN,l.pkN%1?2:0)} ${U(l.pkU)}</div>`:''}</td>
-    <td class="n"><b>${c.q?fmt(c.q,c.q%1?2:0):''}</b></td>
-    <td class="n"><b>${c.v?fmt(c.v):''}</b></td>
-    <td>${s==='missing'?`<span class="badge b-bad">${t('needs')}: ${m.map(x=>t('m_'+(x==='price'?'price':x))).join(', ')}</span>`:
-      `<button class="btn btn-ok ${l.ok?'done':''}" data-act="ok" data-id="${esc(l.id)}">${l.ok?'✓ '+t(s==='notneeded'?'notneeded':'done'):t('confirm')}</button>`}
-      ${l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:''}</td></tr>`}).join('')||`<tr><td colspan="13" class="empty">—</td></tr>`}
-  </tbody></table></div>${R.length>shown.length?`<div class="empty">${shown.length} / ${R.length}</div>`:''}<p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')} ${t('ropNote')}</p>`}
+  <div class="tbl-wrap inv ${invEdit?'editing':''}"><table style="margin-top:${pt}px;margin-bottom:${pb}px"><thead><tr>${cols.map(k=>`<th class="${['stock','use','par','rop','p','buy','bud'].includes(k)?'n ':''}${k==='item'?'pin1':k==='stock'?'pin2':''}" data-k="${k}">${ivColName(k)}${k==='rop'?` <span style="font-weight:400;color:var(--fk-muted)">(${t('auto')})</span>`:''}</th>`).join('')}</tr></thead><tbody>
+  ${shown.map(ivRow).join('')||`<tr><td colspan="${cols.length}" class="empty">—</td></tr>`}
+  </tbody></table></div><p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')} ${t('ropNote')}</p>
+  ${invOpen?ivDrawer(line(invOpen)):''}`}
+/* After the page is drawn: lock the drawer like the table, mark changed fields there too, size the pinned columns, measure rows. */
+function ivPost(root){
+  if(SHEET){if(!editMode)root.querySelectorAll(EDIT_SEL).forEach(e=>e.disabled=true);else root.querySelectorAll(EDIT_SEL).forEach(e=>{if(!canEl(e))e.disabled=true});
+    Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>root.querySelectorAll(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`).forEach(el=>el.classList.add('chg'))))}
+  if(!invEdit)root.querySelectorAll('[data-f],button[data-act="ok"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+  if(OMAN())omr(root)}
+function ivMeasure(w){let s=0,n=0;w.querySelectorAll('tbody tr[data-inv]').forEach(r=>{const h=r.offsetHeight;if(h>0){invH[r.dataset.inv]=h;s+=h;n++}});
+  if(n){const all=Object.values(invH);invAvg=all.reduce((a,b)=>a+b,0)/all.length}
+  const tb=w.querySelector('table');if(tb){const [a,b]=ivPad(invWin.a,invWin.b);tb.style.marginTop=a+'px';tb.style.marginBottom=b+'px'}}
+function ivPin(w){const th=w.querySelector('th.pin1');if(th)w.style.setProperty('--pin1w',th.offsetWidth+'px')}
+function invAfter(P){const top=document.getElementById('top');P.style.setProperty('--invtop',((top&&top.offsetHeight)||0)+'px');
+  const dr=P.querySelector('.invdr');if(dr){if(!invEdit)dr.querySelectorAll('[data-f],button[data-act="ok"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+    if(SHEET)Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>dr.querySelectorAll(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`).forEach(el=>el.classList.add('chg'))))}
+  const w=P.querySelector('.tbl-wrap.inv');if(w){ivPin(w);ivMeasure(w)}}
+function ivPaint(w){const n=invR.length;if(n<=IV_ALL||!w.isConnected)return;const st=w.scrollTop,h=w.clientHeight;
+  const [t0]=ivPad(invWin.a,invWin.b);let t1=t0;for(let i=invWin.a;i<invWin.b;i++)t1+=ivHt(invR[i].id);
+  if((invWin.a===0||st-200>=t0)&&(invWin.b===n||st+h+200<=t1))return;
+  const tb=w.querySelector('tbody');if(!tb)return;const ae=document.activeElement;if(ae&&tb.contains(ae))ae.blur();
+  invWin=ivRange(st,h);tb.innerHTML=invR.slice(invWin.a,invWin.b).map(ivRow).join('');ivPost(tb);ivMeasure(w)}
+let ivRaf=0;
+document.addEventListener('scroll',e=>{const w=e.target;if(w&&w.classList&&w.classList.contains('inv')&&w.classList.contains('tbl-wrap')){if(ivRaf)return;ivRaf=requestAnimationFrame(()=>{ivRaf=0;ivPaint(w)})}},true);
+window.addEventListener('resize',()=>{if(tab==='fill'&&unlocked&&document.querySelector('#page .tbl-wrap.inv')){const k=[lang,invEdit?1:0,ivCard()?1:0,ivCols().join(',')].join('|');if(k!==invHK)render();else{const w=document.querySelector('#page .tbl-wrap.inv');ivPin(w);ivPaint(w)}}});
+function ivSaveView(){const el=document.getElementById('ivvname');const name=(el&&el.value||'').trim().slice(0,40);if(!name){if(el){el.classList.add('miss');el.focus()}return}
+  const v=ivViews().filter(x=>x.name!==name);v.push({name,fl:ivFl()});ls2('pp-inv-views',v);ivNaming=false;toast(t('ivViewSaved'));render()}
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('[data-tab]')){invOpen=null;ivMenu=false;ivNaming=false}if(!unlocked||tab!=='fill'){if(tab!=='fill')invOpen=null;return}
+  const b=e.target.closest('button');const a=b&&b.dataset.act;
+  if(ivMenu&&!e.target.closest('.ivmw')){ivMenu=false;render();if(!a)return}
+  if(a==='ivcols'){ivMenu=!ivMenu;render();return}
+  if(a==='invopen'){invOpen=b.dataset.id;render();const d=document.querySelector('.invdr .ivx');d&&d.focus({preventScroll:true});return}
+  if(a==='invclose'){const id=invOpen;invOpen=null;render();const o=id&&document.querySelector(`.ivopen[data-id="${CSS.escape(id)}"]`);o&&o.focus({preventScroll:true});return}
+  if(a==='ivreorder'){fl.stk=fl.stk==='order'?'':'order';render();return}
+  if(a==='ivsaveview'){ivNaming=true;render();const i=document.getElementById('ivvname');i&&i.focus();return}
+  if(a==='ivviewno'){ivNaming=false;render();return}
+  if(a==='ivviewok'){ivSaveView();return}
+  if(a==='ivdelview'){const i=ivCurView();if(i>=0){const v=ivViews();v.splice(i,1);ls2('pp-inv-views',v);toast(t('ivViewDel'));render()}return}
+  const tr=e.target.closest('.inv tbody tr[data-inv]');
+  if(tr&&!e.target.closest('button,input,select,textarea,a,label')){invOpen=tr.dataset.inv;render()}});
+document.addEventListener('change',e=>{const el=e.target;
+  if(el.dataset&&el.dataset.ivcol){const on=new Set(ivCols());if(el.checked)on.add(el.dataset.ivcol);else on.delete(el.dataset.ivcol);ls2('pp-inv-cols',IV_COLS.filter(k=>on.has(k)));render();const c=document.querySelector(`[data-ivcol="${el.dataset.ivcol}"]`);c&&c.focus();return}
+  if(el.id==='ivview'){const v=ivViews()[+el.value];if(el.value!==''&&v){Object.assign(fl,{q:'',st:'all',con:'',sup:'',pay:'',stk:''},v.fl);render()}}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='ivvname'){e.preventDefault();ivSaveView();return}
+  if(e.key==='Escape'&&tab==='fill'&&!document.querySelector('.cfm')){if(ivMenu){ivMenu=false;render();return}if(ivNaming&&e.target.id==='ivvname'){ivNaming=false;render();return}if(invOpen){const id=invOpen;invOpen=null;render();const o=document.querySelector(`.ivopen[data-id="${CSS.escape(id)}"]`);o&&o.focus({preventScroll:true})}}});
 function vSum(){
   const L=lines();const by={},bc={};
   L.forEach(l=>{const v=calc(l).v;if(!v)return;const k=l.sup||'—';by[k]=by[k]||{v:0,n:0,pay:new Set()};by[k].v+=v;by[k].n++;by[k].pay.add(l.pay||'');bc[l.con]=(bc[l.con]||0)+v});
