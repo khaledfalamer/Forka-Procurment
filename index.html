@@ -8,7 +8,6 @@
 <title>Forka Procurement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="suite/suite.css">
 <style>
 :root{
   --fk-charcoal:#23211f;--fk-charcoal-dark:#171513;--fk-charcoal-soft:#3a3631;
@@ -30,7 +29,14 @@ h1,h2,h3{font-family:var(--fk-serif);font-weight:600;margin:0}
 .top{background:var(--fk-charcoal);color:#fff;padding:12px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:6}
 .logo{font-family:var(--fk-serif);font-weight:600;font-size:22px;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
 .top .sub{color:#b9b2a6;font-size:12px}
+.tabs{display:flex;gap:2px;margin-inline-start:12px}
+.tab{border:0;background:none;color:#d9d3c9;font-family:inherit;font-size:14px;padding:9px 12px;border-radius:10px;cursor:pointer;border-bottom:3px solid transparent;min-height:40px}
+.tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.tab.on{color:#fff;font-weight:600;background:rgba(184,135,90,.16);border-bottom-color:var(--fk-bronze-light)}
 .sp{flex:1}
+.lang{display:flex;gap:3px;background:rgba(255,255,255,.07);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;color:#d9d3c9;border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit;font-weight:600}
+.lang button.on{background:var(--fk-bronze-light);color:#fff}
 .page{padding:20px 24px 60px;display:flex;flex-direction:column;gap:14px;max-width:1500px;margin:0 auto}
 .card{background:var(--fk-card);border:1px solid var(--fk-line);border-radius:var(--fk-radius);padding:16px 18px}
 .card h2{font-size:20px;margin-bottom:8px}
@@ -113,7 +119,7 @@ input.miss::placeholder{color:var(--fk-danger);opacity:.8}
 .steps{margin:0;padding-inline-start:20px;color:var(--fk-text-2)}
 .steps li{margin:6px 0}
 textarea{width:100%;min-height:120px}
-@media (max-width:860px){.page{padding:14px}.two{grid-template-columns:1fr}}
+@media (max-width:860px){.top{padding:10px 14px}.tabs{margin:0;order:3;width:100%;overflow-x:auto}.page{padding:14px}.two{grid-template-columns:1fr}}
 
 .side-card{padding:22px 24px}
 .ops-first .side-card[data-side=ops]{order:-1}
@@ -130,6 +136,7 @@ textarea{width:100%;min-height:120px}
 
 /* header */
 .top{display:block;padding:0}
+.t1{display:flex;align-items:center;gap:18px;padding:10px 24px;min-height:56px}
 .brand{display:flex;align-items:baseline;gap:12px;min-width:0}
 .brand .logo{cursor:pointer}
 .appname{font-weight:600;font-size:14px;color:#fff;white-space:nowrap}
@@ -137,6 +144,11 @@ textarea{width:100%;min-height:120px}
 .sidesw{display:flex;background:rgba(255,255,255,.07);border-radius:999px;padding:3px;gap:2px;margin:0}
 .sidesw button{border:0;background:none;color:#d9d3c9;font-family:inherit;font-size:13px;font-weight:600;padding:6px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
 .sidesw button.on{background:var(--fk-bronze);color:#fff}
+.t2{display:flex;align-items:center;gap:12px;padding:0 24px;background:var(--fk-card);border-bottom:1px solid var(--fk-line);min-height:46px;flex-wrap:wrap}
+.t2 .tabs{margin:0;gap:4px;flex:0 0 auto;max-width:100%;overflow-x:auto}
+.t2 .tab{white-space:nowrap;color:var(--fk-text-2);font-size:13px;font-weight:500;padding:12px 10px 10px;border-radius:0;min-height:46px;border-bottom:2px solid transparent}
+.t2 .tab:hover{color:var(--fk-text);background:none}
+.t2 .tab.on{color:var(--fk-text);font-weight:600;background:none;border-bottom-color:var(--fk-bronze)}
 .status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--fk-text-2);padding:6px 0;margin-inline-start:auto}
 .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .st b{color:var(--fk-text)}
@@ -176,7 +188,7 @@ textarea{width:100%;min-height:120px}
 .dir-in{background:var(--fk-success-bg);color:var(--fk-success)}
 .dir-out{background:var(--fk-paper);color:var(--fk-text-2);border:1px solid var(--fk-line)}
 @media (max-width:1180px){.period{display:none}}
-@media (max-width:860px){.sidesw{order:3;width:100%;justify-content:stretch}.sidesw button{flex:1;text-align:center}.ov-grid{grid-template-columns:1fr}.ov-b{max-width:40%}}
+@media (max-width:860px){.t1{padding:8px 14px;gap:10px;flex-wrap:wrap}.sidesw{order:3;width:100%;justify-content:stretch}.sidesw button{flex:1;text-align:center}.t2{padding:0 14px;flex-wrap:wrap}.t2 .tabs{width:100%;overflow-x:auto}.status{width:100%;padding:8px 0 10px;border-top:1px solid var(--fk-line)}.ov-grid{grid-template-columns:1fr}.ov-b{max-width:40%}}
 @media print{.t2{display:none}}
 /* ===== gate (landing + PIN) ===== */
 .gate{min-height:calc(100vh - 24px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 60px;position:relative}
@@ -215,6 +227,8 @@ textarea{width:100%;min-height:120px}
 .pinbox .err{color:var(--fk-danger);font-size:13px;margin-top:10px;min-height:18px}
 .pinbox .demo{color:var(--fk-muted);font-size:12px;margin-top:6px}
 /* inside header */
+.t1 .brand .logo{font-size:20px;letter-spacing:4px}
+.t1 .appname{color:#d9d3c9;font-weight:500}
 .sidetag{border:1px solid rgba(184,135,90,.55);color:#e9dccb;border-radius:999px;padding:4px 14px;font-size:12px;font-weight:600;letter-spacing:.5px;white-space:nowrap}
 .exitb{border:1px solid rgba(255,255,255,.25);background:none;color:#fff;border-radius:999px;padding:6px 14px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
 .exitb:hover{background:#fff;color:var(--fk-charcoal)}
@@ -334,42 +348,12 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 .fk-lock .fk-k{display:block;font:600 12px/1 'Inter Tight',system-ui,sans-serif;letter-spacing:.2em;color:#c8c3b9;text-transform:uppercase}
 .fk-lock .fk-n{display:block;font:600 20px/1.05 'EB Garamond','IBM Plex Sans Arabic',serif;color:#f6f3ee;margin-top:3px;letter-spacing:0;text-transform:none}
 .fk-lock.on-light .fk-k{color:#8a7f72}.fk-lock.on-light .fk-n{color:#2b2b2b}
-@media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:8.5px}}
-.fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:15px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
+@media (max-width:600px){.fk-lock:not(.big){gap:8px}.fk-lock:not(.big) svg{width:26px;height:26px}.fk-lock:not(.big) .fk-n{font-size:17px}.fk-lock:not(.big) .fk-k{font-size:10.5px}}
+.fk-lock.big{gap:18px}.fk-lock.big svg{width:64px;height:64px}.fk-lock.big .fk-k{font-size:21px}.fk-lock.big .fk-n{font-size:46px;margin-top:6px}
 
-/* ===== Forka suite header and module menu (suite/suite.css), Procurement accent terracotta ===== */
-:root{--fs-accent:#BD5038;
-  --fk-charcoal:var(--fs-ink);--fk-paper:var(--fs-canvas);--fk-card:var(--fs-surface);--fk-line:var(--fs-border);
-  --fk-bronze:var(--fs-bronze);--fk-bronze-hover:var(--fs-bronze-d);--fk-text:var(--fs-ink);--fk-text-2:var(--fs-ink2);
-  --fk-success:var(--fs-success);--fk-success-bg:var(--fs-success-bg);--fk-warning:var(--fs-warning);--fk-warning-bg:var(--fs-warning-bg);
-  --fk-danger:var(--fs-danger);--fk-danger-bg:var(--fs-danger-bg);--fk-info:var(--fs-info);--fk-info-bg:var(--fs-info-bg);
-  --fk-radius:var(--fs-r-lg);--fk-radius-sm:var(--fs-r-sm)}
-#top{background:none;color:inherit}
-#top .fs-head{position:static}
-#top .fs-slot{flex:0 1 auto}
-#top .sidetag{border-color:rgba(189,80,56,.6)}
-#top .exitb{min-height:36px}
-#top .fs-lang,#top .fs-user,#top .fs-head .bell,#top .fs-switch{flex:none}
-.t2-side .exitb{color:var(--fs-ink);border-color:var(--fs-border);background:var(--fs-surface)}
-.t2 .fs-more-btn{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--fs-ink2);font:inherit;cursor:pointer;white-space:nowrap}
-.t2 .fs-more-btn:hover,.t2 .fs-more-btn[aria-expanded=true]{background:var(--fs-soft);color:var(--fs-ink)}
-.fs-pop .tab.fs-on{font-weight:600;background:var(--fs-soft)}
-.t2{display:flex;align-items:center;gap:12px;padding:0 12px;background:var(--fs-surface);border-bottom:1px solid var(--fs-border);min-height:52px}
-.t2 .fs-menu{position:static;border:0;background:none;padding:6px 0;flex:1 1 auto;min-width:0}
-.fs-menu>.tab{font-size:14px}
-.fs-menu>.tab .tcount{margin-inline-start:2px}
-.fs-menu>.tab.fs-on .tcount{background:#fff;color:var(--fs-ink)}
-.fs-pop .tab .tcount,.fs-drawer .tab .tcount{margin-inline-start:auto}
-.t2 .status{flex:0 0 auto;padding:6px 0;margin-inline-start:auto}
-.t2-side{display:none}
-@media (min-width:1024px){.t2 .status>.st:first-child:not(:has(input)){display:none}}
-.fs-drawer .exitb{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 10px;border:0;border-radius:10px;background:none;color:var(--fs-ink);font:inherit;text-align:start;cursor:pointer}
-.fs-drawer .exitb:hover{background:var(--fs-soft);color:var(--fs-ink)}
-.gate-lang{display:none}
-@media (max-width:1023px){#top .fs-switch-label{display:none}}
-@media (max-width:860px){.t2{flex-wrap:wrap;gap:4px 12px}.t2 .status{width:100%;margin:0;border-top:1px solid var(--fs-border);padding:8px 0}}
-@media (max-width:639px){#top .fs-slot{display:none}.t2{padding:0 12px}.t2-side{display:flex;align-items:center;gap:8px;width:100%;padding-top:8px}.t2-side .sidetag{color:var(--fs-ink);border-color:var(--fs-accent)}.t2 .status{border-top:0;padding-top:4px}}
-
+/* Light header (paper) with a terracotta line; Procurement accent only on header, logo, active tab and start icons */
+.top{background:#fdfbf7;color:#2b2b2b}.t1{border-bottom:3px solid #BD5038}.top .fk-lock .fk-k{color:#8a7f72}.top .fk-lock .fk-n{color:#2b2b2b}
+.top .lang{background:rgba(0,0,0,.06)}.top .lang button{color:#6f665c}.top .lang button.on{color:#fff}
 .sidetag{color:#8c6a3f;border-color:rgba(140,106,63,.45)}.exitb{color:#2b2b2b;border-color:#d9cfc0}.exitb:hover{background:#2b2b2b;color:#fff}
 .bell{color:#2b2b2b;border-color:#d9cfc0}.t2 .tab.on{border-bottom-color:#BD5038}
 /* Start screen: iPhone-style icons */
@@ -384,7 +368,6 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 
 /* mobile: large Forka header fits */
 @media (max-width:600px){.fk-lock.big{gap:12px}.fk-lock.big svg{width:52px;height:52px}.fk-lock.big .fk-k{font-size:14px}.fk-lock.big .fk-n{font-size:32px;white-space:normal}}
-
 </style>
 </head>
 <body>
@@ -392,7 +375,6 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 <div class="top" id="top"></div>
 <div class="page" id="page"><div class="empty">Loading…</div></div>
 <div class="toast" id="toast"></div>
-<script src="suite/suite.js"></script>
 <script src="config.js"></script>
 <script>
 let fkI=0;function fkMark(){const m='fkm'+(++fkI);return `<svg viewBox="0 0 118 118" aria-hidden="true"><defs><mask id="${m}"><rect width="118" height="118" fill="#fff"/><circle cx="59" cy="59" r="22" fill="#000"/></mask></defs><g mask="url(#${m})"><rect x="7" y="7" width="48" height="48" rx="12" fill="#BD5038"/><rect x="63" y="7" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.85"/><rect x="7" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.68"/><rect x="63" y="63" width="48" height="48" rx="12" fill="#BD5038" fill-opacity="0.95"/></g><circle cx="59" cy="59" r="15.8" fill="#BD5038"/></svg>`}
@@ -761,28 +743,11 @@ function statusBar(){
     return `${who}${saving||(nl&&!waitInv)?`<span class="st st-chg" id="svst">${t('saving')}</span>`:nl?`<span class="st st-chg">${nl} ${t('unsaved')}</span>`:`<span class="st st-muted" id="svst">✓ ${t('allSaved')}</span>`}`}
   if(mode==='live')return `${me?`<span class="st"><b>${esc(me)}</b></span>`:''}<span class="st"><i class="dot-live"></i>${t('live')}</span>${nl?`<button class="btn btn-sm" data-act="send">${t('send')} (${nl})</button>`:''}`;
   return me?`<span class="st"><b>${esc(me)}</b></span>`:''}
-Object.assign(T.en,{fsMore:'More'});Object.assign(T.ar,{fsMore:'المزيد'});
-function sideName(){return t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')+(side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):'')}
-const TAB_IC={prq:'info',pon:'clock',lpo:'proc',fill:'boards',sups:'people',ana:'search',sum:'ok',how:'info',rnew:'plus',rmine:'user',appr:'check',people:'people',activity:'clock',moves:'right',req:'ext',grn:'ok',pay:'cal',soa:'search'};
-const BOTTOM_PICK=['prq','rnew','appr','lpo','grn','pay','fill','rmine','req','soa','moves','sups'];
-function tabLabel(k){return t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}
-function tabCount(k){return k==='prq'?rqNewCount():k==='appr'?rqApprCount():k==='pon'?rqGoCount():0}
-function tabBtn(k,extra){const n=tabCount(k),on=tab===k;return `<button type="button" class="tab ${on?'on fs-on':''} ${extra||''}" ${on?'aria-current="page"':''} data-tab="${k}">${FS.icon(TAB_IC[k]||'more',18)}<span>${tabLabel(k)}</span>${n?` <span class="tcount${k==='pon'?' soft':''}">${n}</span>`:''}</button>`}
-function exitBtns(){return `${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button>`}
-function bottomItems(){const S=sideTabs();const pick=BOTTOM_PICK.filter(k=>S.includes(k));S.forEach(k=>{if(!pick.includes(k))pick.push(k)});
-  return pick.slice(0,3).map(k=>({label:tabLabel(k),icon:TAB_IC[k]||'more',on:tab===k,badge:tabCount(k)||'',attrs:`data-tab="${k}"`})).concat([{label:t('fsMore'),icon:'menu',attrs:'data-fs="burger"'}])}
-FS.onLang=l=>{lang=l;ls('pp-lang',lang);render()};
-FS.drawerHTML=()=>unlocked?sideTabs().map(k=>tabBtn(k,'fs-item')).join('')+`<div class="fs-sec">${esc(sideName())}</div>`+exitBtns().replace(/class="exitb"([^>]*)>/g,'class="exitb fs-item"$1>'+FS.icon('out',18)):'';
 function renderTop(){
-  const el=document.getElementById('top');el.style.display='';
-  let bot=document.getElementById('fsbot');if(!bot){bot=document.createElement('div');bot.id='fsbot';document.body.appendChild(bot)}
-  const user=me?{name:me,role:t('r_'+(roleNow()||'viewer'))}:null;
-  if(!unlocked){el.innerHTML=FS.header({app:'proc',lang,menu:false,user});bot.innerHTML='';FS.after({app:'proc',bottom:false});return}
-  const S=sideTabs();
-  el.innerHTML=FS.header({app:'proc',lang,menu:S.length>0,user,extra:`<span class="sidetag">${sideName()}</span>${exitBtns()}`,alerts:eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''})
-   +`<div class="t2">${S.length?FS.menu(S.map(k=>({html:tabBtn(k)})),{label:t('landSub')}):''}<div class="t2-side"><span class="sidetag">${sideName()}</span><span class="sp"></span>${S.length?'':exitBtns()}</div><div class="status">${statusBar()}</div></div>${eff()==='fin'&&notifOpen?notifPanel():''}`;
-  bot.innerHTML=S.length?FS.bottom(bottomItems()):'';
-  FS.after({app:'proc',bottom:S.length>0})}
+  const el=document.getElementById('top');if(!unlocked){el.innerHTML='';el.style.display='none';return}el.style.display='';
+  el.innerHTML=`<div class="t1">${fkLock(t('landSub'),'','data-act="exit" title="'+t('exit')+'" style="cursor:pointer"')}<span class="sidetag">${t(side==='plan'?'sidePlan':side==='fin'?'sideFin':side==='dept'?'sideDept':side==='ceo'?'sideCeo':side==='oman'?'sideOman':'sideOps')}${side==='oman'&&omSub?' · '+t({plan:'omPlan',ops:'omOps',fin:'omFin'}[omSub]):''}</span>
+  <span class="sp"></span>${eff()==='fin'?bellBtn():side==='ceo'?ceoBell():''}${langSw('lang')}${side==='oman'&&omSub?`<button class="exitb" data-act="omhome">${lang==='ar'?'→':'←'} ${t('omBack')}</button>`:''}<button class="exitb" data-act="exit">${t('exit')}</button></div>
+  <div class="t2"><div class="tabs">${sideTabs().map(k=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${t(k==='grn'?'aGrn':OMAN()&&k==='req'?'omReq':k)}${k==='prq'&&rqNewCount()?` <span class="tcount">${rqNewCount()}</span>`:''}${k==='appr'&&rqApprCount()?` <span class="tcount">${rqApprCount()}</span>`:''}${k==='pon'&&rqGoCount()?` <span class="tcount soft">${rqGoCount()}</span>`:''}</button>`).join('')}</div><span class="sp"></span><div class="status">${statusBar()}</div></div>${eff()==='fin'&&notifOpen?notifPanel():''}`}
 function render(){
   _lead=null;
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
