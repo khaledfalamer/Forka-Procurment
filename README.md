@@ -7,7 +7,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 
 ## Files
 - `index.html`: the app (EN / عربي).
-- `data.json`: the starting list (330 lines from Abu Ali's October budget).
+- The item list is kept in the Google Sheet (tab "Base") and is sent only after sign-in. `demo-data.json` is made-up sample data for demo mode and tests.
 - `config.js`: the one file you edit (the Sheet link and the PIN switch).
 - `Code.gs`: the small script that connects the Sheet. It goes into Google, not GitHub.
 
@@ -23,7 +23,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 ### B. Put it on GitHub
 1. In GitHub, create a repository (e.g. `forka-procurement`), or add a folder `procurement/` to an existing one.
 2. `config.js` already holds your Sheet link. `PIN: 'auto'` means the PIN box appears only if you set a PIN in the script.
-3. Upload `index.html`, `data.json` and `config.js`.
+3. Upload `index.html`, `demo-data.json` and `config.js`.
 4. Go to **Settings → Pages → Deploy from branch → main / root → Save**. After a minute, the link is `https://<account>.github.io/<repo>/`.
 5. Send the link (and the PIN) to the procurement team.
 
@@ -57,7 +57,7 @@ https://docs.google.com/spreadsheets/d/18QYN4Js_pmckauDBkPT6oFie2icp3PNak71VNtVE
 2. **رمز الفريق (إلزامي):** **Project Settings → Script properties**. الاسم `PIN` والقيمة مثلاً `4821`. بدون رمز لا أحد يستطيع الحفظ.
 3. **Deploy → New deployment → Web app**. *Execute as*: Me، و*Who has access*: Anyone. ثم Deploy، وانسخ الرابط الذي ينتهي بـ `/exec`.
 4. ملف `config.js` فيه رابط الشيت جاهز. خانة الرمز تظهر فقط إذا وضعت رمزاً في السكربت.
-5. ارفع `index.html` و`data.json` و`config.js` إلى GitHub، وفعّل **Settings → Pages**، ثم أرسل الرابط والرمز للفريق.
+5. ارفع `index.html` و`demo-data.json` و`config.js` إلى GitHub، وفعّل **Settings → Pages**، ثم أرسل الرابط والرمز للفريق.
 
 ## تبويب الموردين
 - أضف الموردين وبياناتهم: الشخص المسؤول، الهاتف، البريد، شروط الدفع، أيام الآجل، أيام التوريد، مدة التوريد، الرقم الضريبي، المنطقة، ماذا يورّد، ملاحظات.

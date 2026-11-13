@@ -4,6 +4,8 @@ from playwright.async_api import async_playwright
 ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True); PORT = 8795; BASE = f'http://127.0.0.1:{PORT}'
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 TOK = 'ERPTOK-00000000000000000000'
+DEMO = json.load(open(pathlib.Path(__file__).resolve().parent.parent / 'demo-data.json', encoding='utf-8'))['lines']
+BASE_TAB = dict([('_month', {'month': '2026-11'})] + [(l['id'], l) for l in DEMO])
 ST = {'ver': 'v1', 'delay': 0, 'deny': False, 'sides': ['plan'], 'calls': [], 'lines': {}}
 res = []
 def check(n, ok, info=''):
@@ -16,7 +18,7 @@ async def server(route):
     if b.get('check') and not b.get('load'): return await route.fulfill(json={'ok': True, 'me': me})
     if b.get('load'):
         if b.get('ver') and b['ver'] == ST['ver']: return await route.fulfill(json={'ok': True, 'same': True, 'ver': ST['ver'], 'me': me})
-        return await route.fulfill(json={'ok': True, 'me': me, 'ver': ST['ver'], 'lines': ST['lines'], 'suppliers': {}, 'tabs': {}})
+        return await route.fulfill(json={'ok': True, 'me': me, 'ver': ST['ver'], 'lines': ST['lines'], 'suppliers': {}, 'tabs': {'Base': BASE_TAB}})
     await route.fulfill(json={'ok': True, 'ver': ST['ver']})
 DJ = []
 async def dj(route):
@@ -29,13 +31,13 @@ async def main():
             ctx = await b.new_context(viewport={'width': 1280, 'height': 900})
             await ctx.route('**/config.js*', lambda r: r.fulfill(body=CFG, content_type='application/javascript'))
             await ctx.route('**/fonts.googleapis.com/**', lambda r: r.fulfill(body='', content_type='text/css'))
-            await ctx.route('https://proc.test/**', server); await ctx.route('**/data.json', dj)
+            await ctx.route('https://proc.test/**', server); await ctx.route('**/*data.json', dj)
             errs = []
-            # 1. first open from Forka Apps: server asked while data.json downloads
+            # 1. first open from Forka Apps: the item list comes from the server after sign-in, never from a public file
             ST['delay'] = 1.0; pg = await ctx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
             await pg.goto(BASE + '/#erp=' + TOK); await pg.wait_for_timeout(2500)
-            first_post = ST['calls'][0][0]; dj_end = [t for k, t in DJ if k == 'end'][0]
-            check('First open: the server is asked while data.json is still downloading', first_post < dj_end, (first_post, dj_end))
+            check('First open: no item-list file is downloaded (the list is not public)', not DJ, DJ)
+            check('First open: the item list arrives from the server after sign-in', await pg.evaluate('BASE.length') == len(DEMO) and await pg.evaluate("BASE.every(l=>l.id!=='_month')"), await pg.evaluate('BASE.length'))
             check('First open: one section enters straight away', await pg.evaluate('mode') == 'live' and await pg.evaluate('unlocked') == 'plan', await pg.evaluate('mode'))
             await pg.close()
             # 2. second open: saved copy shows before the slow server answers
