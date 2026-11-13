@@ -285,11 +285,14 @@ function activity_() {
 }
 
 /* ---------------- alerts ---------------- */
-function alert_(ev, subject, body, onlyName) {
+function alert_(ev, subject, body, onlyName, o) {
   const to = (ERP_ONLY ? contacts_() : users_()).filter(u => u.alerts.indexOf(ev) >= 0 && (!onlyName || u.name.toLowerCase() === String(onlyName).toLowerCase()));
   const url = props_().getProperty('APP_URL') || '';
   to.forEach(u => {
-    if (u.email) { try { MailApp.sendEmail({ to: u.email, subject: 'Forka Procurement — ' + subject, body: body + (url ? '\n\nOpen the app: ' + url : ''), name: 'Forka Procurement' }); } catch (e) {} }
+    if (u.email) { try { MailApp.sendEmail({ to: u.email, subject: 'Forka Procurement — ' + subject, body: body + (url ? '\n\nOpen the app: ' + url : ''), name: 'Forka Procurement',
+      htmlBody: fkMail_(Object.assign({ c: '#BD5038', logo: 'https://procurement.forka.com/logos/forka-procurement-logo.png', alt: 'Forka Procurement', lang: 'en',
+        kick: 'Procurement', title: subject, body: body, btn: 'Open in Procurement', url: url, foot: 'You get this email because you use Forka App.' },
+        o || {}, { hi: u.name ? 'Hello ' + String(u.name).split(' ')[0] + ',' : '' })) }); } catch (e) {} }
     if (u.wa) whatsapp_(u.wa, subject + ' — ' + body);
   });
 }
@@ -309,15 +312,20 @@ function requestAlerts_(oldD, d, me) {
   const st = d.status, was = oldD ? oldD.status : null;
   if (st === was) {
     const L = d.log || [], O = (oldD && oldD.log) || [];
-    if (L.length > O.length && L[L.length - 1].type === 'msg') alert_('reply', 'Update on your request: ' + (d.title || ''), L[L.length - 1].text || '', d.by);
+    if (L.length > O.length && L[L.length - 1].type === 'msg') alert_('reply', 'Update on your request: ' + (d.title || ''), L[L.length - 1].text || '', d.by,
+      { kick: 'Update on your request', title: d.title || 'Your request', body: 'Procurement wrote a note on your request:', quote: L[L.length - 1].text || '' });
     return;
   }
   const pick = (d.opts || []).filter(o => o.pick)[0] || {};
   const amt = (+pick.price || 0) * (+d.qty || 1);
-  if (st === 'new') alert_('request', 'New request: ' + (d.title || ''), (d.by || '') + ' (' + (d.dept || '') + ') asked for: ' + (d.title || '') + '\n\n' + (d.details || ''));
-  if (st === 'approval') alert_('approval', 'Waiting for your approval: ' + (d.title || ''), (d.title || '') + '\nChosen supplier: ' + (pick.sup || '-') + '\nEstimated total: AED ' + amt.toFixed(2) + '\nHandled by: ' + (d.buyer || ''));
-  if (st === 'approved') alert_('decision', 'CEO approved: ' + (d.title || ''), 'You can place the order with ' + (pick.sup || 'the chosen supplier') + '.');
-  if (was === 'approval' && st === 'quotes') alert_('decision', 'CEO sent back: ' + (d.title || ''), (d.ceo && d.ceo.note) || '');
+  if (st === 'new') alert_('request', 'New request: ' + (d.title || ''), (d.by || '') + ' (' + (d.dept || '') + ') asked for: ' + (d.title || '') + '\n\n' + (d.details || ''), null,
+    { kick: 'New request', title: d.title || 'New request', body: 'A department sent a new request.', quote: d.details || '', rows: [['From', d.by || ''], ['Department', d.dept || ''], ['How much', d.qty ? String(d.qty) : '']] });
+  if (st === 'approval') alert_('approval', 'Waiting for your approval: ' + (d.title || ''), (d.title || '') + '\nChosen supplier: ' + (pick.sup || '-') + '\nEstimated total: AED ' + amt.toFixed(2) + '\nHandled by: ' + (d.buyer || ''), null,
+    { kick: 'Waiting for your approval', title: d.title || 'Purchase', body: 'This purchase needs your OK before the order is placed.', rows: [['Chosen supplier', pick.sup || '-'], ['Estimated total', 'AED ' + amt.toFixed(2)], ['Department', d.dept || ''], ['Handled by', d.buyer || '']], btn: 'Open CEO approvals' });
+  if (st === 'approved') alert_('decision', 'CEO approved: ' + (d.title || ''), 'You can place the order with ' + (pick.sup || 'the chosen supplier') + '.', null,
+    { kick: 'Approved by the CEO', title: d.title || 'Purchase approved', body: 'You can now place the order.', rows: [['Supplier', pick.sup || 'the chosen supplier'], ['Estimated total', amt ? 'AED ' + amt.toFixed(2) : ''], ['Next step', 'Issue the LPO']] });
+  if (was === 'approval' && st === 'quotes') alert_('decision', 'CEO sent back: ' + (d.title || ''), (d.ceo && d.ceo.note) || '', null,
+    { kick: 'Sent back by the CEO', title: d.title || 'Purchase sent back', body: 'The CEO sent this purchase back. Note from the CEO:', quote: (d.ceo && d.ceo.note) || '' });
 }
 // Daily 8:00 — bills received and not paid, grouped by supplier.
 function dailyPayments() {
@@ -331,7 +339,9 @@ function dailyPayments() {
   const keys = Object.keys(by); if (!keys.length) return;
   const total = keys.reduce((s, k) => s + by[k].v, 0);
   const body = keys.sort((a, b) => by[b].v - by[a].v).map(k => '• ' + k + ': ' + by[k].n + ' bill(s), AED ' + by[k].v.toFixed(2)).join('\n');
-  alert_('payments', 'Bills received and not paid: AED ' + total.toFixed(2), body + '\n\nOpen Payments → Statements to see the due dates.');
+  alert_('payments', 'Bills received and not paid: AED ' + total.toFixed(2), body + '\n\nOpen Payments → Statements to see the due dates.', null,
+    { kick: 'Payments', title: 'AED ' + total.toFixed(2) + ' received and not paid', body: 'Bills received from suppliers and not paid yet. Open Payments, then Statements, to see the due dates.',
+      rows: keys.map(k => [k, by[k].n + ' bill' + (by[k].n > 1 ? 's' : '') + ', AED ' + by[k].v.toFixed(2)]) });
 }
 
 /* ---------------- Drive files ---------------- */
@@ -419,4 +429,36 @@ function authorize() {
   UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { muteHttpExceptions: true });
   CacheService.getScriptCache().put('auth-check', '1', 60);
   return 'Permissions OK';
+}
+
+/* ---------------- Email design "Paper letter" (Khaled, 13 Nov 2026) ----------------
+   Warm paper background, white card, the app logo on top, a thin line and the button in the app colour.
+   o = { c: app colour, logo: logo URL, alt, lang: 'en'|'ar', kick, title, hi, body, quote, rows: [[label, value]], btn, url, after, foot } */
+function fkMail_(o) {
+  const e = s => String(s == null ? '' : s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const ar = o.lang === 'ar', al = ar ? 'right' : 'left', dir = ar ? 'rtl' : 'ltr';
+  const font = ar ? "'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif" : "'Inter Tight',Arial,Helvetica,sans-serif";
+  const head = ar ? font : "'EB Garamond',Georgia,'Times New Roman',serif";
+  const para = s => e(s).replace(/\n/g, '<br>');
+  const rows = (o.rows || []).filter(r => r && r[1] !== '' && r[1] != null).map(r =>
+    '<tr><td style="padding:9px 0;border-top:1px solid #eee8de;font-size:13px;color:#8a8378;width:38%;text-align:' + al + ';vertical-align:top">' + e(r[0]) + '</td>' +
+    '<td style="padding:9px 0;border-top:1px solid #eee8de;font-size:14.5px;font-weight:600;color:#2B2B2B;text-align:' + al + '">' + para(r[1]) + '</td></tr>').join('');
+  return '<!DOCTYPE html><html dir="' + dir + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">' +
+    '<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@600&family=Inter+Tight:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"></head>' +
+    '<body style="margin:0;padding:0;background:#f6f3ee">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f3ee"><tr><td align="center" style="padding:28px 14px">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #e7e1d7;border-top:4px solid ' + o.c + ';border-radius:18px;font-family:' + font + ';text-align:' + al + '" dir="' + dir + '">' +
+    '<tr><td style="padding:26px 34px 6px"><img src="' + o.logo + '" height="34" alt="' + e(o.alt || 'Forka') + '" style="display:block;height:34px;width:auto;border:0"></td></tr>' +
+    '<tr><td style="padding:18px 34px 30px">' +
+    (o.kick ? '<div style="font-size:12px;font-weight:700;letter-spacing:' + (ar ? '0' : '.08em') + ';text-transform:uppercase;color:' + o.c + '">' + e(o.kick) + '</div>' : '') +
+    '<div style="font-family:' + head + ';font-size:' + (ar ? '24px' : '30px') + ';font-weight:' + (ar ? 700 : 600) + ';line-height:1.2;color:#2B2B2B;margin:6px 0 14px">' + e(o.title) + '</div>' +
+    ((o.hi || o.body) ? '<div style="font-size:15px;line-height:1.6;color:#4a4640">' + (o.hi ? e(o.hi) + '<br>' : '') + para(o.body) + '</div>' : '') +
+    (o.quote ? '<div style="margin:16px 0 4px;padding:14px 16px;background:#f6f3ee;border-radius:12px;font-size:15px;line-height:1.55;color:#2B2B2B">' + para(o.quote) + '</div>' : '') +
+    (rows ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:18px 0 22px">' + rows + '<tr><td colspan="2" style="border-top:1px solid #eee8de;font-size:0;line-height:0">&nbsp;</td></tr></table>' : '<div style="height:18px"></div>') +
+    (o.url ? '<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="border-radius:999px;background:' + o.c + '"><a href="' + e(o.url) + '" style="display:inline-block;padding:13px 26px;font-weight:600;font-size:15px;color:#ffffff;text-decoration:none;border-radius:999px">' + e(o.btn) + ' ' + (ar ? '&larr;' : '&rarr;') + '</a></td></tr></table>' : '') +
+    (o.after || '') +
+    '</td></tr></table>' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;font-family:' + font + ';text-align:center" dir="' + dir + '"><tr><td style="padding:18px 20px;font-size:12px;line-height:1.6;color:#8a8378">' +
+    para(o.foot || '') + '<br>Forka Collective</td></tr></table>' +
+    '</td></tr></table></body></html>';
 }
