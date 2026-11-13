@@ -625,6 +625,53 @@ body.pside-mini.has-pside .top{padding-left:72px}
 </style>
 </head>
 <body>
+<script>
+/* Keep what people type (same code in every Forka app).
+   When a screen is redrawn (a click, moving a card, a refresh from the server), any box that
+   still holds text the app has not saved gets that text back, with the cursor where it was.
+   Text the app has read and saved (it shows on the page after the redraw) is not put back. */
+(function(){
+  if(window.__fkKeep||!window.MutationObserver)return;window.__fkKeep=1;
+  const TEXT=/^(text|search|email|tel|url|number)$/;
+  const isBox=el=>el&&(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&TEXT.test(el.type||'text')));
+  const GET={},read=new WeakSet();let inInput=0;
+  [HTMLInputElement.prototype,HTMLTextAreaElement.prototype].forEach(pr=>{const d=Object.getOwnPropertyDescriptor(pr,'value');GET[pr===HTMLInputElement.prototype?'INPUT':'TEXTAREA']=d.get;
+    Object.defineProperty(pr,'value',{configurable:true,enumerable:d.enumerable,get(){if(!inInput)read.add(this);return d.get.call(this)},set(v){d.set.call(this,v)}})});
+  const val=el=>GET[el.tagName].call(el);
+  addEventListener('input',()=>{inInput=1},true);addEventListener('input',()=>{inInput=0});   // reading while someone types (e.g. @mentions) is not saving
+  let last=null;
+  // the box someone is in right now (a redraw removes it without a focusout, so it stays set)
+  addEventListener('focusin',e=>{if(isBox(e.target))last=e.target},true);
+  // leaving for another button or box clears it at once; a redraw removing the box fires focusout with
+  // nothing to go to, so it is cleared only after the redraw has been handled
+  const caretOf=b=>{try{return [b.selectionStart,b.selectionEnd]}catch(_){return null}};let lastCaret=null;
+  addEventListener('focusout',e=>{if(e.target!==last)return;lastCaret=caretOf(last);if(e.relatedTarget)last=null;else{const was=last;setTimeout(()=>{if(last===was&&document.activeElement!==was)last=null},0)}},true);
+  const sig=el=>{let s=el.tagName+'|'+(el.type||'')+'|'+(el.id||'')+'|'+(el.getAttribute('name')||'')+'|'+(el.getAttribute('placeholder')||'');
+    for(const a of el.attributes)if(a.name.startsWith('data-'))s+='|'+a.name+'='+a.value;return s};
+  const ctx=(el,stop)=>{let s='',n=el.parentElement;while(n&&n!==stop){let p=n.id?'#'+n.id:'';for(const a of n.attributes)if(a.name.startsWith('data-'))p+='['+a.name+'='+a.value+']';if(p)s=p+'>'+s;n=n.parentElement}return s};
+  const keyOf=(el,stop,base)=>base+'/'+ctx(el,stop)+'/'+sig(el);
+  const boxesIn=n=>n.nodeType!==1?[]:(isBox(n)?[n]:[...n.querySelectorAll('input,textarea')].filter(isBox));
+  const norm=s=>String(s).replace(/\s+/g,' ').trim();
+  new MutationObserver(recs=>{
+    const gone=new Map(),seen={};
+    recs.forEach(r=>{const base=ctx(r.target,null)+(r.target.id?'#'+r.target.id:'');
+      r.removedNodes.forEach(n=>{
+        // a removed box keeps its value; its ancestors above the removed node are gone, so the key starts at the parent (r.target)
+        boxesIn(n).forEach(b=>{if(b.isConnected)return;const v=val(b);if(v===b.defaultValue||!norm(v))return;
+          let k=keyOf(b,null,base);const i=seen[k]=(seen[k]||0)+1;k+='#'+i;gone.set(k,{b,v,def:b.defaultValue,wasRead:read.has(b),focus:b===last,caret:b===last?(lastCaret||caretOf(b)):null})})})});
+    if(!gone.size)return;
+    const page=norm(document.body.innerText||'');const used={};
+    recs.forEach(r=>{const base=ctx(r.target,null)+(r.target.id?'#'+r.target.id:'');
+      r.addedNodes.forEach(n=>boxesIn(n).forEach(b=>{if(!b.isConnected)return;let k=keyOf(b,r.target,base);const i=used[k]=(used[k]||0)+1;k+='#'+i;
+        const o=gone.get(k);if(!o||val(b)!==b.defaultValue||b.defaultValue!==o.def)return;
+        if(o.wasRead&&page.includes(norm(o.v).slice(0,200)))return;     // the app saved it and shows it: do not put it back
+        b.value=o.v;read.delete(b);
+        if(o.focus&&(document.activeElement===document.body||!document.activeElement)){try{b.focus({preventScroll:true});if(o.caret)b.setSelectionRange(o.caret[0],o.caret[1])}catch(_){}}
+      }))});
+  }).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 
 <div class="top" id="top"></div>
 <div id="papp"><aside id="pside" aria-label="Procurement menu"></aside><div id="pscrim" onclick="pSide(false)"></div>
@@ -2054,12 +2101,12 @@ document.addEventListener('click',e=>{
   else if(a==='rqlog'){const tx=(document.getElementById('rqtext')||{}).value||'';if(!tx.trim())return;const ty=side==='dept'?'reply':side==='ceo'?'ceo':((document.getElementById('rqlt')||{}).value||'msg');if(editR('Requests',rqOpenId,{log:rqLog(rqOpenId,ty,tx.trim().slice(0,1500))})){if(ty==='msg'){const r0=rec('Requests',rqOpenId);sendAlert('reply',{title:r0.title},r0.by)}render()}}
 });
 document.addEventListener('change',e=>{const el=e.target;
-  if(el.dataset.rqd){let v=el.value;if(['qty','budget'].includes(el.dataset.rqd))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).slice(0,el.dataset.rqd==='details'?2000:200);rqDraft[el.dataset.rqd]=v;if(['title','dept'].includes(el.dataset.rqd))setTimeout(render,0);return}
+  if(el.dataset.rqd){let v=el.value;if(['qty','budget'].includes(el.dataset.rqd))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).slice(0,el.dataset.rqd==='details'?2000:200);rqDraft[el.dataset.rqd]=v;if(['title','dept'].includes(el.dataset.rqd))renderSoon(el);return}
   if(el.dataset.rqqf!==undefined){const f=el.files[0];el.value='';rqQuoteFile(+el.dataset.rqqf,f);return}
   if(el.dataset.rqphoto){const f=el.files[0];el.value='';if(f)rqPhoto(f);return}
-  if(el.dataset.rqspec&&rqOpenId){const sp=Object.assign({},rec('Requests',rqOpenId).spec||{},{[el.dataset.rqspec]:String(el.value).trim().slice(0,600)});editR('Requests',rqOpenId,{spec:sp});setTimeout(render,0);return}
+  if(el.dataset.rqspec&&rqOpenId){const sp=Object.assign({},rec('Requests',rqOpenId).spec||{},{[el.dataset.rqspec]:String(el.value).trim().slice(0,600)});editR('Requests',rqOpenId,{spec:sp});renderSoon(el);return}
   if(el.dataset.rqf&&rqOpenId){editR('Requests',rqOpenId,{[el.dataset.rqf]:String(el.value).trim().slice(0,80)});render();return}
-  if(el.dataset.rqopt!==undefined&&rqOpenId){const L=(rec('Requests',rqOpenId).opts||[]).map(x=>Object.assign({},x));const i=+el.dataset.rqopt,f=el.dataset.of;if(!L[i])return;L[i][f]=f==='price'?(el.value===''?null:Math.max(0,parseFloat(el.value)||0)):String(el.value).trim().slice(0,200);editR('Requests',rqOpenId,{opts:L});setTimeout(render,0);return}
+  if(el.dataset.rqopt!==undefined&&rqOpenId){const L=(rec('Requests',rqOpenId).opts||[]).map(x=>Object.assign({},x));const i=+el.dataset.rqopt,f=el.dataset.of;if(!L[i])return;L[i][f]=f==='price'?(el.value===''?null:Math.max(0,parseFloat(el.value)||0)):String(el.value).trim().slice(0,200);editR('Requests',rqOpenId,{opts:L});renderSoon(el);return}
   if(el.id==='rqkind'){(tab==='pon'?rqG:rqF).kind=el.value;render();return}
   if(['rqcost','rqdept','rqbranch'].includes(el.id)){(tab==='pon'?rqG:rqF)[el.id.slice(2)]=el.value;render();return}
   if(el.id==='rqview'){const m=tab==='pon'?'go':'in',v=rqViews()[+el.value];if(el.value!==''&&v){const F=m==='go'?rqG:rqF;Object.assign(F,RQ_FD,v.f);if(RQCH[m].more.includes(F.st)||F.kind||F.cost||F.dept||F.branch)rqMore[m]=true}render();return}
@@ -2220,7 +2267,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{const el=e.target;
   if(el.dataset.pof2&&poOpen){editR('POs',poOpen,{[el.dataset.pof2]:String(el.value).trim().slice(0,300)});render();return}
-  if(el.dataset.pol!==undefined&&poOpen){const L=(rec('POs',poOpen).lines||[]).map(x=>Object.assign({},x));const i=+el.dataset.pol,k=el.dataset.plf;if(!L[i])return;L[i][k]=['qty','price'].includes(k)?(el.value===''?null:Math.max(0,parseFloat(el.value)||0)):String(el.value).trim().slice(0,300);editR('POs',poOpen,{lines:L});setTimeout(render,0);return}
+  if(el.dataset.pol!==undefined&&poOpen){const L=(rec('POs',poOpen).lines||[]).map(x=>Object.assign({},x));const i=+el.dataset.pol,k=el.dataset.plf;if(!L[i])return;L[i][k]=['qty','price'].includes(k)?(el.value===''?null:Math.max(0,parseFloat(el.value)||0)):String(el.value).trim().slice(0,300);editR('POs',poOpen,{lines:L});renderSoon(el);return}
   if(el.id==='poadd'&&el.value&&poOpen){const m=el.value.match(/\[([^\]]+)\]$/);const it=m?line(m[1]):null;el.value='';if(!it||!it.n)return;const L=[...(rec('POs',poOpen).lines||[]),{item:it.id,name:it.n,qty:calc(it).q||null,unit:it.u||'',price:+it.p||null}];if(editR('POs',poOpen,{lines:L}))render();return}
   if(el.id==='gpo'&&el.value){const po=Object.assign({id:el.value},rec('POs',el.value));const R=poRecvd(po);const gid=el.dataset.rid;
     const L=(po.lines||[]).map((l,i)=>({item:l.item,name:l.name,u:l.unit,ord:Math.max(0,+((+l.qty||0)-R[i]).toFixed(3)),planQ:+l.qty||0,recv:null,rej:null,price:+l.price||null,plan:+l.price||0,poLine:i})).filter(l=>l.ord>0);
@@ -2353,7 +2400,7 @@ document.addEventListener('click',async e=>{const tr=e.target.closest('tr[data-o
 });
 document.addEventListener('change',e=>{const el=e.target;
   if(el.id==='pin')return;
-  if(el.id==='me'){me=el.value.trim();ls('pp-me',me);if(!SHEET)setTimeout(render,0);return}
+  if(el.id==='me'){me=el.value.trim();ls('pp-me',me);if(!SHEET)renderSoon(el);return}
   if(el.id==='rbr'){reqF.br=el.value;render();return}
   if(el.id==='mvm'){mvF.m=el.value;render();return}
   if(el.id==='psup'){payF.sup=el.value;render();return}
@@ -2365,16 +2412,24 @@ document.addEventListener('change',e=>{const el=e.target;
   if(el.id==='fcon'){fl.con=el.value;render();return}if(el.id==='fsup'){fl.sup=el.value;render();return}if(el.id==='fpay'){fl.pay=el.value;render();return}
   if(el.dataset.scan){const f=el.files[0];el.value='';if(f)scanBill(el.dataset.scan,f);return}
   if(el.dataset.media){addMedia(el.dataset.media,[...el.files]);el.value='';return}
-  if(el.id==='gadd'&&el.value){const id=el.dataset.rid,l=line(el.value),g=rec('GRN',id);const c=calc(l);const L=[...grnLines(g),{item:l.id,name:l.n,u:l.u,ord:null,planQ:c.q||0,recv:null,rej:null,price:+l.p||null,plan:+l.p||0}];editR('GRN',id,{lines:L});setTimeout(render,0);return}
-  if(el.dataset.gl!==undefined&&el.dataset.rid){const g=rec('GRN',el.dataset.rid);const L=grnLines(g).map(x=>Object.assign({},x));const i=+el.dataset.gl,f=el.dataset.gf;let v=el.value;if(['ord','recv','rej','price'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);if(f==='item'){const it=line(v);L[i]=v?Object.assign(L[i],{item:it.id,name:it.n,u:it.u||L[i].u,plan:+it.p||0,planQ:calc(it).q,matched:true,check:false}):Object.assign(L[i],{item:null,matched:false})}else L[i][f]=v;editR('GRN',el.dataset.rid,{lines:L});setTimeout(render,0);return}
-  if(el.dataset.rk&&el.dataset.rid){const f=el.dataset.rf;let v=el.value;if(['ord','recv','rej'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else if(f==='temp')v=v===''?null:parseFloat(v);else v=String(v).trim().slice(0,f==='note'?500:160);editR(el.dataset.rk,el.dataset.rid,{[f]:v});setTimeout(render,0);return}
+  if(el.id==='gadd'&&el.value){const id=el.dataset.rid,l=line(el.value),g=rec('GRN',id);const c=calc(l);const L=[...grnLines(g),{item:l.id,name:l.n,u:l.u,ord:null,planQ:c.q||0,recv:null,rej:null,price:+l.p||null,plan:+l.p||0}];editR('GRN',id,{lines:L});renderSoon(el);return}
+  if(el.dataset.gl!==undefined&&el.dataset.rid){const g=rec('GRN',el.dataset.rid);const L=grnLines(g).map(x=>Object.assign({},x));const i=+el.dataset.gl,f=el.dataset.gf;let v=el.value;if(['ord','recv','rej','price'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);if(f==='item'){const it=line(v);L[i]=v?Object.assign(L[i],{item:it.id,name:it.n,u:it.u||L[i].u,plan:+it.p||0,planQ:calc(it).q,matched:true,check:false}):Object.assign(L[i],{item:null,matched:false})}else L[i][f]=v;editR('GRN',el.dataset.rid,{lines:L});renderSoon(el);return}
+  if(el.dataset.rk&&el.dataset.rid){const f=el.dataset.rf;let v=el.value;if(['ord','recv','rej'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else if(f==='temp')v=v===''?null:parseFloat(v);else v=String(v).trim().slice(0,f==='note'?500:160);editR(el.dataset.rk,el.dataset.rid,{[f]:v});renderSoon(el);return}
   if(el.dataset.sid&&el.dataset.sf){const f=el.dataset.sf;let v=el.value;if(['days','lead','minOrder','payDom'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,f==='notes'?500:160);
-    const cur=supRec(el.dataset.sid);if(cur[f]===v)return;editS(el.dataset.sid,{[f]:v});setTimeout(render,0);return}
+    const cur=supRec(el.dataset.sid);if(cur[f]===v)return;editS(el.dataset.sid,{[f]:v});renderSoon(el);return}
   if(el.dataset.id&&el.dataset.f){const f=el.dataset.f;let v=el.value;
     if(['use','par','st','p','pkN','cyc'].includes(f))v=v===''?null:Math.max(0,parseFloat(v)||0);else v=String(v).trim().slice(0,120);
-    const cur=line(el.dataset.id);if(cur[f]===v)return;edit(el.dataset.id,{[f]:v});setTimeout(render,0)}
+    const cur=line(el.dataset.id);if(cur[f]===v)return;edit(el.dataset.id,{[f]:v});renderSoon(el)}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pin'&&!unlocked){e.preventDefault();pinOk()}});
+/* Don't redraw under someone's fingers: a server refresh waits while a box is being typed in,
+   and redraws once they leave it (their text is then saved or kept). */
+let redrawLater=false;
+const typingNow=()=>{const a=document.activeElement;return !!a&&(a.tagName==='TEXTAREA'||a.tagName==='SELECT'||(a.tagName==='INPUT'&&!/^(checkbox|radio|button|submit|file|range|color)$/.test(a.type)))};
+// after a box is saved, redraw at once - unless the person has already moved into another box or menu
+// (e.g. opened the unit menu to pick Bucket): then wait until they leave it, so it is never replaced under them
+const renderSoon=el=>setTimeout(()=>{if(typingNow()&&document.activeElement!==el)redrawLater=true;else render()},0);
+document.addEventListener('focusout',()=>{if(redrawLater)setTimeout(()=>{if(redrawLater&&!typingNow()){redrawLater=false;render()}},60)});
 /* Search boxes: the list is redrawn once typing pauses (180 ms), not on every key. */
 let searchT=null;
 function searchRender(id){clearTimeout(searchT);searchT=setTimeout(()=>{render();const q=document.getElementById(id);if(q&&document.activeElement!==q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}},180)}
@@ -2403,7 +2458,7 @@ document.addEventListener('input',e=>{const id=e.target.id;
   if(SHEET){
     const go=async first=>{if(!pin||mode==='login')return;try{const o=await sheetLoad(!first);if(o===SAME)return;shared=o;
         if(first){mode='live';editMode=myRole!=='viewer'}else if(myRole==='viewer')editMode=false;
-        const ae=document.activeElement;if(!(ae&&ae.tagName==='INPUT'&&(ae.dataset.f||ae.dataset.sf)))render()}
+        if(typingNow()){redrawLater=true}else render()}
       catch(e){if(e.code==='pin'){signOut(errMsg(e.err));return}if(first){mode='offline';render()}}};
     if(mode==='live'){}else if(!pin){mode='login';render()}
     else if(SNAP&&!PRELOAD){PRELOAD=SNAP;BGWAIT=true;await go(true);go(false).finally(bgDone)}  // open from the saved copy, then check the server
@@ -2429,7 +2484,7 @@ document.addEventListener('input',e=>{const id=e.target.id;
     [['people',o=>PEOPLE=o],['activity',o=>ACT=o],['outbox',o=>OUTBOX=o]].forEach(([c,f])=>db.collection(c).onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});f(o);if(['people','activity'].includes(tab)&&!(document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.ppf))render()},()=>{}));
     [['oman_suppliers',o=>{supShared=o}],['oman_lines',o=>{shared=o}]].forEach(([c,f])=>db.collection(c).onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});inRegion('oman',()=>f(o));render()},()=>{}));
     [['GRN','oman_grn'],['POs','oman_pos']].forEach(([k,c])=>db.collection(c).onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});inRegion('oman',()=>{recShared[k]=o});render()},()=>{}));
-    db.collection('suppliers').onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});inRegion('uae',()=>{supShared=o});const ae=document.activeElement;if(!(ae&&ae.tagName==='INPUT'&&(ae.dataset.f||ae.dataset.sf)))render()},()=>{});
+    db.collection('suppliers').onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});inRegion('uae',()=>{supShared=o});if(typingNow()){redrawLater=true}else render()},()=>{});
     [['GRN','grn'],['Evaluations','evaluations'],['Deliveries','deliveries'],['Transfers','transfers'],['Requests','requests'],['POs','pos']].forEach(([k,c])=>db.collection(c).onSnapshot(sn=>{const o={};sn.docs.forEach(d=>{if(d.exists)o[d.id]=d.data()});inRegion('uae',()=>{recShared[k]=o});const ae=document.activeElement;if(!(ae&&(ae.tagName==='INPUT'||ae.tagName==='SELECT')&&(ae.dataset.tl||ae.dataset.tk||ae.dataset.rf||ae.dataset.gl!==undefined)))render()},()=>{}));
     db.collection('lines').onSnapshot(snap=>{const o={};snap.docs.forEach(d=>{if(d.exists&&!/^(G|E|D|T|R|PO)-[0-9a-z]+$/.test(d.id))o[d.id]=d.data()});inRegion('uae',()=>{shared=o});
         if(!snap.metadata.fromCache){clearTimeout(timer);if(mode==='loading'||mode==='offline')mode=canW===false?'local':'live';
