@@ -3,6 +3,7 @@ import asyncio, json, os, pathlib, subprocess, sys, time
 from playwright.async_api import async_playwright
 ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8794; BASE = f'http://127.0.0.1:{PORT}'
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
+BASE_TAB = {l['id']: l for l in json.load(open(pathlib.Path(__file__).resolve().parent.parent / 'demo-data.json', encoding='utf-8'))['lines']}  # the server sends the item list after sign-in
 TOK = 'ERPTOK-00000000000000000000'; res = []; VER = {'n': 1}
 def check(n, ok, info=''):
     res.append(bool(ok)); print(('PASS ' if ok else 'FAIL ') + n + ('' if ok else ' - ' + str(info)[:300]))
@@ -10,7 +11,7 @@ async def server(route):
     b = json.loads(route.request.post_data or '{}')
     me = {'name': 'Khaled', 'sides': ['plan', 'ops', 'dept', 'fin', 'ceo', 'oman'], 'role': 'admin'}
     if b.get('check') and not b.get('load'): return await route.fulfill(json={'ok': True, 'me': me})
-    if b.get('load'): return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v%d' % VER['n'], 'lines': {}, 'suppliers': {}, 'tabs': {}})
+    if b.get('load'): return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v%d' % VER['n'], 'lines': {}, 'suppliers': {}, 'tabs': {'Base': BASE_TAB}})
     await route.fulfill(json={'ok': True, 'ver': 'v%d' % VER['n']})
 async def main():
     srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
