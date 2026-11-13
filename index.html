@@ -1039,7 +1039,7 @@ function snapFor(s,w,want){if(!s||!s.r||!s.r.me)return null;
 const wantCeo=()=>side==='ceo'&&(tab==='people'||tab==='activity');
 async function sheetLoad(light){
   if(PRELOAD){const j0=PRELOAD;PRELOAD=null;return applyLoad(j0)}
-  let j=await post({pin,side,load:true,ver:light&&!wantCeo()?VER:'',ceo:wantCeo()});
+  let j=await post({pin,side,load:true,ver:light&&!wantCeo()&&BASE.length?VER:'',ceo:wantCeo()});   // no item list yet (e.g. a saved copy from before it moved to the Base tab): ask for everything, never "anything new?"
   if(j.ok&&j.same){applyMe(j.me);return SAME}
   keepSnap(j);
   if(!j.ok&&(j.error==='id'||j.error==='bad')){const r=await fetch(CFG.SHEET_URL+(CFG.SHEET_URL.includes('?')?'&':'?')+'t='+Date.now());j=await r.json()}  // old v3 script: open read
