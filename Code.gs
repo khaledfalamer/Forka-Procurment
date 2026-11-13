@@ -285,11 +285,16 @@ function activity_() {
 }
 
 /* ---------------- alerts ---------------- */
+/* Emails go out from Google's no-reply address of the company (noreply@forka.com), not from the
+   account that published this script, so staff never see whose account runs it. If Google refuses
+   (only Workspace accounts may use it), the email is still sent the normal way. */
+function mail_(o) { try { MailApp.sendEmail(Object.assign({ noReply: true }, o)); } catch (e) { MailApp.sendEmail(o); } }
+
 function alert_(ev, subject, body, onlyName, o) {
   const to = (ERP_ONLY ? contacts_() : users_()).filter(u => u.alerts.indexOf(ev) >= 0 && (!onlyName || u.name.toLowerCase() === String(onlyName).toLowerCase()));
   const url = props_().getProperty('APP_URL') || '';
   to.forEach(u => {
-    if (u.email) { try { MailApp.sendEmail({ to: u.email, subject: 'Forka Procurement — ' + subject, body: body + (url ? '\n\nOpen the app: ' + url : ''), name: 'Forka Procurement',
+    if (u.email) { try { mail_({ to: u.email, subject: 'Forka Procurement — ' + subject, body: body + (url ? '\n\nOpen the app: ' + url : ''), name: 'Forka Procurement',
       htmlBody: fkMail_(Object.assign({ c: '#BD5038', logo: 'https://procurement.forka.com/logos/forka-procurement-logo.png', alt: 'Forka Procurement', lang: 'en',
         kick: 'Procurement', title: subject, body: body, btn: 'Open in Procurement', url: url, foot: 'You get this email because you use Forka App.' },
         o || {}, { hi: u.name ? 'Hello ' + String(u.name).split(' ')[0] + ',' : '' })) }); } catch (e) {} }
