@@ -12,11 +12,11 @@ Owner: Khaled Alamer, CEO of Forka Collective. Read this before any change.
 - Before any change or go-live: look at the live design first (header, logo, colours, fonts). If it differs from what the work was built on, change nothing and show Khaled side-by-side screenshots; he decides. Every change keeps the current colours and logo design (Khaled, 12 Nov 2026).
 
 ## How it works
+- The month's item list (items, suppliers, prices, use) is in the Sheet tab "Base" and is sent only after sign-in (Code.gs ensureBase_/importBase_). It was the public data.json until 13 Nov 2026; never put real items, suppliers or prices in the repo again. demo-data.json is made-up sample data for demo mode and tests.
 - index.html is the whole app (one file). config.js holds SHEET_URL (the Procurement Apps Script web app) and ERP_URL. CNAME is procurement.forka.com, served by GitHub Pages from main.
 - Sign-in only goes through erp.forka.com (Forka Apps). The server asks the accounts server "who" this person is and caches the answer for 5 minutes. Sections (sides): plan, ops, dept, fin, ceo, oman. Access is set in Forka Apps > People and access. An active CEO gets all of them automatically.
 - Code.gs = Apps Script project "Procurment" (1RDOgbmpCbTzqOYhr28cVHDNEfeo3H06Cpu_2MPJyK790lEA8tv951FcT), bound to the Sheet "Forka Procurement Planner — November 2026 (database)". Khaled deploys it himself: paste, then Deploy > Manage deployments > pencil > New version. It lives in a different project from the Forka Apps accounts server, so never mix them up.
 - Oman (REGION 'oman'): its own items, suppliers, LPOs (LPO-OM-…), GRNs (GRN-OM-…), stock and payments, in OMR. These are kept in the Sheet tabs OmanItems / OmanSuppliers / OmanPOs / OmanGRN / Oman<kind>. The Oman button opens 3 sides: Purchasing (lpo, fill, sups, ana, sum), Operations (grn, moves) and Payments (pay, soa). Payments show "Paid from: UAE / Oman" with a filter. The Oman manager (oman@forka.com, Mr. Tamer) orders, receives and counts. Abu Ali and Khaled approve.
-- data.json is public in this repo. Move the item list behind sign-in when possible.
 
 ## Rollback
 Website: revert the commit on main. Script: Manage deployments > pencil > previous version.

@@ -24,7 +24,12 @@
  */
 const DATA_COL = 'data (do not edit)';
 const SHEETS = { line: 'Planner', sup: 'Suppliers' };
-const PRIVATE_TABS = ['Users', 'Activity'];
+const PRIVATE_TABS = ['Users', 'Activity', 'Base'];
+/* The month's item list (items, suppliers, prices, use) lives only in the tab "Base" and is sent only after sign-in.
+   It used to be the public file data.json. The first load after this version fills the tab once from that file's
+   last copy on GitHub; later months replace the tab's rows. Nobody can write to "Base" from the app. */
+const BASE_TAB = 'Base';
+const BASE_SEED_URL = 'https://raw.githubusercontent.com/khaledfalamer/Forka-Procurment/d9c76f5503d4d788937afb95bf84ff63365be587/data.json';
 const LABELS = {
   Planner: { id: 'Ref', n: 'Item', con: 'Concept', cat: 'Category', sup: 'Supplier', pay: 'Payment', use: 'Use / month', par: 'PAR',
     st: 'Stock now', p: 'Unit price', u: 'Price per', pkN: 'Pack qty', pkU: 'Pack unit', q: 'To buy', v: 'Budget AED', status: 'Status' },
@@ -173,6 +178,7 @@ function stamp_() { return props_().getProperty('PVER') || '0'; }
 function bump_() { props_().setProperty('PVER', Date.now().toString(36) + Math.random().toString(36).slice(2, 6)); }
 // wantCeo: Activity and People are read only when the CEO has those pages open.
 function loadAll_(me, wantCeo) {
+  ensureBase_();
   const tabs = {}, ceo = me.sides.indexOf('ceo') >= 0 && !!wantCeo;
   SpreadsheetApp.getActive().getSheets().forEach(sh => {
     const n = sh.getName();
@@ -182,6 +188,30 @@ function loadAll_(me, wantCeo) {
   });
   if (ceo) tabs.People = (ERP_ONLY ? contacts_() : users_()).map(u => ({ name: u.name, sides: u.sides, email: u.email, wa: u.wa, alerts: u.alerts }));
   return { ok: true, me: me, ver: stamp_(), lines: tabs[SHEETS.line] || {}, suppliers: tabs[SHEETS.sup] || {}, tabs: tabs };
+}
+function ensureBase_() {
+  const ss = SpreadsheetApp.getActive();
+  if (ss.getSheetByName(BASE_TAB)) return;
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    if (ss.getSheetByName(BASE_TAB)) return;
+    const r = UrlFetchApp.fetch(BASE_SEED_URL, { muteHttpExceptions: true });
+    if (r.getResponseCode() !== 200) return;
+    importBase_(JSON.parse(r.getContentText()));
+  } catch (e) {} finally { lock.releaseLock(); }
+}
+// d = { month, basis, lines: [ {id, n, sup, p, ...} ] }  ->  one row per item, plus a row "_month" (which month and budget it comes from)
+function importBase_(d) {
+  const lines = (d && d.lines) || []; if (!lines.length) return;
+  const ss = SpreadsheetApp.getActive();
+  let sh = ss.getSheetByName(BASE_TAB);
+  if (sh) sh.clear(); else sh = ss.insertSheet(BASE_TAB);
+  const now = new Date();
+  const rows = [['Item', 'Updated by', 'Updated', DATA_COL], ['_month', 'import', now, JSON.stringify({ month: d.month || '', basis: d.basis || '' })]]
+    .concat(lines.map(l => [String(l.id), 'import', now, JSON.stringify(l)]));
+  sh.getRange(1, 1, rows.length, 4).setValues(rows);
+  sh.setFrozenRows(1); sh.getRange(1, 1, 1, 4).setFontWeight('bold');
+  bump_();
 }
 function col_(sh, head, label) {
   let i = head.indexOf(label);
