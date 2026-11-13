@@ -2,6 +2,8 @@
 saved views, phone cards, no sideways page scroll, English and Arabic. python3 tests/inventory_view_test.py"""
 import asyncio, json, os, pathlib, re, socket, subprocess, sys, time
 from playwright.async_api import async_playwright
+import json as _j, pathlib as _pl
+BASE_TAB = {l['id']: l for l in _j.load(open(_pl.Path(__file__).resolve().parent.parent / 'demo-data.json', encoding='utf-8'))['lines']}  # the server sends the item list after sign-in
 ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True)
 def free_port():
     s = socket.socket(); s.bind(('127.0.0.1', 0)); p = s.getsockname()[1]; s.close(); return p
@@ -17,7 +19,7 @@ async def server(route):
     b = json.loads(route.request.post_data or '{}')
     me = {'name': 'Khaled', 'sides': ['plan', 'ops', 'dept', 'fin', 'ceo', 'oman'], 'role': 'admin'}
     if b.get('check') and not b.get('load'): return await route.fulfill(json={'ok': True, 'me': me})
-    if b.get('load'): return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v1', 'lines': {}, 'suppliers': {}, 'tabs': {}})
+    if b.get('load'): return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v1', 'lines': {}, 'suppliers': {}, 'tabs': {'Base': BASE_TAB}})
     if b.get('batch'): SAVED.extend(b['batch'])
     await route.fulfill(json={'ok': True, 'ver': 'v2'})
 async def new_ctx(b, w, h):
