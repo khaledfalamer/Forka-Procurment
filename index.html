@@ -408,13 +408,22 @@ body.pside-mini.has-pside .top{padding-left:72px}
   .ps-mini{display:none}.ps-burger{display:flex}body.has-pside .top,body.pside-mini.has-pside .top{padding-left:0}body.has-pside #pmain,body.pside-mini.has-pside #pmain{margin-left:0}
   .crumb .sidetag,.crumb .cr-sep{display:none}.top .status{display:none}
 }
+
+/* Loading: the app's logo in a white circle with a soft light travelling around it */
+.fk-load{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:#f6f3ee}
+.fk-load .fk-ring{position:relative;width:150px;height:150px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -18px rgba(43,43,43,.35)}
+.fk-load .fk-ring:before{content:"";position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 62%,color-mix(in srgb,var(--lc) 35%,transparent) 80%,var(--lc) 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));animation:fkring 1.3s linear infinite}
+.fk-load .fk-ring:after{content:"";position:absolute;inset:-5px;border-radius:50%;border:4px solid color-mix(in srgb,var(--lc) 14%,transparent)}
+.fk-load .fk-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@keyframes fkring{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.fk-load .fk-ring:before{animation:none;opacity:.6}}
 </style>
 </head>
 <body>
 
 <div class="top" id="top"></div>
 <div id="papp"><aside id="pside" aria-label="Procurement menu"></aside><div id="pscrim" onclick="pSide(false)"></div>
-<div id="pmain"><div class="page" id="page"><div class="empty">Loading…</div></div></div></div>
+<div id="pmain"><div class="page" id="page"><div class="fk-load" role="status" style="--lc:#BD5038"><div class="fk-ring"><svg width="84" height="84" viewBox="0 0 118 118" aria-hidden="true"><rect x="7" y="7" width="48" height="48" rx="12" fill="#BD5038" opacity="1"/><rect x="63" y="7" width="48" height="48" rx="12" fill="#BD5038" opacity="0.85"/><rect x="7" y="63" width="48" height="48" rx="12" fill="#BD5038" opacity="0.68"/><rect x="63" y="63" width="48" height="48" rx="12" fill="#BD5038" opacity="0.95"/><circle cx="59" cy="59" r="22" fill="#fff"/><circle cx="59" cy="59" r="15.8" fill="#BD5038"/></svg></div><span class="fk-vh">Loading</span></div></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script>
