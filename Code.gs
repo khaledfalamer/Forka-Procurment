@@ -97,7 +97,7 @@ const ERP_ONLY = true;           // true = Procurement PINs are switched off; si
 function erpWho_(tok) {
   tok = String(tok || '');
   if (!/^[A-Za-z0-9-]{20,120}$/.test(tok)) return { error: 'erp' };
-  const cache = CacheService.getScriptCache(), k = 'erp:' + tok, hit = cache.get(k);
+  const cache = CacheService.getScriptCache(), k = 'erp2:' + tok, hit = cache.get(k);
   let me = hit ? JSON.parse(hit) : null;
   if (!me) {
     const ask = action => { const r = UrlFetchApp.fetch(ERP_ACCOUNTS_URL, { method: 'post', contentType: 'text/plain', payload: JSON.stringify({ action: action, token: tok }), muteHttpExceptions: true, followRedirects: true });
@@ -107,7 +107,9 @@ function erpWho_(tok) {
     if (!j.ok && (j.error === 'action' || j.error === 'role' || j.error === 'bad')) j = ask('me');
     if (!j.ok || !j.me) return { error: 'erp' };
     if (!(j.me.apps && j.me.apps.proc)) return { error: 'noproc' };
-    me = { name: j.me.name, email: j.me.email, sides: (j.me.sides || []).filter(x => SIDES.indexOf(x) >= 0) };
+    const level = ['staff', 'manager', 'ceo'].indexOf(j.me.level) >= 0 ? j.me.level : 'staff';
+    // Clearance rules (Khaled, 13 Nov 2026): staff never get CEO approvals, whatever is ticked.
+    me = { name: j.me.name, email: j.me.email, level: level, sides: (j.me.sides || []).filter(x => SIDES.indexOf(x) >= 0 && !(x === 'ceo' && level === 'staff')) };
     cache.put(k, JSON.stringify(me), 300);          // re-checked with Forka Apps every 5 minutes
   }
   return me;
@@ -375,7 +377,7 @@ function doPost(e) {
   try { b = JSON.parse(e.postData.contents); } catch (err) { return out_({ ok: false, error: 'bad' }); }
   const me = who_(b.pin, b.side, b.erp);
   if (me.error) return out_({ ok: false, error: me.error });
-  if (b.check && !b.load) return out_({ ok: true, me: { name: me.name, sides: me.sides, role: me.team ? 'team' : 'admin' } });
+  if (b.check && !b.load) return out_({ ok: true, me: { name: me.name, sides: me.sides, level: me.level || '', role: me.team ? 'team' : 'admin' } });
   if (b.load) {
     if (b.ver && b.ver === stamp_()) return out_({ ok: true, same: true, ver: b.ver, me: me });
     return out_(loadAll_(me, b.ceo));

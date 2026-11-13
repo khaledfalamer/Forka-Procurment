@@ -889,8 +889,8 @@ async function startEdit(){
   editMsg='';mode='loading';render();
   try{shared=await sheetLoad();mode='live';editMode=myRole!=='viewer'}catch(e){if(e.code==='pin'){signOut(errMsg(e.err));return}mode='offline'}
   render();sendLeftovers()}
-function applyMe(m){const was=myRole;if(m&&m.email)myEmail=String(m.email);if(m&&m.role){myRole=m.role;myBranch=m.branch||'';if(m.name){me=m.name;ls('pp-me',me)}}else if(!myRole)myRole='team';}
-function signOut(msg){pin='';clearSnap();bgDone();try{sessionStorage.removeItem('pp-pin')}catch(_){}editMode=false;myRole='';myBranch='';reqOpen=null;billOpen=null;shared={};supShared={};recShared={Evaluations:{},Deliveries:{},GRN:{},Transfers:{},Requests:{},POs:{}};supOpen=null;grnOpen=null;mode='login';editMsg=msg||'';unlocked=null;gateMsg=msg||'';if(msg&&gateSide)gateSide=gateSide;else gateSide=null;try{sessionStorage.removeItem('pp-ok')}catch(_){}render()}
+function applyMe(m){const was=myRole;if(m&&m.email)myEmail=String(m.email);if(m&&m.level){myLevel=String(m.level);if(tab==='moves'&&noMoves())tab=sideTabs()[0]||'req'}if(m&&m.role){myRole=m.role;myBranch=m.branch||'';if(m.name){me=m.name;ls('pp-me',me)}}else if(!myRole)myRole='team';}
+function signOut(msg){pin='';myLevel='';clearSnap();bgDone();try{sessionStorage.removeItem('pp-pin')}catch(_){}editMode=false;myRole='';myBranch='';reqOpen=null;billOpen=null;shared={};supShared={};recShared={Evaluations:{},Deliveries:{},GRN:{},Transfers:{},Requests:{},POs:{}};supOpen=null;grnOpen=null;mode='login';editMsg=msg||'';unlocked=null;gateMsg=msg||'';if(msg&&gateSide)gateSide=gateSide;else gateSide=null;try{sessionStorage.removeItem('pp-ok')}catch(_){}render()}
 function errMsg(e){if(e==='erp'){setTimeout(erpGone,0);return t('erpExpired')}return e==='side'?t('pinNoSide'):e==='pin'?t('wrongPin'):e==='nopin'?t('noPinSet'):e==='net'?t('net'):e==='locked'?t('errLocked'):e==='role'?t('errRole'):e==='split'?t('errSplit'):e==='notready'?t('errNotready'):e==='paid'?t('errPaid'):t('oldScript')}
 function loginView(){return `<div class="card login"><div style="margin-bottom:14px">${fkLock(t('landSub'),'on-light')}</div><h2>${t('loginT')}</h2><p style="color:var(--fk-text-2);font-size:13px">${t('loginH')}</p>
   <form data-login="1" onsubmit="return false" class="controls"><input id="pin" type="password" inputmode="numeric" placeholder="${t('yourPin')}" autocomplete="current-password" style="width:180px"><button class="btn btn-accent" data-act="startedit">${t('signIn')}</button></form>
@@ -1583,10 +1583,12 @@ async function erpEnter(sd){pin='erp';SNAPOFF=false;
   try{shared=await sheetLoad();mode='live';editMode=myRole!=='viewer'}catch(e){if(e.code==='pin'){signOut(errMsg(e.err));return}mode='offline'}
   render();sendLeftovers()}
 function erpGone(){clearSnap();bgDone();ERP='';ERP_SIDES=null;pin='';try{sessionStorage.removeItem('pp-erp');sessionStorage.removeItem('pp-pin');sessionStorage.removeItem('pp-ok')}catch(_){}unlocked=null;gateSide=null;mode='login';gateMsg=t('erpExpired');render()}
-function enterSide(sd){setRegion(sd==='oman'?'oman':'uae');setOmSub(null);poOpen=null;poDoc=false;grnDoc=false;rqOpenId=null;unlocked=sd;side=sd;tab=SIDES[sd][0];gateMsg='';reqOpen=billOpen=grnOpen=supOpen=null;if(!SHEET){try{sessionStorage.setItem('pp-ok',sd)}catch(_){}}render();window.scrollTo(0,0)}
+function enterSide(sd){setRegion(sd==='oman'?'oman':'uae');setOmSub(null);poOpen=null;poDoc=false;grnDoc=false;rqOpenId=null;unlocked=sd;side=sd;tab=sideTabs()[0]||SIDES[sd][0];gateMsg='';reqOpen=billOpen=grnOpen=supOpen=null;if(!SHEET){try{sessionStorage.setItem('pp-ok',sd)}catch(_){}}render();window.scrollTo(0,0)}
 function exitSide(){unlocked=null;gateSide=null;gateMsg='';try{sessionStorage.removeItem('pp-ok')}catch(_){}if(SHEET){signOut();return}render();window.scrollTo(0,0)}
 
-function sideTabs(){return side==='oman'?(omSub?OMSUB[omSub]:[]):SIDES[side]}
+/* Clearance rules (Khaled, 13 Nov 2026): Stock moves are for manager clearance and above; staff never get CEO approvals (the server also removes it). */
+let myLevel='';function noMoves(){return SHEET&&!!ERP&&myLevel==='staff'}
+function sideTabs(){const T=side==='oman'?(omSub?OMSUB[omSub]:[]):SIDES[side];return noMoves()?T.filter(k=>k!=='moves'):T}
 function sideOf(tb){return tb==='home'?side:SIDES.ops.includes(tb)&&tb!=='how'?'ops':SIDES.plan.includes(tb)?'plan':side}
 function goSide(s){if((s==='oman')!==OMAN()&&SHEET&&(Object.keys(local).length+Object.keys(supLocal).length+recPending())){toast(t('saveFirst'));return false}setRegion(s==='oman'?'oman':'uae');side=s;ls('pp-side',s);const T=sideTabs();if(!T.includes(tab))tab=T[0];reqOpen=null;billOpen=null;grnOpen=null}
 
@@ -1606,7 +1608,7 @@ function vHome(){const L=lines(),T=recs('Transfers'),G=recs('GRN');
    ${col('ops',t('sideOps'),t('sideOpsH'),[
      row('ops','grn',t('aGrn'),t('dGrn'),bd(gh,t('hGrnOpen'),'b-warn')),
      row('ops','req',t('req'),t('dReq'),bd(c('requested'),t('hToApprove'),'b-warn')+bd(c('approved'),t('hToIssue'),'b-warn')+bd(c('issued'),t('hToConfirm'),'b-mute')),
-     row('ops','moves',t('moves'),t('dMoves'),'')])}</div>`}
+     noMoves()?'':row('ops','moves',t('moves'),t('dMoves'),'')])}</div>`}
 
 // ---- transfers (branch requests → issue bill → branch confirms) ----
 const TST={draft:['b-mute','tsDraft'],requested:['b-warn','tsRequested'],approved:['b-warn','tsApproved'],rejected:['b-bad','tsRejected'],issued:['b-warn','tsIssued'],received:['b-ok','tsReceived']};
