@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#23211f">
 <title>Forka Procurement</title>
+<link rel="icon" href="logos/forka-procurement-icon.svg" type="image/svg+xml"><link rel="icon" href="logos/forka-procurement-icon.png" type="image/png" sizes="64x64"><link rel="apple-touch-icon" href="logos/forka-procurement-touch.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -368,6 +369,198 @@ button.btn.miss{border-color:var(--fk-danger);background:var(--fk-danger-bg);col
 
 /* mobile: large Forka header fits */
 @media (max-width:600px){.fk-lock.big{gap:12px}.fk-lock.big svg{width:52px;height:52px}.fk-lock.big .fk-k{font-size:14px}.fk-lock.big .fk-n{font-size:32px;white-space:normal}}
+/* ===== Inventory workspace (tab "fill"): scoped to .ivbar/.ivsum/.ivfil/.inv/.invdr ===== */
+.ivi{width:16px;height:16px;flex:none;vertical-align:-3px}
+.ivbar{position:sticky;top:var(--invtop,0px);z-index:5;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;background:var(--fk-paper);padding:10px 0 8px;margin:-6px 0 -6px;border-bottom:1px solid var(--fk-line)}
+.ivbar h2{font-size:24px;margin:0}
+.ivcount{color:var(--fk-muted);font-size:13px}
+.ivsave{display:inline-flex;gap:10px;align-items:center;font-size:13px}
+.ivsave .st-muted{color:var(--fk-success)}
+.ivmode{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#BD5038;border:1px solid rgba(189,80,56,.45);border-radius:999px;padding:2px 9px}
+[dir=rtl] .ivmode{letter-spacing:0}
+.ivacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ivacts .btn{display:inline-flex;align-items:center;gap:6px}
+.ivmw{position:relative}
+.ivmenu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:30;background:var(--fk-card);border:1px solid var(--fk-line);border-radius:12px;box-shadow:0 12px 32px rgba(35,33,31,.16);padding:8px;min-width:230px;max-height:60vh;overflow:auto}
+.ivmi{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;font-weight:500;color:var(--fk-text);font-size:13px;cursor:pointer}
+.ivmi:hover{background:var(--fk-paper)}.ivmi input{min-height:0;width:16px;height:16px;accent-color:var(--fk-bronze)}
+.ivmi small{margin-inline-start:auto;color:var(--fk-muted);font-size:11px}
+.ivlock{margin:0}
+.ivsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ivsum .card{padding:12px 16px}.ivsum .num{font-size:24px}
+.ivsumb{text-align:start;font-family:inherit;color:inherit;cursor:pointer}
+.ivsumb:hover{border-color:var(--fk-bronze-light)}.ivsumb.on{border-color:var(--fk-bronze);box-shadow:0 0 0 1px var(--fk-bronze)}
+.ivwrap{white-space:normal}
+.ivn{unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.ivfil #q{min-width:220px;flex:1 1 220px;max-width:340px}
+.ivfil select{max-width:100%}.ivfil #fsup{max-width:260px}
+.ivviews{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--fk-muted)}
+.ivviews select{max-width:200px}.ivviews input{width:170px}
+.ivdel{display:inline-flex;align-items:center;color:var(--fk-danger)}
+/* table box: scrolls on its own, sized to the screen under the sticky title */
+.tbl-wrap.inv{max-height:calc(100vh - var(--invtop,0px) - 76px);min-height:320px;overscroll-behavior:contain}
+.inv table{width:max-content;min-width:100%}
+.inv th.pin1,.inv td.pin1{position:sticky;inset-inline-start:0;z-index:1;background:var(--fk-card);width:250px;min-width:250px;max-width:250px}
+.inv th.pin2,.inv td.pin2{position:sticky;inset-inline-start:var(--pin1w,250px);z-index:1;background:var(--fk-card);box-shadow:inset -1px 0 0 var(--fk-line)}
+[dir=rtl] .inv th.pin2,[dir=rtl] .inv td.pin2{box-shadow:inset 1px 0 0 var(--fk-line)}
+.inv thead th.pin1,.inv thead th.pin2{z-index:3;background:var(--fk-paper)}
+.inv td.item{padding-inline-end:34px}.inv.editing td.item{padding-inline-end:62px}
+.inv .ivname{display:block;overflow-wrap:anywhere}
+.ivopen{position:absolute;top:7px;inset-inline-end:4px;width:26px;height:26px;border:1px solid transparent;border-radius:7px;background:none;color:var(--fk-muted);cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.inv.editing .ivopen{inset-inline-end:34px}
+.ivopen:hover,.ivopen:focus-visible{color:var(--fk-bronze);border-color:var(--fk-line);background:var(--fk-paper);outline:none}
+[dir=rtl] .ivopen svg{transform:scaleX(-1)}
+.inv tbody tr[data-inv]{cursor:pointer}
+.inv tbody tr[data-inv]:hover td{background:#faf6ef}
+.inv .ivrop{padding:6px 0;font-weight:600}
+.inv .ivst{min-width:130px}
+.ivpk{display:flex;gap:4px}
+/* editable vs read-only: in edit mode editable cells are tinted and their fields look like inputs */
+.inv.editing td.ed{background:#fbf7f1}
+.inv.editing tbody tr[data-inv]:hover td.ed{background:#f7f0e5}
+.inv.editing td input:not(:disabled),.inv.editing td select:not(:disabled),.invdr.editing input:not(:disabled),.invdr.editing select:not(:disabled){background:#fff;border-color:#d6ccbd}
+.inv:not(.editing) td input:disabled,.inv:not(.editing) td select:disabled{padding-inline:2px}
+.inv td input.miss:disabled,.inv td select.miss:disabled{padding-inline:9px}
+/* row drawer: opens from the inline-end side (right in English, left in Arabic) */
+.invdr{position:fixed;top:0;bottom:0;inset-inline-end:0;width:min(440px,100vw);z-index:40;background:var(--fk-card);border-inline-start:1px solid var(--fk-line);box-shadow:-14px 0 40px rgba(35,33,31,.16);display:flex;flex-direction:column}
+[dir=rtl] .invdr{box-shadow:14px 0 40px rgba(35,33,31,.16)}
+.ivdh{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:18px 20px 12px;border-bottom:3px solid #BD5038}
+.ivdh h2{font-size:22px;overflow-wrap:anywhere}
+.ivdk{color:var(--fk-muted);font-size:12px;margin-bottom:2px}
+.ivx{border:1px solid var(--fk-line);background:var(--fk-card);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--fk-text-2);flex:none}
+.ivx:hover,.ivx:focus-visible{border-color:var(--fk-bronze);color:var(--fk-bronze);outline:none}
+.ivdb{flex:1;overflow:auto;padding:6px 20px 16px}
+.ivdb section{padding:12px 0;border-bottom:1px solid var(--fk-line)}.ivdb section:last-child{border-bottom:0}
+.ivdb h3{font-family:var(--fk-sans);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--fk-text-2);margin:0 0 8px}
+[dir=rtl] .ivdb h3{font-family:'IBM Plex Sans Arabic',sans-serif;letter-spacing:0}
+.ivf{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:start;padding:5px 0}
+.ivl{font-size:12.5px;color:var(--fk-text-2);font-weight:600;padding-top:8px}
+.ivf.ro .ivl{padding-top:2px}
+.ivv input:not(.cyc):not(.pkn),.ivv select:not(.smsel):not(.us){width:100%}
+.ivv input.num{text-align:end}
+.ivv .ivpk{gap:6px}.ivv .ivpk input.pkn{flex:1 1 auto;min-width:0;width:auto}.ivv .ivpk select{flex:0 0 auto}
+.inv tbody tr.ivsel[data-inv] td,.inv.editing tbody tr.ivsel[data-inv] td.ed{background:#f3e9da}
+.ivv .hint{white-space:normal}
+.ivconv{margin-top:6px;padding:8px 10px;background:var(--fk-paper);border-radius:8px;font-weight:600;font-size:13px}
+.ivdf{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--fk-line);background:var(--fk-paper);font-size:13px}
+.ivdf .st-muted{color:var(--fk-success)}
+/* phones: one card per item (name, stock now, reorder point, to buy, status); tap opens the drawer */
+@media (max-width:639px){
+ .ivbar h2{font-size:21px}
+ .ivsum{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ivsum .card{padding:10px 12px}.ivsum .num{font-size:19px}.ivsum .hint{display:none}.ivsum .lbl{font-size:11.5px}
+ .ivfil #fsup{max-width:none}
+ .ivfil #q{max-width:none;min-width:0;flex-basis:100%}
+ .ivfil select{flex:1 1 140px;min-width:0}
+ .ivviews select{max-width:none;flex:1 1 140px}
+ .tbl-wrap.inv{max-height:calc(100vh - var(--invtop,0px) - 70px)}
+ .inv table{display:block;width:100%;min-width:0}
+ .inv thead{display:none}
+ .inv tbody{display:block}
+ .inv tbody tr[data-inv]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px;padding:12px 14px;border-bottom:1px solid var(--fk-line)}
+ .inv tbody tr.r-miss{box-shadow:inset 3px 0 0 var(--fk-danger)}.inv tbody tr.r-ok{box-shadow:inset 3px 0 0 var(--fk-success)}
+ [dir=rtl] .inv tbody tr.r-miss{box-shadow:inset -3px 0 0 var(--fk-danger)}[dir=rtl] .inv tbody tr.r-ok{box-shadow:inset -3px 0 0 var(--fk-success)}
+ .inv tbody td{display:block;border:0;padding:0;background:none!important;box-shadow:none!important;position:static!important;width:auto!important;min-width:0!important;max-width:none!important}
+ .inv tbody td.item{grid-column:1/-1;position:relative!important;padding-inline-end:36px}
+ .inv.editing tbody td.item{padding-inline-end:66px}
+ .inv tbody td:not(.item):not(.cm){display:none}
+ .inv tbody td.cm{text-align:start}
+ .inv tbody td.cm::before{content:attr(data-lbl);display:block;font-size:11px;color:var(--fk-muted);font-weight:600;margin-bottom:2px}
+ .inv tbody td.ivst{grid-column:1/-1}
+ .inv tbody td.ivst::before{content:none}
+ .inv td input.num{width:100%;max-width:110px;text-align:start}
+ .inv .hint{white-space:normal}
+ .ivf{grid-template-columns:1fr;gap:4px}.ivl{padding-top:0}
+}
+/* ===== Requests queue and request detail (UI redesign 4.1). Scoped to .rqhead / .rqpills / .rqfil / .rqlist / .rqd. */
+.rqi{width:16px;height:16px;flex:none;vertical-align:-3px}
+.rqhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.rqhead>div{min-width:0}.rqhead .hint{white-space:normal}
+.rqcount{font-size:12.5px;font-variant-numeric:tabular-nums}
+.rqnewb{display:inline-flex;gap:6px;align-items:center;min-height:42px;padding:8px 18px;font-size:14px}
+.rqpills{display:flex;gap:8px;flex-wrap:wrap}
+.rqpill{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--fk-line);background:var(--fk-card);border-radius:999px;padding:5px 13px;font-family:inherit;font-weight:600;font-size:12.5px;color:var(--fk-text-2);cursor:pointer;min-height:36px;max-width:100%}
+.rqpill i{width:8px;height:8px;border-radius:50%;flex:none}
+.rqpill .n{font-variant-numeric:tabular-nums;font-weight:700;color:var(--fk-text)}
+.rqpill small{font-weight:500;color:var(--fk-muted);font-size:11px;white-space:nowrap}
+.rqpill:hover{border-color:var(--fk-bronze-light)}
+.rqpill.on{border-color:#BD5038;background:rgba(189,80,56,.07);color:var(--fk-text);box-shadow:inset 0 0 0 1px #BD5038}
+.rqpill:focus-visible,.rqfil .chip:focus-visible,.rqlist .rq-li:focus-visible{outline:2px solid #BD5038;outline-offset:2px}
+.rqfil{display:flex;flex-direction:column;gap:10px;padding:12px 14px}
+.rqfr{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rqsearch{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--fk-line);border-radius:var(--fk-radius-sm);padding:0 10px;background:var(--fk-card);color:var(--fk-muted);flex:0 1 260px;min-width:0;min-height:36px}
+.rqsearch:focus-within{border-color:var(--fk-bronze)}
+.rqsearch input{border:0!important;outline:0;background:none;min-width:0;width:100%;padding:6px 0;box-shadow:none!important}
+.rqfil .chip{display:inline-flex;align-items:center;gap:6px}
+.rqfil .chip bdi{font-variant-numeric:tabular-nums}
+.rqcnt{background:#BD5038;color:#fff;border-radius:999px;padding:0 6px;font-size:11px;line-height:17px}
+.rqmore{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--fk-line)}
+.rqmore select{min-width:0;max-width:220px}
+.rqviews{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--fk-muted);min-width:0}
+.rqviews select{max-width:200px;min-width:0}.rqviews input{width:170px;min-width:0}
+.rqviews .btn{display:inline-flex;align-items:center;gap:4px}
+.rqlist .rq-li{flex-wrap:wrap;gap:6px 14px}
+.rq-tl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rq-tl b{font-size:14.5px;overflow-wrap:anywhere}
+.rq-meta{display:flex;flex-wrap:wrap;gap:3px 6px;align-items:center;margin-top:4px;font-size:12px;color:var(--fk-muted)}
+.rq-meta .dot{color:var(--fk-line)}
+.rq-meta .kindtag{margin-inline-end:2px}
+.rqwho{display:inline-flex;gap:4px;align-items:center}.rqwho .rqi{width:13px;height:13px}
+.rqno{font-variant-numeric:tabular-nums;font-weight:600;color:var(--fk-text-2)}
+.rq-side{display:flex;flex-direction:column;gap:3px;align-items:flex-end;font-size:12px;color:var(--fk-muted);min-width:120px;text-align:end}
+.rq-side>span{display:inline-flex;gap:5px;align-items:center}.rq-side .rqi{width:13px;height:13px}
+.rq-side bdi{font-variant-numeric:tabular-nums}
+.rq-st{display:flex;gap:10px;align-items:center}
+.rq-noph{display:inline-flex;align-items:center;justify-content:center;background:var(--fk-paper);color:var(--fk-muted)}
+.rq-noph .rqi{width:22px;height:22px}
+.rqlist .rq-li.is-urg{box-shadow:inset 3px 0 0 #BD5038}
+[dir=rtl] .rqlist .rq-li.is-urg{box-shadow:inset -3px 0 0 #BD5038}
+.rq-urg{display:inline-flex;align-items:center;gap:4px;background:#BD5038;color:#fff;border-radius:999px;font-weight:700;font-size:11px;padding:2px 9px 2px 7px;white-space:nowrap}
+.rq-urg .rqi{width:12px;height:12px}
+.rqd{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px;align-items:start}
+.rqd>.rqd-wide{grid-column:1/-1;min-width:0}
+.rqb{min-width:0}.rqb .hint{white-space:normal}
+.rqbh{display:flex;align-items:center;gap:8px;font-family:var(--fk-sans);font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:#BD5038;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid var(--fk-line)}
+[dir=rtl] .rqbh{letter-spacing:0;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:13px}
+.rqtitle{font-size:26px;margin:6px 0 4px;overflow-wrap:anywhere}
+.rqdet{white-space:pre-wrap;margin:14px 0 0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.rqmeta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 0;padding:12px 0 0;border-top:1px solid var(--fk-line)}
+.rqmeta b{font-variant-numeric:tabular-nums}
+.rqown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.rqown input{width:100%;box-sizing:border-box}
+.rqstat{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:3px}
+.rqbuyer{display:block;margin-top:3px}
+.rqd .rq-steps{flex-direction:column;gap:4px}
+.rqd .rq-step{min-width:0;flex:none;padding:6px 10px}
+.rqacts{margin-top:14px;padding-top:14px;border-top:1px solid var(--fk-line)}
+.rqd .ceo-box{gap:16px 28px}
+.rqcomp{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--fk-line)}
+.rqcomp textarea{width:100%;min-height:72px;box-sizing:border-box}
+.rqcomp-a{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.rqcomp-a .btn{display:inline-flex;gap:6px;align-items:center}
+.rqmailh{flex:1 1 160px;min-width:0}
+.rqlt{display:flex;gap:8px;align-items:center}.rqlt select{min-width:0;max-width:100%}
+.rqhist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rqhist li.rq-msg{position:relative;border:0;background:none;padding:0 0 14px;padding-inline-start:24px;border-radius:0}
+.rqhist li::before{content:'';position:absolute;inset-inline-start:2px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--fk-card);border:2px solid #BD5038}
+.rqhist li::after{content:'';position:absolute;inset-inline-start:7px;top:18px;bottom:2px;width:1.5px;background:var(--fk-line)}
+.rqhist li:last-child{padding-bottom:0}.rqhist li:last-child::after{display:none}
+.rqhist li>div:first-child{overflow-wrap:anywhere}
+@media (max-width:1000px){.rqd{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:639px){
+ .rqlist .rq-li{padding:12px 14px!important}
+ .rqlist .rq-li .grow{flex-basis:calc(100% - 66px)}
+ .rq-side{order:3;flex-direction:row;flex-wrap:wrap;align-items:center;min-width:0;text-align:start;gap:2px 12px;flex:1 1 auto}
+ .rq-st{order:4}
+ .rqsearch{flex:1 1 100%}
+ .rqviews{flex:1 1 100%}.rqviews select{flex:1 1 140px;max-width:none}.rqviews input{flex:1 1 120px;width:auto}
+ .rqmore select{flex:1 1 140px;max-width:none}
+ .rqpill small{display:none}
+ .rqtitle{font-size:22px}
+ .rqmeta{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .rqd .rq-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .rqd .rq-photos.big img{width:130px;height:98px}
+ .rqnewb{width:100%;justify-content:center}
+}
 
 /* Procurement colour: terracotta from the Procurement logo; logo file in the header */
 :root{--fk-bronze:#BD5038;--fk-bronze-hover:#A9452F;--fk-bronze-light:#C96650;--fk-bronze-soft:#f6e1da}
@@ -817,7 +1010,7 @@ function render(){
   renderTop();const P=document.getElementById('page');
   if(!unlocked){P.innerHTML=gateSide?vPin():vLanding();lastTab='';const pp=document.getElementById('pin');if(pp)pp.focus();return}
   if(side==='oman'&&!omSub){P.innerHTML=vOmHome();lastTab='';return}
-  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
+  const ae=document.activeElement,af=ae&&ae.dataset&&ae.dataset.f&&ae.dataset.id?{id:ae.dataset.id,f:ae.dataset.f,dr:!!ae.closest('.invdr')}:ae&&ae.dataset&&ae.dataset.sf?{sid:ae.dataset.sid,sf:ae.dataset.sf}:ae&&ae.id?{elid:ae.id}:null;
   const same=lastTab===tab;lastTab=tab;const wy=window.scrollY,sc=[...P.querySelectorAll('.tbl-wrap')].map(e=>[e.scrollTop,e.scrollLeft]);
   if(!sideTabs().includes(tab))tab=sideTabs()[0];
   if(tab==='lpo'&&!poOpen)poAutoRestock();
@@ -826,10 +1019,11 @@ function render(){
     Object.entries(supLocal).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-sid="${CSS.escape(id)}"][data-sf="${f}"]`);if(el)el.classList.add('chg')}));
     Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>{const el=P.querySelector(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`);if(el)el.classList.add('chg')}))}
   if(tab==='fill'&&!invEdit)P.querySelectorAll('.inv [data-f],.inv button[data-act="ok"],.inv button[data-act="useprice"]').forEach(e=>e.disabled=true);
+  if(tab==='fill')invAfter(P);
   calPrep(P);if(calEl&&!document.body.contains(calEl))calClose();
   if(eff()==='fin'&&grnOpen)P.querySelectorAll('input,select,textarea,button').forEach(el=>{if(!['gback'].includes(el.dataset.act)&&!(el.dataset.act==='gstatus'&&el.dataset.v==='paid'))el.disabled=true});
   if(same){[...P.querySelectorAll('.tbl-wrap')].forEach((e,i)=>{if(sc[i]){e.scrollTop=sc[i][0];e.scrollLeft=sc[i][1]}});window.scrollTo(0,wy)}
-  if(af){const el=af.elid?document.getElementById(af.elid):af.sid?P.querySelector(`[data-sid="${CSS.escape(af.sid)}"][data-sf="${af.sf}"]`):P.querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){el.focus({preventScroll:true});try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
+  if(af){const el=af.elid?document.getElementById(af.elid):af.sid?P.querySelector(`[data-sid="${CSS.escape(af.sid)}"][data-sf="${af.sf}"]`):(af.dr&&P.querySelector('.invdr')||P).querySelector(`[data-id="${CSS.escape(af.id)}"][data-f="${af.f}"]`);if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){el.focus({preventScroll:true});try{const v=el.value;el.setSelectionRange(v.length,v.length)}catch(_){}}}
 }
 function banner(){
   const nl=Object.keys(local).length+Object.keys(supLocal).length+recPending();
@@ -858,6 +1052,101 @@ function head(L){
   <div class="card"><div class="controls"><b>${t('progress')}</b><span class="muted" style="color:var(--fk-muted)">${c.confirmed+c.notneeded} ${t('of')} ${n}</span></div>
    <div class="prog">${['confirmed','notneeded','toconfirm','missing'].map(k=>`<i style="width:${c[k]/n*100}%;background:${col[k]}"></i>`).join('')}</div>
    <div class="legend">${['missing','toconfirm','confirmed','notneeded'].map(k=>`<span data-st="${k}"><i class="dot" style="background:${col[k]}"></i>${t(k)} <b>${c[k]}</b></span>`).join('')}</div></div>`}
+/* ===== Inventory workspace: summary, filters, saved views, chosen columns (Item and Stock now pinned), row drawer.
+   Only the rows near the visible part of the table are drawn (windowing), so every item is reachable without a page cap.
+   Formulas, locks, confirms, saving and permissions are the same as before (calc, ropOf, stockState, edit, EDIT_SEL, canEl). */
+Object.assign(T.en,{ivCols:'Columns',ivPinned:'always shown',ivViews:'Saved views',ivViewPick:'Saved views',ivSaveView:'Save view',ivViewName:'Name for this view',ivViewOk:'Save',ivViewNo:'Cancel',ivDelView:'Delete view',ivViewSaved:'View saved',ivViewDel:'View deleted',ivReorder:'Items to reorder',ivReorderH:'At or below the reorder point',ivDone:'Lines confirmed',ivDetails:'Details',ivClose:'Close',ivConv:'Conversion',ivUsage:'Usage and reserve',ivSupply:'Supply',ivSm:'Supply mode',ivNowT:'Stock and order',ivPrice:'Price',ivNameT:'New item',ivCount:'{n} items',ivLead:'Supplier lead time: {n} days',ivNoConv:'Set the unit and the pack to see the conversion.',ivLocked:'Locked. Press Edit to change items, stock counts or prices.',ivPay:'Pemo {a} · Credit {b} · Not set {c}',ivEditing:'Editing',ivOpen:'Open details',ivPerDay:'{q} {u} per day',ivDaysLeft:'Days left'});
+Object.assign(T.ar,{ivCols:'الأعمدة',ivPinned:'يظهر دائماً',ivViews:'العروض المحفوظة',ivViewPick:'العروض المحفوظة',ivSaveView:'حفظ العرض',ivViewName:'اسم هذا العرض',ivViewOk:'حفظ',ivViewNo:'إلغاء',ivDelView:'حذف العرض',ivViewSaved:'تم حفظ العرض',ivViewDel:'تم حذف العرض',ivReorder:'أصناف تحتاج طلب',ivReorderH:'عند نقطة الطلب أو أقل',ivDone:'سطور مؤكدة',ivDetails:'التفاصيل',ivClose:'إغلاق',ivConv:'التحويل',ivUsage:'الاستهلاك والاحتياطي',ivSupply:'التوريد',ivSm:'طريقة التوريد',ivNowT:'المخزون والطلب',ivPrice:'السعر',ivNameT:'صنف جديد',ivCount:'{n} صنف',ivLead:'مدة توريد المورد: {n} أيام',ivNoConv:'حدد الوحدة والعبوة لترى التحويل.',ivLocked:'مقفل. اضغط تعديل لتغيير الأصناف أو الجرد أو الأسعار.',ivPay:'Pemo {a} · آجل {b} · غير محدد {c}',ivEditing:'وضع التعديل',ivOpen:'فتح التفاصيل',ivPerDay:'{q} {u} في اليوم',ivDaysLeft:'الأيام المتبقية'});
+const IV_ALL=120,IV_BUF=900,IV_MIN=60;
+const IV_COLS=['item','stock','sup','sm','pay','use','par','rop','buy','p','unit','pack','bud','status'];
+const IV_DEF=['item','stock','sup','rop','buy','p','bud','status'],IV_PIN=['item','stock'];
+let invOpen=null,ivMenu=false,ivNaming=false,invR=[],invWin={a:0,b:0},invH={},invHK='',invAvg=0;
+const IVI={
+ cols:'<path d="M4 5h16v14H4z"/><path d="M9.5 5v14M14.5 5v14"/>',
+ open:'<path d="M4 5h16v14H4z"/><path d="M14 5v14"/><path d="M9 10l2 2-2 2"/>',
+ x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ view:'<path d="M7 4h10v16l-5-4-5 4z"/>',
+ trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'};
+const ivI=k=>`<svg class="ivi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IVI[k]}</svg>`;
+function ivCols(){const s=ls2('pp-inv-cols');const on=Array.isArray(s)?s:IV_DEF;return IV_COLS.filter(k=>IV_PIN.includes(k)||on.includes(k)||(ivCard()&&['rop','buy','status'].includes(k)))}
+function ivViews(){const v=ls2('pp-inv-views');return Array.isArray(v)?v:[]}
+const IV_FK=['q','st','con','sup','pay','stk'];
+function ivFl(){const o={};IV_FK.forEach(k=>o[k]=fl[k]);return o}
+function ivCurView(){const c=JSON.stringify(ivFl());return ivViews().findIndex(v=>JSON.stringify(Object.assign({q:'',st:'all',con:'',sup:'',pay:'',stk:''},v.fl))===c)}
+function ivColName(k){return k==='sm'?t('ivSm'):t({item:'item',stock:'stock',sup:'supplier',pay:'payment',use:'use',par:'par',rop:'rop',buy:'buy',p:'price',unit:'unit',pack:'pack',bud:'bud',status:'status'}[k])}
+function ivCard(){try{return matchMedia('(max-width:639px)').matches}catch(_){return false}}
+function ivHt(id){return invH[id]||invAvg||(ivCard()?150:64)}
+function ivRange(st,h){const n=invR.length;if(n<=IV_ALL)return {a:0,b:n};
+  let y=0,a=-1,b=n;for(let i=0;i<n;i++){const hh=ivHt(invR[i].id);if(a<0&&y+hh>=st-IV_BUF)a=i;if(y>st+h+IV_BUF){b=i;break}y+=hh}
+  if(a<0)a=Math.max(0,n-IV_MIN);if(b-a<IV_MIN)b=Math.min(n,a+IV_MIN);if(b-a<IV_MIN)a=Math.max(0,b-IV_MIN);return {a,b}}
+function ivPad(a,b){let t0=0,t1=0;for(let i=0;i<a;i++)t0+=ivHt(invR[i].id);for(let i=b;i<invR.length;i++)t1+=ivHt(invR[i].id);return [t0,t1]}
+const ivNum=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}" aria-label="${esc(ivColName(f==='st'?'stock':f==='p'?'p':f))}">`;
+const ivB=(n,d)=>`<bdi class="ivn">${fmt(n,d)}</bdi>`;
+function ivConvTxt(l){return l.u&&+l.pkN>0&&l.pkU?`1 ${U(l.u)} = ${ivB(+l.pkN,l.pkN%1?2:0)} ${U(l.pkU)}`:''}
+function ivRopHtml(l){return smOf(l)?`<span class="badge b-pemo">${smOf(l)==='direct'?t('smDirect'):fill(t('smCycleB'),{n:cycOf(l)})}</span>`:(+l.use>0||+l.par>0)?`<div class="ivrop">${ivB(ropOf(l),ropOf(l)%1?1:0)}</div>${(k=>k?`<span class="badge ${k==='ok'?'b-ok':k==='order'?'b-warn':'b-bad'}">${t(k==='ok'?'sOk':k==='order'?'sOrder':'sBelow')}</span>`:'')(stockState(l))}`:''}
+function ivStatusHtml(l,s,m){return (s==='missing'?`<span class="badge b-bad ivneed">${t('needs')}: ${m.map(x=>t('m_'+(x==='price'?'price':x))).join(', ')}</span>`:
+  `<button class="btn btn-ok ${l.ok?'done':''}" data-act="ok" data-id="${esc(l.id)}">${l.ok?'✓ '+t(s==='notneeded'?'notneeded':'done'):t('confirm')}</button>`)+
+  (l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:'')}
+function ivSmHtml(l){return `<div class="smrow"><select class="smsel" data-id="${esc(l.id)}" data-f="sm" title="${t('smT')}" aria-label="${t('smT')}"><option value="">${t('smStore')}</option><option value="direct" ${smOf(l)==='direct'?'selected':''}>${t('smDirect')}</option><option value="cycle" ${smOf(l)==='cycle'?'selected':''}>${t('smCycle')}</option></select>${smOf(l)==='cycle'?`<input class="num cyc" type="number" min="1" step="1" data-id="${esc(l.id)}" data-f="cyc" value="${cycOf(l)}" title="${t('smDays')}" aria-label="${t('smDays')}"><span class="hint">${t('smDays')}</span>`:''}</div>`}
+function ivPayHtml(l,m){return `<select class="${m.includes('pay')?'miss':''}" data-id="${esc(l.id)}" data-f="pay" aria-label="${t('payment')}"><option value="">${t('choose')}</option><option value="pemo" ${l.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${l.pay==='credit'?'selected':''}>${t('creditW')}</option></select>`}
+function ivPackHtml(l,m){return `<div class="ivpk"><input class="num pkn ${m.includes('pack')&&!(+l.pkN>0)?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="pkN" value="${l.pkN==null?'':l.pkN}" placeholder="#" aria-label="${t('pack')}">${uSel(l,'pkU',m.includes('pack')&&!l.pkU)}</div>`}
+function ivCell(k,l,m,s,c){const ref=l.ref,id=esc(l.id),sm=smOf(l);
+  switch(k){
+  case 'item':return `<td class="item pin1" data-k="item">${invEdit?`<button class="rmx" data-act="rmitem" data-id="${id}" title="${t('rmItem')}" aria-label="${t('rmItem')}">✕</button>`:''}${l.isNew?`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${id}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}"><div style="display:flex;gap:4px;margin-top:4px"><select data-id="${id}" data-f="con">${Object.keys(CON).map(x=>`<option value="${x}" ${l.con===x?'selected':''}>${CON[x][lang]}</option>`).join('')}</select><select data-id="${id}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select></div>`:`<span class="ivname">${esc(l.n)}</span><small>${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · <bdi>${id}</bdi></small>`}<button class="ivopen" data-act="invopen" data-id="${id}" title="${t('ivOpen')}" aria-label="${t('ivOpen')}">${ivI('open')}</button></td>`;
+  case 'stock':return `<td class="n pin2 ed cm" data-k="stock" data-lbl="${t('stock')}">${sm==='direct'?`<span class="hint">${t('smDirectS')}</span>`:ivNum(l,'st',false)+(!sm&&+l.use>0?`<div class="hint">${ivB((+l.st||0)/(+l.use/30),0)} ${t('daysLeft')}</div>`:'')}</td>`;
+  case 'sup':return `<td class="ed" data-k="sup"><input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${id}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}" aria-label="${t('supplier')}"></td>`;
+  case 'sm':return `<td class="ed" data-k="sm">${ivSmHtml(l)}</td>`;
+  case 'pay':return `<td class="ed" data-k="pay">${ivPayHtml(l,m)}</td>`;
+  case 'use':return `<td class="n ed" data-k="use">${ivNum(l,'use',m.includes('use'))}${sm==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:''}${ref&&ref.q?`<div class="hint">${t('storeRef')}: ${ivB(ref.q,ref.q%1?1:0)}</div>`:''}</td>`;
+  case 'par':return `<td class="n ${sm?'':'ed'}" data-k="par">${sm?'<span class="hint">-</span>':ivNum(l,'par',m.includes('par'))}</td>`;
+  case 'rop':return `<td class="n cm" data-k="rop" data-lbl="${t('rop')}">${ivRopHtml(l)}</td>`;
+  case 'buy':return `<td class="n cm" data-k="buy" data-lbl="${t('buy')}"><b>${c.q?ivB(c.q,c.q%1?2:0):''}</b></td>`;
+  case 'p':return `<td class="n ed" data-k="p">${ivNum(l,'p',m.includes('price'))}${ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${ivB(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${id}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''}</td>`;
+  case 'unit':return `<td class="ed" data-k="unit">${uSel(l,'u',m.includes('unit'))}${ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''}</td>`;
+  case 'pack':return `<td class="ed" data-k="pack">${ivPackHtml(l,m)}${ivConvTxt(l)?`<div class="hint">${ivConvTxt(l)}</div>`:''}</td>`;
+  case 'bud':return `<td class="n" data-k="bud"><b>${c.v?ivB(c.v):''}</b></td>`;
+  case 'status':return `<td class="cm ivst" data-k="status">${ivStatusHtml(l,s,m)}</td>`}}
+function ivRow(l){const m=missing(l),s=status(l),c=calc(l);
+  return `<tr class="${s==='missing'?'r-miss':s==='confirmed'?'r-ok':''}${invOpen===l.id?' ivsel':''}" data-inv="${esc(l.id)}">${ivCols().map(k=>ivCell(k,l,m,s,c)).join('')}</tr>`}
+function ivSummary(L){let tot=0,pe=0,cr=0,np=0,ro=0,dn=0;
+  L.forEach(l=>{const v=calc(l).v;tot+=v;if(l.pay==='pemo')pe+=v;else if(l.pay==='credit')cr+=v;else np+=v;if(['order','below'].includes(stockState(l)))ro++;const s=status(l);if(s==='confirmed'||s==='notneeded')dn++});
+  const n=L.length;
+  return `<div class="ivsum">
+   <div class="card stat"><div class="lbl">${t('budget')}</div><div class="num">${ivB(tot)}<small>AED</small></div><div class="hint ivwrap">${fill(t('ivPay'),{a:fmt(pe),b:fmt(cr),c:`<span style="color:${np?'var(--fk-danger)':'inherit'}">${fmt(np)}</span>`})}</div></div>
+   <div class="card stat" id="stval"><div class="lbl">${t('stVal')}</div><div class="num">${ivB(stockVal(L).v)}<small>AED</small></div><div class="hint">${t('stValH')}</div></div>
+   <button class="card stat ivsumb ${fl.stk==='order'?'on':''}" data-act="ivreorder"><div class="lbl">${t('ivReorder')}</div><div class="num" style="color:${ro?'var(--fk-danger)':'inherit'}">${ivB(ro)}</div><div class="hint">${t('ivReorderH')}</div></button>
+   <div class="card stat"><div class="lbl">${t('ivDone')}</div><div class="num">${ivB(dn)}<small>/ <bdi>${fmt(n)}</bdi></small></div><div class="prog" style="margin:8px 0 0"><i style="width:${n?dn/n*100:0}%;background:var(--fk-success)"></i></div></div></div>`}
+function ivColMenu(){const on=ivCols();return `<div class="ivmenu" role="menu">${IV_COLS.map(k=>`<label class="ivmi"><input type="checkbox" data-ivcol="${k}" ${on.includes(k)?'checked':''} ${IV_PIN.includes(k)?'disabled':''}><span>${ivColName(k)}</span>${IV_PIN.includes(k)?`<small>${t('ivPinned')}</small>`:''}</label>`).join('')}</div>`}
+function ivDrawer(l){const m=missing(l),s=status(l),c=calc(l),ref=l.ref,id=esc(l.id),sm=smOf(l);
+  const F=(lbl,html,cls)=>`<div class="ivf ${cls||''}"><span class="ivl">${lbl}</span><div class="ivv">${html}</div></div>`;
+  const nU=nUnsaved();
+  return `<aside class="invdr ${invEdit?'editing':''}" role="dialog" aria-label="${t('ivDetails')}: ${esc(l.n||t('newItem'))}" data-dr="${id}">
+  <div class="ivdh"><div style="min-width:0"><div class="ivdk">${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · <bdi>${id}</bdi></div><h2>${esc(l.n)||t('ivNameT')}</h2></div><button class="ivx" data-act="invclose" title="${t('ivClose')}" aria-label="${t('ivClose')}">${ivI('x')}</button></div>
+  <div class="ivdb">
+   ${l.isNew?`<section><h3>${t('ivNameT')}</h3>${F(t('item'),`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${id}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}">`)}${F(t('concept'),`<select data-id="${id}" data-f="con">${Object.keys(CON).map(x=>`<option value="${x}" ${l.con===x?'selected':''}>${CON[x][lang]}</option>`).join('')}</select>`)}${F(t('food')+' / '+t('nonfood'),`<select data-id="${id}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select>`)}</section>`:''}
+   <section><h3>${t('ivNowT')}</h3>
+    ${F(t('stock'),sm==='direct'?`<span class="hint">${t('smDirectS')}</span>`:ivNum(l,'st',false))}
+    ${!sm&&+l.use>0?F(t('ivDaysLeft'),`<b>${ivB((+l.st||0)/(+l.use/30),0)}</b> ${t('daysLeft')}`,'ro'):''}
+    ${F(t('rop')+` <span class="hint">(${t('auto')})</span>`,ivRopHtml(l)||'<span class="hint">—</span>','ro')}
+    ${F(t('buy'),`<b>${c.q?ivB(c.q,c.q%1?2:0):'0'}</b> ${esc(U(l.u||''))}`,'ro')}
+    ${F(t('bud'),`<b>${ivB(c.v,c.v%1?2:0)}</b>`,'ro')}</section>
+   <section><h3>${t('ivUsage')}</h3>
+    ${F(t('use'),ivNum(l,'use',m.includes('use'))+(+l.use>0?`<div class="hint">${fill(t('ivPerDay'),{q:`<bdi>${fmt(+l.use/30,(+l.use/30)%1?1:0)}</bdi>`,u:esc(U(l.u||''))})}</div>`:'')+(sm==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:'')+(ref&&ref.q?`<div class="hint">${t('storeRef')}: ${ivB(ref.q,ref.q%1?1:0)}</div>`:''))}
+    ${F(t('par'),sm?'<span class="hint">-</span>':ivNum(l,'par',m.includes('par')))}</section>
+   <section><h3>${t('ivConv')}</h3>
+    ${F(t('unit'),uSel(l,'u',m.includes('unit'))+(ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''))}
+    ${F(t('pack'),ivPackHtml(l,m))}
+    <div class="ivconv">${ivConvTxt(l)||`<span class="hint">${t('ivNoConv')}</span>`}</div></section>
+   <section><h3>${t('ivSupply')}</h3>
+    ${F(t('supplier'),`<input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${id}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}">`+(l.sup?`<div class="hint">${fill(t('ivLead'),{n:leadOf(l.sup)})}</div>`:''))}
+    ${F(t('ivSm'),ivSmHtml(l))}
+    ${F(t('payment'),ivPayHtml(l,m))}</section>
+   <section><h3>${t('ivPrice')}</h3>
+    ${F(t('price'),ivNum(l,'p',m.includes('price'))+(ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${ivB(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${id}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''))}</section>
+   <section><h3>${t('status')}</h3><div class="ivst">${ivStatusHtml(l,s,m)}</div></section>
+  </div>
+  <div class="ivdf">${nU?`<span class="st st-chg"><span>${ivB(nU)} ${t('unsaved')}</span></span>`:`<span class="st st-muted">${ivI('check')}<span>${t('allSaved')}</span></span>`}<span class="sp"></span>${invEdit?`<button class="btn btn-accent" data-act="invsave">${t('saveS')}${nU?' ('+nU+')':''}</button>`:''}<button class="btn" data-act="invclose">${t('ivClose')}</button></div></aside>`}
 function vFill(){
   const L=lines();const sups=[...new Set(L.map(l=>l.sup).filter(Boolean))].sort();
   const fk=JSON.stringify(fl);if(fk!==keepKey){keepKey=fk;keepIds=null}
@@ -868,39 +1157,79 @@ function vFill(){
   if(keepIds){const inR=new Set(R.map(l=>l.id));L.forEach(l=>{if(keepIds.has(l.id)&&!inR.has(l.id))R.push(l)})}keepIds=new Set(R.map(l=>l.id));
   if(!rowRank||rowRankKey!==fk){rowRankKey=fk;rowRank={};[...R].sort((a,b)=>(a.con>b.con?1:a.con<b.con?-1:0)||((a.sup||'~')>(b.sup||'~')?1:(a.sup||'~')<(b.sup||'~')?-1:0)||(a.n>b.n?1:a.n<b.n?-1:0)||(a.id>b.id?1:-1)).forEach((l,k)=>rowRank[l.id]=k)}
   const rr=l=>rowRank[l.id]??-1;R.sort((a,b)=>rr(a)-rr(b)||(b.id>a.id?1:-1));
-  const shown=R.slice(0,400);
-  const num=(l,f,miss)=>`<input class="num ${miss?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="${f}" value="${l[f]==null?'':l[f]}" placeholder="${miss?'—':''}">`;
+  // windowing: draw only the rows around the visible part of the table box
+  const cols=ivCols(),hk=[lang,invEdit?1:0,ivCard()?1:0,cols.join(',')].join('|');if(hk!==invHK){invHK=hk;invH={};invAvg=0}
+  invR=R;const ow=document.querySelector('#page .tbl-wrap.inv');invWin=ivRange(ow?ow.scrollTop:0,ow?ow.clientHeight:Math.max(400,innerHeight-200));
+  const [pt,pb]=ivPad(invWin.a,invWin.b),shown=R.slice(invWin.a,invWin.b);
+  const nU=nUnsaved(),vw=ivViews(),cv=ivCurView();
+  if(invOpen&&(!L.some(l=>l.id===invOpen)))invOpen=null;
   return `${SHEET?'':`<div class="card"><div class="controls"><label for="me">${t('name')}</label><input id="me" value="${esc(me)}" placeholder="${t('namePh')}" style="min-width:220px;${me?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">${SHEET&&(CFG.PIN===true||pinNeeded||pin)?`<label for="pin">${t('pin')}</label><input id="pin" type="password" value="${esc(pin)}" style="width:110px;${pin?'':'border-color:var(--fk-danger);background:var(--fk-danger-bg)'}">`:''}<span class="sp"></span><span style="color:var(--fk-muted);font-size:12px">${t('basis')}</span></div></div>`}
-  ${banner()}${head(L)}
-  <div class="controls"><input id="q" placeholder="${t('search')}" value="${esc(fl.q)}" style="min-width:230px">
+  ${banner()}
+  <div class="ivbar ${invEdit?'editing':''}"><h2>${t('fill')}</h2><span class="ivcount">${fill(t('ivCount'),{n:`<bdi>${fmt(R.length)}</bdi>`})}</span>
+   <span class="ivsave">${nU?`<span class="st st-chg"><span>${ivB(nU)} ${t('unsaved')}</span></span>`:`<span class="st st-muted">${ivI('check')}<span>${t('allSaved')}</span></span>`}${invEdit?`<span class="ivmode">${t('ivEditing')}</span>`:''}</span>
+   <span class="sp"></span>
+   <div class="ivacts"><div class="ivmw"><button class="btn" data-act="ivcols" aria-haspopup="true" aria-expanded="${ivMenu}">${ivI('cols')} ${t('ivCols')}</button>${ivMenu?ivColMenu():''}</div>
+   ${invEdit?`<button class="btn btn-primary" data-act="add">+ ${t('add')}</button><button class="btn" data-act="invcancel">${t('cancelS')}</button><button class="btn btn-accent" data-act="invsave">${t('saveS')}${nU?' ('+nU+')':''}</button>`
+     :`<button class="btn btn-accent" data-act="invedit">${t('editInv')}</button>`}</div></div>
+  ${invEdit?'':`<p class="hint ivlock">${t('editInvH')}</p>`}
+  ${ivSummary(L)}
+  <div class="controls ivfil"><input id="q" type="search" placeholder="${t('search')}" value="${esc(fl.q)}" aria-label="${t('search')}">
    <div class="chips">${['all','missing','toconfirm','confirmed','notneeded'].map(k=>`<button class="chip ${fl.st===k?'on':''}" data-st="${k}">${t(k)}</button>`).join('')}</div>
-   <select id="fcon"><option value="">${t('concept')}: ${t('all')}</option>${Object.keys(CON).map(k=>`<option value="${k}" ${fl.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select>
-   <select id="fsup"><option value="">${t('supplier')}: ${t('all')}</option>${sups.map(s=>`<option ${fl.sup===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
-   <select id="fpay"><option value="">${t('payment')}: ${t('all')}</option><option value="pemo" ${fl.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${fl.pay==='credit'?'selected':''}>${t('creditW')}</option><option value="none" ${fl.pay==='none'?'selected':''}>${t('nopay')}</option></select>
-   <select id="fstk"><option value="">${t('stockF')}: ${t('all')}</option><option value="order" ${fl.stk==='order'?'selected':''}>${t('sOrder')}</option><option value="below" ${fl.stk==='below'?'selected':''}>${t('sBelow')}</option><option value="ok" ${fl.stk==='ok'?'selected':''}>${t('sOk')}</option></select>
-   <span class="sp"></span>${invEdit?`<button class="btn btn-primary" data-act="add">+ ${t('add')}</button><button class="btn" data-act="invcancel">${t('cancelS')}</button><button class="btn btn-accent" data-act="invsave">${t('saveS')}${nUnsaved()?' ('+nUnsaved()+')':''}</button>`
-     :`<button class="btn btn-accent" data-act="invedit">${t('editInv')}</button>`}</div>
-  ${invEdit?'':`<p class="hint" style="margin:-4px 0 10px">${t('editInvH')}</p>`}
+   <select id="fcon" aria-label="${t('concept')}"><option value="">${t('concept')}: ${t('all')}</option>${Object.keys(CON).map(k=>`<option value="${k}" ${fl.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select>
+   <select id="fsup" aria-label="${t('supplier')}"><option value="">${t('supplier')}: ${t('all')}</option>${sups.map(s=>`<option ${fl.sup===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
+   <select id="fpay" aria-label="${t('payment')}"><option value="">${t('payment')}: ${t('all')}</option><option value="pemo" ${fl.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${fl.pay==='credit'?'selected':''}>${t('creditW')}</option><option value="none" ${fl.pay==='none'?'selected':''}>${t('nopay')}</option></select>
+   <select id="fstk" aria-label="${t('stockF')}"><option value="">${t('stockF')}: ${t('all')}</option><option value="order" ${fl.stk==='order'?'selected':''}>${t('sOrder')}</option><option value="below" ${fl.stk==='below'?'selected':''}>${t('sBelow')}</option><option value="ok" ${fl.stk==='ok'?'selected':''}>${t('sOk')}</option></select>
+   <span class="ivviews">${ivI('view')}<select id="ivview" aria-label="${t('ivViews')}"><option value="">${t('ivViewPick')}${vw.length?' ('+vw.length+')':''}</option>${vw.map((v,i)=>`<option value="${i}" ${cv===i?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
+   ${ivNaming?`<input id="ivvname" maxlength="40" placeholder="${t('ivViewName')}" aria-label="${t('ivViewName')}"><button class="btn btn-sm btn-accent" data-act="ivviewok">${t('ivViewOk')}</button><button class="btn btn-sm" data-act="ivviewno">${t('ivViewNo')}</button>`
+     :`<button class="btn btn-sm" data-act="ivsaveview">${t('ivSaveView')}</button>${cv>=0?`<button class="btn btn-sm ivdel" data-act="ivdelview" title="${t('ivDelView')}" aria-label="${t('ivDelView')}">${ivI('trash')}</button>`:''}`}</span></div>
   <datalist id="sups">${[...new Set([...sups,...suppliers().map(x=>x.n).filter(Boolean)])].sort().map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
-  <div class="tbl-wrap inv ${invEdit?'editing':''}"><table><thead><tr><th>${t('item')}</th><th>${t('supplier')}</th><th>${t('payment')}</th><th class="n">${t('use')}</th><th class="n">${t('par')}</th><th class="n">${t('stock')}</th><th class="n">${t('rop')} <span style="font-weight:400;color:var(--fk-muted)">(${t('auto')})</span></th><th class="n">${t('price')}</th><th>${t('unit')}</th><th>${t('pack')}</th><th class="n">${t('buy')}</th><th class="n">${t('bud')}</th><th>${t('status')}</th></tr></thead><tbody>
-  ${shown.map(l=>{const m=missing(l),s=status(l),c=calc(l),ref=l.ref;
-    return `<tr class="${s==='missing'?'r-miss':s==='confirmed'?'r-ok':''}">
-    <td class="item">${invEdit?`<button class="rmx" data-act="rmitem" data-id="${esc(l.id)}" title="${t('rmItem')}" aria-label="${t('rmItem')}">✕</button>`:''}${l.isNew?`<input dir="auto" class="${m.includes('name')?'miss':''}" data-id="${esc(l.id)}" data-f="n" value="${esc(l.n)}" placeholder="${t('newItem')}"><div style="display:flex;gap:4px;margin-top:4px"><select data-id="${esc(l.id)}" data-f="con">${Object.keys(CON).map(k=>`<option value="${k}" ${l.con===k?'selected':''}>${CON[k][lang]}</option>`).join('')}</select><select data-id="${esc(l.id)}" data-f="cat"><option value="Food" ${l.cat==='Food'?'selected':''}>${t('food')}</option><option value="Non-food" ${l.cat==='Non-food'?'selected':''}>${t('nonfood')}</option></select></div>`:`${esc(l.n)}<small>${CON[l.con]?CON[l.con][lang]:esc(l.con)} · ${l.cat==='Food'?t('food'):t('nonfood')} · ${esc(l.id)}</small>`}</td>
-    <td><input dir="auto" class="sup ${m.includes('sup')?'miss':''}" list="sups" data-id="${esc(l.id)}" data-f="sup" value="${esc(l.sup)}" placeholder="${m.includes('sup')?t('m_sup'):''}"><div class="smrow"><select class="smsel" data-id="${esc(l.id)}" data-f="sm" title="${t('smT')}"><option value="">${t('smStore')}</option><option value="direct" ${smOf(l)==='direct'?'selected':''}>${t('smDirect')}</option><option value="cycle" ${smOf(l)==='cycle'?'selected':''}>${t('smCycle')}</option></select>${smOf(l)==='cycle'?`<input class="num cyc" type="number" min="1" step="1" data-id="${esc(l.id)}" data-f="cyc" value="${cycOf(l)}" title="${t('smDays')}"><span class="hint">${t('smDays')}</span>`:''}</div></td>
-    <td><select class="${m.includes('pay')?'miss':''}" data-id="${esc(l.id)}" data-f="pay"><option value="">${t('choose')}</option><option value="pemo" ${l.pay==='pemo'?'selected':''}>${t('pemoW')}</option><option value="credit" ${l.pay==='credit'?'selected':''}>${t('creditW')}</option></select></td>
-    <td class="n">${num(l,'use',m.includes('use'))}${smOf(l)==='cycle'&&+l.use>0?`<div class="hint">${fill(t('perOrder'),{q:fmt(+l.use/30*cycOf(l),(+l.use/30*cycOf(l))%1?1:0),u:U(l.u||'')})}</div>`:''}${ref&&ref.q?`<div class="hint">${t('storeRef')}: ${fmt(ref.q,ref.q%1?1:0)}</div>`:''}</td>
-    <td class="n">${smOf(l)?'<span class="hint">-</span>':num(l,'par',m.includes('par'))}</td>
-    <td class="n">${smOf(l)==='direct'?`<span class="hint">${t('smDirectS')}</span>`:num(l,'st',false)+(!smOf(l)&&+l.use>0?`<div class="hint">${fmt((+l.st||0)/(+l.use/30),0)} ${t('daysLeft')}</div>`:'')}</td>
-    <td class="n">${smOf(l)?`<span class="badge b-pemo">${smOf(l)==='direct'?t('smDirect'):fill(t('smCycleB'),{n:cycOf(l)})}</span>`:(+l.use>0||+l.par>0)?`<div style="padding:6px 0;font-weight:600">${fmt(ropOf(l),ropOf(l)%1?1:0)}</div>${(k=>k?`<span class="badge ${k==='ok'?'b-ok':k==='order'?'b-warn':'b-bad'}">${t(k==='ok'?'sOk':k==='order'?'sOrder':'sBelow')}</span>`:'')(stockState(l))}`:''}</td>
-    <td class="n">${num(l,'p',m.includes('price'))}${ref&&ref.p>0?`<div class="hint">${t('storeRef')}: ${fmt(ref.p,2)}${m.includes('price')?` · <button data-act="useprice" data-id="${esc(l.id)}" data-v="${ref.p}">${t('use_')}</button>`:''}</div>`:''}</td>
-    <td>${uSel(l,'u',m.includes('unit'))}${ref&&ref.u?`<div class="hint">${t('storeRef')}: ${esc(ref.u)}</div>`:''}</td>
-    <td><div style="display:flex;gap:4px"><input class="num pkn ${m.includes('pack')&&!(+l.pkN>0)?'miss':''}" type="number" min="0" step="any" inputmode="decimal" data-id="${esc(l.id)}" data-f="pkN" value="${l.pkN==null?'':l.pkN}" placeholder="#">${uSel(l,'pkU',m.includes('pack')&&!l.pkU)}</div>${l.u&&+l.pkN>0&&l.pkU?`<div class="hint">1 ${U(l.u)} = ${fmt(l.pkN,l.pkN%1?2:0)} ${U(l.pkU)}</div>`:''}</td>
-    <td class="n"><b>${c.q?fmt(c.q,c.q%1?2:0):''}</b></td>
-    <td class="n"><b>${c.v?fmt(c.v):''}</b></td>
-    <td>${s==='missing'?`<span class="badge b-bad">${t('needs')}: ${m.map(x=>t('m_'+(x==='price'?'price':x))).join(', ')}</span>`:
-      `<button class="btn btn-ok ${l.ok?'done':''}" data-act="ok" data-id="${esc(l.id)}">${l.ok?'✓ '+t(s==='notneeded'?'notneeded':'done'):t('confirm')}</button>`}
-      ${l.who?`<div class="who">${esc(l.who)} · ${new Date(l.at).toLocaleDateString(lang==='ar'?'ar-AE':'en-GB',{day:'numeric',month:'short'})}</div>`:''}</td></tr>`}).join('')||`<tr><td colspan="13" class="empty">—</td></tr>`}
-  </tbody></table></div>${R.length>shown.length?`<div class="empty">${shown.length} / ${R.length}</div>`:''}<p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')} ${t('ropNote')}</p>`}
+  <div class="tbl-wrap inv ${invEdit?'editing':''}"><table style="margin-top:${pt}px;margin-bottom:${pb}px"><thead><tr>${cols.map(k=>`<th class="${['stock','use','par','rop','p','buy','bud'].includes(k)?'n ':''}${k==='item'?'pin1':k==='stock'?'pin2':''}" data-k="${k}">${ivColName(k)}${k==='rop'?` <span style="font-weight:400;color:var(--fk-muted)">(${t('auto')})</span>`:''}</th>`).join('')}</tr></thead><tbody>
+  ${shown.map(ivRow).join('')||`<tr><td colspan="${cols.length}" class="empty">—</td></tr>`}
+  </tbody></table></div><p style="color:var(--fk-muted);font-size:12px;margin:0">${t('notes')} ${t('ropNote')}</p>
+  ${invOpen?ivDrawer(line(invOpen)):''}`}
+/* After the page is drawn: lock the drawer like the table, mark changed fields there too, size the pinned columns, measure rows. */
+function ivPost(root){
+  if(SHEET){if(!editMode)root.querySelectorAll(EDIT_SEL).forEach(e=>e.disabled=true);else root.querySelectorAll(EDIT_SEL).forEach(e=>{if(!canEl(e))e.disabled=true});
+    Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>root.querySelectorAll(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`).forEach(el=>el.classList.add('chg'))))}
+  if(!invEdit)root.querySelectorAll('[data-f],button[data-act="ok"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+  if(OMAN())omr(root)}
+function ivMeasure(w){let s=0,n=0;w.querySelectorAll('tbody tr[data-inv]').forEach(r=>{const h=r.offsetHeight;if(h>0){invH[r.dataset.inv]=h;s+=h;n++}});
+  if(n){const all=Object.values(invH);invAvg=all.reduce((a,b)=>a+b,0)/all.length}
+  const tb=w.querySelector('table');if(tb){const [a,b]=ivPad(invWin.a,invWin.b);tb.style.marginTop=a+'px';tb.style.marginBottom=b+'px'}}
+function ivPin(w){const th=w.querySelector('th.pin1');if(th)w.style.setProperty('--pin1w',th.offsetWidth+'px')}
+function invAfter(P){const top=document.getElementById('top');P.style.setProperty('--invtop',((top&&top.offsetHeight)||0)+'px');
+  const dr=P.querySelector('.invdr');if(dr){if(!invEdit)dr.querySelectorAll('[data-f],button[data-act="ok"],button[data-act="useprice"]').forEach(e=>e.disabled=true);
+    if(SHEET)Object.entries(local).forEach(([id,p])=>Object.keys(p).forEach(f=>dr.querySelectorAll(`[data-id="${CSS.escape(id)}"][data-f="${f}"]`).forEach(el=>el.classList.add('chg'))))}
+  const w=P.querySelector('.tbl-wrap.inv');if(w){ivPin(w);ivMeasure(w)}}
+function ivPaint(w){const n=invR.length;if(n<=IV_ALL||!w.isConnected)return;const st=w.scrollTop,h=w.clientHeight;
+  const [t0]=ivPad(invWin.a,invWin.b);let t1=t0;for(let i=invWin.a;i<invWin.b;i++)t1+=ivHt(invR[i].id);
+  if((invWin.a===0||st-200>=t0)&&(invWin.b===n||st+h+200<=t1))return;
+  const tb=w.querySelector('tbody');if(!tb)return;const ae=document.activeElement;if(ae&&tb.contains(ae))ae.blur();
+  invWin=ivRange(st,h);tb.innerHTML=invR.slice(invWin.a,invWin.b).map(ivRow).join('');ivPost(tb);ivMeasure(w)}
+let ivRaf=0;
+document.addEventListener('scroll',e=>{const w=e.target;if(w&&w.classList&&w.classList.contains('inv')&&w.classList.contains('tbl-wrap')){if(ivRaf)return;ivRaf=requestAnimationFrame(()=>{ivRaf=0;ivPaint(w)})}},true);
+window.addEventListener('resize',()=>{if(tab==='fill'&&unlocked&&document.querySelector('#page .tbl-wrap.inv')){const k=[lang,invEdit?1:0,ivCard()?1:0,ivCols().join(',')].join('|');if(k!==invHK)render();else{const w=document.querySelector('#page .tbl-wrap.inv');ivPin(w);ivPaint(w)}}});
+function ivSaveView(){const el=document.getElementById('ivvname');const name=(el&&el.value||'').trim().slice(0,40);if(!name){if(el){el.classList.add('miss');el.focus()}return}
+  const v=ivViews().filter(x=>x.name!==name);v.push({name,fl:ivFl()});ls2('pp-inv-views',v);ivNaming=false;toast(t('ivViewSaved'));render()}
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('[data-tab]')){invOpen=null;ivMenu=false;ivNaming=false}if(!unlocked||tab!=='fill'){if(tab!=='fill')invOpen=null;return}
+  const b=e.target.closest('button');const a=b&&b.dataset.act;
+  if(ivMenu&&!e.target.closest('.ivmw')){ivMenu=false;render();if(!a)return}
+  if(a==='ivcols'){ivMenu=!ivMenu;render();return}
+  if(a==='invopen'){invOpen=b.dataset.id;render();const d=document.querySelector('.invdr .ivx');d&&d.focus({preventScroll:true});return}
+  if(a==='invclose'){const id=invOpen;invOpen=null;render();const o=id&&document.querySelector(`.ivopen[data-id="${CSS.escape(id)}"]`);o&&o.focus({preventScroll:true});return}
+  if(a==='ivreorder'){fl.stk=fl.stk==='order'?'':'order';render();return}
+  if(a==='ivsaveview'){ivNaming=true;render();const i=document.getElementById('ivvname');i&&i.focus();return}
+  if(a==='ivviewno'){ivNaming=false;render();return}
+  if(a==='ivviewok'){ivSaveView();return}
+  if(a==='ivdelview'){const i=ivCurView();if(i>=0){const v=ivViews();v.splice(i,1);ls2('pp-inv-views',v);toast(t('ivViewDel'));render()}return}
+  const tr=e.target.closest('.inv tbody tr[data-inv]');
+  if(tr&&!e.target.closest('button,input,select,textarea,a,label')){invOpen=tr.dataset.inv;render()}});
+document.addEventListener('change',e=>{const el=e.target;
+  if(el.dataset&&el.dataset.ivcol){const on=new Set(ivCols());if(el.checked)on.add(el.dataset.ivcol);else on.delete(el.dataset.ivcol);ls2('pp-inv-cols',IV_COLS.filter(k=>on.has(k)));render();const c=document.querySelector(`[data-ivcol="${el.dataset.ivcol}"]`);c&&c.focus();return}
+  if(el.id==='ivview'){const v=ivViews()[+el.value];if(el.value!==''&&v){Object.assign(fl,{q:'',st:'all',con:'',sup:'',pay:'',stk:''},v.fl);render()}}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='ivvname'){e.preventDefault();ivSaveView();return}
+  if(e.key==='Escape'&&tab==='fill'&&!document.querySelector('.cfm')){if(ivMenu){ivMenu=false;render();return}if(ivNaming&&e.target.id==='ivvname'){ivNaming=false;render();return}if(invOpen){const id=invOpen;invOpen=null;render();const o=document.querySelector(`.ivopen[data-id="${CSS.escape(id)}"]`);o&&o.focus({preventScroll:true})}}});
 function vSum(){
   const L=lines();const by={},bc={};
   L.forEach(l=>{const v=calc(l).v;if(!v)return;const k=l.sup||'—';by[k]=by[k]||{v:0,n:0,pay:new Set()};by[k].v+=v;by[k].n++;by[k].pay.add(l.pay||'');bc[l.con]=(bc[l.con]||0)+v});
@@ -1442,29 +1771,82 @@ function vRqNew(){const d=rqDraft;const k=d.kind;const fld=(f,lbl,inner)=>`<div 
     <div class="fld" style="grid-column:1/-1"><label>${t('rqPhotos')}</label><div class="rq-photos">${(d.photos||[]).map((ph,i)=>`<div class="rq-ph"><img src="${ph}" alt=""><button class="btn btn-ok" data-rqphdel="${i}">✕</button></div>`).join('')}${(d.photos||[]).length<3?`<label class="btn" style="display:inline-flex;align-items:center;cursor:pointer">+ ${t('rqAddPhoto')}<input type="file" accept="image/*" data-rqphoto="1" style="display:none"></label>`:''}</div></div>
    </div><div class="controls" style="margin-top:16px"><span class="hint" style="white-space:normal">${t('rqBy')}: <b>${esc(me)}</b></span><span class="sp"></span><button class="btn btn-accent" data-act="rqsend" style="min-height:44px;padding:8px 22px;font-size:14px">${t('rqSend')}</button></div></div>`:''}`}
 
-function rqList(R,showBy){return R.length?`<div class="card" style="padding:4px 0"><div class="list">${R.map(r=>`<div class="li rq-li" data-rqopen="${esc(r.id)}">${(r.photos||[]).length?`<img class="rq-thumb" src="${r.photos[0]}" alt="">`:''}<div class="grow"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>${esc(r.title||'—')}</b>${r.urg==='urgent'?`<span class="badge b-bad">${t('urgU')}</span>`:''}</div>
-   <div class="hint" style="white-space:normal;margin-top:3px">${esc(r.no||'')} · ${rqKindTag(r)} · ${esc(nm(DEPTS,r.dept))}${r.branch?' · '+esc(nm(RQLOC,r.branch)):''}${showBy?' · '+esc(r.by||''):''} · ${rqAge(r.date)}${r.needBy?' · '+rqNeedTxt(r):''}${r.buyer?' · '+t('rqAssigned')+' '+esc(r.buyer):''}${['later','rejected'].includes(r.status)&&r.closeReason?` · <b>${t('rr_'+r.closeReason)}</b>${r.reviewOn?' · '+t('rqReviewOn')+' '+esc(r.reviewOn):''}`:''}</div></div>${rqBadge(r.status||'new')}<span class="ov-arrow">${lang==='ar'?'←':'→'}</span></div>`).join('')}</div></div>`:`<div class="card"><div class="empty">${t('rqNone')}</div></div>`}
+/* ===== Requests queue and request detail (UI redesign 4.1): status pills, a few chips plus More filters, saved views (this browser),
+   a four-block request page, and a confirm before big status changes. Statuses, transitions, permissions and saving are the same as before
+   (rqGo, rqClose, editR, rqLog); only the layout changed. */
+Object.assign(T.en,{rqMoreF:'More filters',rqLessF:'Fewer filters',rqClearF:'Clear filters',rqMineF:'Handled by me',rqShown:'shown',rqKindAll:'All kinds',rqCostAll:'CAPEX and OPEX',rqDeptAll:'All departments',rqLocAll:'All locations',rqFilters:'Filters',
+ rqB_sum:'Request summary',rqB_own:'Owner and status',rqB_thr:'Clarification thread',rqB_hist:'Decision history',rqNoThread:'No messages yet.',rqNoHist:'No status changes yet.',rqNotAssigned:'Not assigned yet',rqType:'Type',rqMailHs:'Opens your email app. A copy is noted here.',
+ cf_review:'Accept "{t}" and start clarifying it?',cf_reviewY:'Yes, accept',cf_approval:'Send "{t}" to the CEO for approval?',cf_approvalY:'Yes, send',cf_ceook:'Approve "{t}"? The order can then be placed and an LPO is prepared.',cf_ceookY:'Yes, approve',
+ cf_withdraw:'Withdraw "{t}" from the CEO? It goes back to quotes.',cf_withdrawY:'Yes, withdraw',cf_reopen:'Reopen "{t}"?',cf_reopenY:'Yes, reopen',cf_lpo:'Create an LPO for "{t}"?',cf_lpoY:'Yes, create',cf_cancelled:'Cancel your request "{t}"?',cf_cancelledY:'Yes, cancel it'});
+Object.assign(T.ar,{rqMoreF:'فلاتر أكثر',rqLessF:'فلاتر أقل',rqClearF:'مسح الفلاتر',rqMineF:'المسندة لي',rqShown:'معروض',rqKindAll:'كل الأنواع',rqCostAll:'CAPEX و OPEX',rqDeptAll:'كل الأقسام',rqLocAll:'كل المواقع',rqFilters:'الفلاتر',
+ rqB_sum:'ملخص الطلب',rqB_own:'المسؤول والحالة',rqB_thr:'محادثة التوضيح',rqB_hist:'سجل القرارات',rqNoThread:'لا توجد رسائل بعد.',rqNoHist:'لا توجد تغييرات في الحالة بعد.',rqNotAssigned:'لم يُسند بعد',rqType:'النوع',rqMailHs:'يفتح تطبيق البريد. وتُسجَّل نسخة هنا.',
+ cf_review:'قبول "{t}" وبدء التوضيح؟',cf_reviewY:'نعم، اقبل',cf_approval:'إرسال "{t}" للرئيس التنفيذي للموافقة؟',cf_approvalY:'نعم، أرسل',cf_ceook:'الموافقة على "{t}"؟ بعدها يمكن الطلب ويُجهَّز أمر الشراء.',cf_ceookY:'نعم، موافق',
+ cf_withdraw:'سحب "{t}" من الرئيس التنفيذي؟ سيعود إلى مرحلة العروض.',cf_withdrawY:'نعم، اسحب',cf_reopen:'إعادة فتح "{t}"؟',cf_reopenY:'نعم، أعد الفتح',cf_lpo:'إنشاء أمر شراء لـ "{t}"؟',cf_lpoY:'نعم، أنشئ',cf_cancelled:'إلغاء طلبك "{t}"؟',cf_cancelledY:'نعم، ألغِه'});
+const RQI={plus:'<path d="M12 5v14M5 12h14"/>',filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',view:'<path d="M7 4h10v16l-5-4-5 4z"/>',trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
+ mail:'<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',note:'<path d="M6 4h9l3 3v13H6z"/><path d="M9 11h6M9 15h6"/>',flag:'<path d="M6 21V4"/><path d="M6 4h11l-2 4 2 4H6"/>',
+ user:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-5.5 7-5.5s6 1.5 7 5.5"/>',clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',box:'<path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/>',
+ search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',list:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/>',
+ doc:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>'};
+const rqI=k=>`<svg class="rqi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${RQI[k]}</svg>`;
+const rqUrgB=()=>`<span class="rq-urg">${rqI('flag')}${t('urgU')}</span>`;
+/* status pills = the counts that used to be big cards; the rest of today's status chips sit under More filters */
+const RQCH={in:{pills:['open','new','review'],more:['rejected','cancelled','all']},go:{pills:['active','sourcing','quotes','approval','approved','ordered','later'],more:['done','rejected','all']}};
+const RQ_FD={kind:'',q:'',urg:false,mine:false,cost:'',dept:'',branch:''};
+let rqMore={in:false,go:false},rqNaming=false;
+function rqViews(){const v=ls2('pp-rq-views');return Array.isArray(v)?v:[]}
+function rqFl(F){return {st:F.st||'',kind:F.kind||'',q:F.q||'',urg:!!F.urg,mine:!!F.mine,cost:F.cost||'',dept:F.dept||'',branch:F.branch||''}}
+function rqCurView(m,F){const c=JSON.stringify(rqFl(F));return rqViews().findIndex(v=>v.m===m&&JSON.stringify(rqFl(v.f||{}))===c)}
+function rqSaveView(){const el=document.getElementById('rqvname');const name=(el&&el.value||'').trim().slice(0,40);if(!name){if(el){el.classList.add('miss');el.focus()}return}
+  const m=tab==='pon'?'go':'in',F=m==='go'?rqG:rqF;const v=rqViews().filter(x=>!(x.m===m&&x.name===name));v.push({name,m,f:rqFl(F)});ls2('pp-rq-views',v);rqNaming=false;toast(t('ivViewSaved'));render()}
+function rqRow(r,showBy){const u=r.urg==='urgent';
+  const meta=[`<bdi class="rqno">${esc(r.no||'')}</bdi>`,`<span>${rqKindTag(r)}</span>`,`<span>${esc(nm(DEPTS,r.dept))}${r.branch?' · '+esc(nm(RQLOC,r.branch)):''}</span>`,showBy&&r.by?`<span class="rqwho">${rqI('user')}${esc(r.by)}</span>`:''].filter(Boolean);
+  const sd=[`<span>${rqI('clock')}<bdi>${rqAge(r.date)}</bdi></span>`,r.needBy?`<span><bdi>${rqNeedTxt(r)}</bdi></span>`:'',r.buyer?`<span>${t('rqAssigned')} <b>${esc(r.buyer)}</b></span>`:'',
+    ['later','rejected'].includes(r.status)&&r.closeReason?`<span><b>${t('rr_'+r.closeReason)}</b>${r.reviewOn?' · '+t('rqReviewOn')+' <bdi>'+esc(r.reviewOn)+'</bdi>':''}</span>`:''].filter(Boolean);
+  return `<div class="li rq-li${u?' is-urg':''}" data-rqopen="${esc(r.id)}" tabindex="0">${(r.photos||[]).length?`<img class="rq-thumb" src="${r.photos[0]}" alt="">`:`<span class="rq-thumb rq-noph">${rqI('box')}</span>`}
+   <div class="grow"><div class="rq-tl"><b dir="auto">${esc(r.title||'—')}</b>${u?rqUrgB():''}</div><div class="rq-meta">${meta.join('<span class="dot" aria-hidden="true">·</span>')}</div></div>
+   <div class="rq-side">${sd.join('')}</div><div class="rq-st">${rqBadge(r.status||'new')}<span class="ov-arrow">${lang==='ar'?'←':'→'}</span></div></div>`}
+function rqList(R,showBy){return R.length?`<div class="card rqlist" style="padding:4px 0"><div class="list">${R.map(r=>rqRow(r,showBy)).join('')}</div></div>`:`<div class="card"><div class="empty">${t('rqNone')}</div></div>`}
 
 function vRqMine(){if(rqOpenId)return vRqDetail(rqOpenId,false);
   const R=recs('Requests').filter(r=>(r.by||'').trim().toLowerCase()===(me||'').trim().toLowerCase()).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return `<div class="card"><h2 style="margin:0">${t('rmine')}</h2></div>${rqList(R,false)}`}
+  const canNew=sideTabs().includes('rnew');
+  return `<div class="card rqhead"><div><h2 style="margin:0">${t('rmine')}</h2><div class="hint"><bdi>${R.length}</bdi> ${t('rqShown')}</div></div><span class="sp"></span>${canNew?`<button class="btn btn-accent rqnewb" data-act="rqnewgo">${rqI('plus')}<span>${t('rnew')}</span></button>`:''}</div>${rqList(R,false)}`}
 
 function rqInGroup(r,mode){const st=r.status||'new';return mode==='in'?RQIN.includes(st)||(['rejected','cancelled'].includes(st)&&RQIN.includes(r.prevStatus||'new')):!RQIN.includes(st)&&!(['rejected','cancelled'].includes(st)&&RQIN.includes(r.prevStatus||'new'))}
 function vPrq(mode){if(rqOpenId)return vRqDetail(rqOpenId,true);
-  const F=mode==='in'?rqF:rqG;const A=recs('Requests').filter(r=>rqInGroup(r,mode));const cnt=s=>A.filter(r=>(r.status||'new')===s).length;
-  const groups=mode==='in'?{open:RQIN}:{active:RQGO,closed:['done','rejected','cancelled']};
-  const chips=mode==='in'?[['open',t('rqOpenN')],['new',t('rs_new')],['review',t('rs_review')],['rejected',t('rs_rejected')],['cancelled',t('rs_cancelled')],['all',t('rqAll')]]:[['active',t('rqActive')],['sourcing',t('rs_sourcing')],['quotes',t('rs_quotes')],['approval',t('rs_approval')],['approved',t('rs_approved')],['ordered',t('rs_ordered')],['later',t('rs_later')],['done',t('rs_done')],['rejected',t('rs_rejected')],['all',t('rqAll')]];
-  if(!chips.some(c=>c[0]===F.st))F.st=chips[0][0];
-  let R=F.st==='all'?A:groups[F.st]?A.filter(r=>groups[F.st].includes(r.status||'new')):A.filter(r=>(r.status||'new')===F.st);if(F.kind)R=R.filter(r=>r.kind===F.kind);
+  const F=mode==='in'?rqF:rqG;for(const k in RQ_FD)if(!(k in F))F[k]=RQ_FD[k];
+  const A=recs('Requests').filter(r=>rqInGroup(r,mode));const cnt=s=>A.filter(r=>(r.status||'new')===s).length;
+  const groups=mode==='in'?{open:RQIN}:{active:RQGO,closed:['done','rejected','cancelled']};const CH=RQCH[mode];
+  if(![...CH.pills,...CH.more].includes(F.st))F.st=CH.pills[0];
+  const meL=(me||'').trim().toLowerCase(),isMine=r=>!!meL&&String(r.buyer||'').trim().toLowerCase()===meL;
+  let R=F.st==='all'?A:groups[F.st]?A.filter(r=>groups[F.st].includes(r.status||'new')):A.filter(r=>(r.status||'new')===F.st);
+  if(F.kind)R=R.filter(r=>r.kind===F.kind);if(F.urg)R=R.filter(r=>r.urg==='urgent');if(F.mine)R=R.filter(isMine);
+  if(F.cost)R=R.filter(r=>r.cost===F.cost);if(F.dept)R=R.filter(r=>r.dept===F.dept);if(F.branch)R=R.filter(r=>r.branch===F.branch);
   const q=F.q.trim().toLowerCase();if(q)R=R.filter(r=>[r.title,r.no,r.by,r.details,r.buyer].some(v=>String(v||'').toLowerCase().includes(q)));
   R.sort((a,b)=>(b.urg==='urgent')-(a.urg==='urgent')||RQS.indexOf(a.status||'new')-RQS.indexOf(b.status||'new')||(a.needBy||'9').localeCompare(b.needBy||'9'));
   const act=A.filter(r=>(mode==='in'?RQIN:RQGO).includes(r.status||'new'));const capex=act.filter(r=>r.cost==='capex').length;
-  const cards=mode==='in'?[['new',t('rs_new'),cnt('new'),'var(--fk-warning)'],['review',t('rs_review'),cnt('review'),''],['open',t('rqOpenN'),act.length,'',`CAPEX ${capex} · OPEX ${act.length-capex}`]]
-    :[['sourcing',t('rs_sourcing'),cnt('sourcing'),''],['quotes',t('rs_quotes'),cnt('quotes'),'var(--fk-bronze)'],['approval',t('rs_approval'),cnt('approval'),'var(--fk-warning)'],['approved',t('rs_approved'),cnt('approved'),'var(--fk-success)'],['ordered',t('rs_ordered'),cnt('ordered'),''],['later',t('rs_later'),cnt('later'),'var(--fk-muted)']];
-  return `${banner()}<div class="card"><h2 style="margin:0">${t(mode==='in'?'prq':'pon')}</h2><p class="hint" style="white-space:normal;margin:4px 0 0;font-size:12.5px">${t(mode==='in'?'prqH':'ponH')}</p></div>
-  <div class="grid kpis">${cards.map(([k,l,n,c,h])=>`<button class="card stat" data-rqst="${k}" style="text-align:start;cursor:pointer;font-family:inherit;${F.st===k?'border-color:var(--fk-bronze);box-shadow:0 0 0 1px var(--fk-bronze)':''}"><div class="lbl">${l}</div><div class="num" style="${c?'color:'+c:''}">${n}</div>${h?`<div class="hint">${h}</div>`:''}</button>`).join('')}</div>
-  <div class="controls"><div class="chips">${chips.map(([k,l])=>`<button class="chip ${F.st===k?'on':''}" data-rqst="${k}">${l}${RQS.includes(k)&&cnt(k)?' · '+cnt(k):''}</button>`).join('')}</div><span class="sp"></span>
-   <select id="rqkind"><option value="">${t('rqAll')}</option>${RQK.map(k=>`<option value="${k}" ${F.kind===k?'selected':''}>${t('rk_'+k)}</option>`).join('')}</select><input id="rqq" value="${esc(F.q)}" placeholder="${t('search')}" style="width:180px"></div>
+  const tone={new:'var(--fk-warning)',quotes:'var(--fk-bronze)',approval:'var(--fk-warning)',approved:'var(--fk-success)',later:'var(--fk-muted)',open:'#BD5038',active:'#BD5038'};
+  const pills=CH.pills.map(k=>{const n=groups[k]?act.length:cnt(k);const l=k==='open'?t('rqOpenN'):k==='active'?t('rqActive'):t('rs_'+k);
+    return `<button class="rqpill ${F.st===k?'on':''}" data-rqst="${k}" aria-pressed="${F.st===k}"><i style="background:${tone[k]||'var(--fk-line)'}"></i><span>${l}</span><bdi class="n">${n}</bdi>${k==='open'?`<small>CAPEX <bdi>${capex}</bdi> · OPEX <bdi>${act.length-capex}</bdi></small>`:''}</button>`}).join('');
+  const hid=(CH.more.includes(F.st)?1:0)+['kind','cost','dept','branch'].filter(k=>F[k]).length;const more=!!rqMore[mode];
+  const dirty=F.st!==CH.pills[0]||F.q||F.urg||F.mine||hid;const urgN=act.filter(r=>r.urg==='urgent').length,mineN=act.filter(isMine).length;
+  const V=rqViews(),cv=rqCurView(mode,F),nv=V.filter(v=>v.m===mode).length;
+  const sel=(id,all,L,v)=>`<select id="${id}" aria-label="${esc(all)}"><option value="">${all}</option>${L.map(x=>`<option value="${x[0]}" ${v===x[0]?'selected':''}>${esc(lang==='ar'?x[2]:x[1])}</option>`).join('')}</select>`;
+  return `${banner()}<div class="card rqhead"><div><h2 style="margin:0">${t(mode==='in'?'prq':'pon')}</h2><p class="hint" style="white-space:normal;margin:4px 0 0;font-size:12.5px">${t(mode==='in'?'prqH':'ponH')}</p></div><span class="sp"></span><span class="hint rqcount"><bdi>${R.length}</bdi> ${t('rqShown')}</span></div>
+  <div class="rqpills" role="group" aria-label="${esc(t('lt_status'))}">${pills}</div>
+  <div class="card rqfil"><div class="rqfr">
+    <label class="rqsearch">${rqI('search')}<input id="rqq" value="${esc(F.q)}" placeholder="${t('search')}" aria-label="${esc(t('search'))}" dir="auto"></label>
+    <div class="chips"><button class="chip ${F.mine?'on':''}" data-rqfx="mine" aria-pressed="${!!F.mine}">${rqI('user')}<span>${t('rqMineF')}</span><bdi>· ${mineN}</bdi></button>
+     <button class="chip ${F.urg?'on':''}" data-rqfx="urg" aria-pressed="${!!F.urg}">${rqI('flag')}<span>${t('urgU')}</span><bdi>· ${urgN}</bdi></button>
+     <button class="chip rqmoreb ${more?'on':''}" data-act="rqmore" aria-expanded="${more}" aria-controls="rqmorebox">${rqI('filter')}<span>${t(more?'rqLessF':'rqMoreF')}</span>${hid?`<bdi class="rqcnt">${hid}</bdi>`:''}</button>
+     ${dirty?`<button class="chip" data-act="rqclear">${t('rqClearF')}</button>`:''}</div>
+    <span class="sp"></span>
+    <span class="rqviews">${rqI('view')}${rqNaming?`<input id="rqvname" maxlength="40" dir="auto" placeholder="${t('ivViewName')}" aria-label="${t('ivViewName')}"><button class="btn btn-sm btn-accent" data-act="rqviewok">${t('ivViewOk')}</button><button class="btn btn-sm" data-act="rqviewno">${t('ivViewNo')}</button>`
+     :`<select id="rqview" aria-label="${t('ivViews')}"><option value="">${t('ivViewPick')}${nv?' ('+nv+')':''}</option>${V.map((v,i)=>v.m===mode?`<option value="${i}" ${cv===i?'selected':''}>${esc(v.name)}</option>`:'').join('')}</select>${cv>=0?`<button class="btn btn-sm" data-act="rqdelview" title="${t('ivDelView')}" aria-label="${t('ivDelView')}">${rqI('trash')}</button>`:`<button class="btn btn-sm" data-act="rqsaveview">${t('ivSaveView')}</button>`}`}</span></div>
+   ${more?`<div class="rqmore" id="rqmorebox"><div class="chips">${CH.more.map(k=>`<button class="chip ${F.st===k?'on':''}" data-rqst="${k}">${k==='all'?t('rqAll'):t('rs_'+k)}${RQS.includes(k)&&cnt(k)?' · <bdi>'+cnt(k)+'</bdi>':''}</button>`).join('')}</div>
+    <select id="rqkind" aria-label="${esc(t('rqKindAll'))}"><option value="">${t('rqKindAll')}</option>${RQK.map(k=>`<option value="${k}" ${F.kind===k?'selected':''}>${t('rk_'+k)}</option>`).join('')}</select>
+    <select id="rqcost" aria-label="${esc(t('rqCostAll'))}"><option value="">${t('rqCostAll')}</option>${['capex','opex'].map(c=>`<option value="${c}" ${F.cost===c?'selected':''}>${c.toUpperCase()}</option>`).join('')}</select>
+    ${sel('rqdept',t('rqDeptAll'),DEPTS,F.dept)}${sel('rqbranch',t('rqLocAll'),RQLOC,F.branch)}</div>`:''}</div>
   ${rqList(R,true)}`}
 
 function rqMiss(r){const st=r.status||'new';const m={spec:[],buyer:false,opt:false,pick:false};
@@ -1472,7 +1854,7 @@ function rqMiss(r){const st=r.status||'new';const m={spec:[],buyer:false,opt:fal
   if(st==='sourcing')m.opt=!(r.opts||[]).some(o=>String(o.sup||'').trim()&&+o.price>0);
   if(st==='quotes')m.pick=!(r.opts||[]).some(o=>o.pick);return m}
 function vRqDetail(id,proc){const r=Object.assign({id},rec('Requests',id));if(!r.no)return '';const st=r.status||'new';const can=(!SHEET||editMode);const editable=proc&&can&&side!=='ceo'&&!['done','rejected','cancelled'].includes(st);
-  const log=(r.log||[]).filter(e=>proc||['msg','reply','status'].includes(e.type));
+  const log=(r.log||[]).filter(e=>proc||['msg','reply','status'].includes(e.type));const thread=log.filter(e=>e.type!=='status'),hist=log.filter(e=>e.type==='status');
   const steps=['new','review','sourcing','quotes','approval','ordered','done'];const st0=st==='later'||st==='rejected'?(r.prevStatus||'new'):st;const si=st0==='approved'?steps.indexOf('approval')+0.5:steps.indexOf(st0);const ceo=side==='ceo';
   const specKeys=SPECF[r.kind]||SPECF.other;const req=SPECREQ[r.kind]||SPECREQ.other;const spec=r.spec||{};const M=rqMiss(r);
   const opts=r.opts||[];const showSpec=proc&&st!=='new';const showOpts=proc&&(RQGO.includes(st)||st==='done'||(['later','rejected'].includes(st)&&RQGO.includes(r.prevStatus)));
@@ -1486,32 +1868,46 @@ function vRqDetail(id,proc){const r=Object.assign({id},rec('Requests',id));if(!r
      ${rqClose.to==='later'?`<div class="fld"><label>${t('rqReview')}</label><input type="date" id="rqcd" value="${esc(rqClose.date||'')}"></div>`:''}
      <div class="fld" style="grid-column:1/-1"><label>${rqClose.to==='ceoback'?t('ceoNoteReq'):t('rqNote')} <span style="color:var(--fk-danger)">*</span></label><textarea id="rqcn" dir="auto" class="${String(rqClose.note||'').trim()?'':'miss'}" style="min-height:70px">${esc(rqClose.note||'')}</textarea></div></div>
      <div class="controls" style="margin-top:10px"><span class="sp"></span><button class="btn" data-act="rqcloseno">${t('cancelS')}</button><button class="btn btn-primary" data-act="rqcloseok">${t('rqConfirm')}</button></div></div>`:'';
-  const why=['later','rejected'].includes(st)&&r.closeReason?`<div class="banner ${st==='rejected'?'bn-warn':'bn-info'}" style="margin-top:12px"><b>${t('rs_'+st)}</b> · ${t('rr_'+r.closeReason)}${r.closeNote?' — '+esc(r.closeNote):''}${r.reviewOn?' · '+t('rqReviewOn')+' '+esc(r.reviewOn):''}</div>`:'';
-  return `<div class="controls"><button class="btn" data-act="rqback">${lang==='ar'?'→':'←'} ${side==='ceo'?t('appr'):proc?t(RQIN.includes(st)?'prq':'pon'):t('rmine')}</button><span class="sp"></span>${r.urg==='urgent'?`<span class="badge b-bad">${t('urgU')}</span>`:''}${rqBadge(st)}</div>
-  <div class="card"><div class="hint">${esc(r.no)} · ${dd(r.date)} · ${rqKindTag(r)}</div><h2 style="font-size:26px;margin:6px 0 4px">${esc(r.title||'')}</h2>
-   <div class="hint" style="white-space:normal;font-size:13px">${t('rqBy')}: <b>${esc(r.by||'')}</b> · ${esc(nm(DEPTS,r.dept))}${r.branch?' · '+esc(nm(RQLOC,r.branch)):''}${r.phone?' · <span dir="ltr">'+esc(r.phone)+'</span>':''}</div>
-   ${r.details?`<p style="white-space:pre-wrap;margin:14px 0 0;font-size:14px;line-height:1.55">${esc(r.details)}</p>`:''}
-   <div class="bill-meta" style="margin-bottom:0">${[[t('rqQty'),(r.qty??'—')+' '+(r.unit||'')],[t('rqNeed'),r.needBy?rqNeedTxt(r,1):'—'],[t('rqBudget').replace(/ \(.*\)/,''),r.budget?'AED '+fmt(+r.budget):'—'],[t('rqAssigned'),r.buyer||'—']].map(([l,v])=>`<div><div class="hint">${l}</div><b>${v}</b></div>`).join('')}</div>
-   ${r.refs?`<div class="hint" style="white-space:normal;margin-top:10px">${t('rqRefs')}: ${esc(r.refs)}</div>`:''}
-   ${(r.photos||[]).length?`<div style="margin-top:14px"><div class="hint" style="margin-bottom:6px">${t('rqPhotos').replace(/ \(.*\)/,'')}</div><div class="rq-photos big">${r.photos.map((ph,i)=>`<button class="rq-ph" data-rqzoom="${i}"><img src="${ph}" alt=""></button>`).join('')}</div></div>`:''}</div>
-  <div class="card"><div class="rq-steps">${steps.map((s,i)=>`<div class="rq-step ${i<si?'past':i===si?'now':''} ${['rejected','cancelled','later'].includes(st)?'off':''}"><i>${i<si?'✓':i+1}</i><span>${t('rs_'+(s==='approval'&&st0==='approved'?'approved':s))}</span></div>`).join('')}</div>${why}
-   ${A.length||(proc&&editable)?`<div class="controls" style="margin-top:14px">${A.join('')}<span class="sp"></span>${proc&&editable?`<label class="hint" style="display:flex;gap:6px;align-items:center">${t('rqAssign')} <input data-rqf="buyer" class="${M.buyer?'miss':''}" value="${esc(r.buyer||'')}" style="width:150px"></label>`:''}</div>`:''}
+  const why=['later','rejected'].includes(st)&&r.closeReason?`<div class="banner ${st==='rejected'?'bn-warn':'bn-info'}" style="margin-top:12px"><b>${t('rs_'+st)}</b> · ${t('rr_'+r.closeReason)}${r.closeNote?' — '+esc(r.closeNote):''}${r.reviewOn?' · '+t('rqReviewOn')+' <bdi>'+esc(r.reviewOn)+'</bdi>':''}</div>`:'';
+  const msg=e=>`<div class="rq-msg t-${e.type}"><div class="hint"><bdi>${dd(e.at,1)}</bdi> · <b>${esc(e.by||'')}</b> · ${t('lt_'+e.type)}${proc&&['note','call','meet','ceo'].includes(e.type)?` <span class="badge b-mute">${t('rqInternal')}</span>`:''}</div><div style="white-space:pre-wrap" dir="auto">${esc(e.text)}</div></div>`;
+  const hst=e=>{const p=String(e.text||'').split('|');return `<li class="rq-msg t-status"><div>${rqBadge(p[0])}${p.length>1?` <span dir="auto">${esc(p.slice(1).join(' — '))}</span>`:''}</div><div class="hint"><bdi>${dd(e.at,1)}</bdi> · <b>${esc(e.by||'')}</b></div></li>`};
+  const meta=[[t('rqQty'),`<bdi>${r.qty??'—'}</bdi> ${esc(r.unit||'')}`],[t('rqNeed'),r.needBy?`<bdi>${rqNeedTxt(r,1)}</bdi>`:'—'],[t('rqBudget').replace(/ \(.*\)/,''),r.budget?`<bdi>AED ${fmt(+r.budget)}</bdi>`:'—']];
+  return `<div class="controls"><button class="btn" data-act="rqback">${lang==='ar'?'→':'←'} ${side==='ceo'?t('appr'):proc?t(RQIN.includes(st)?'prq':'pon'):t('rmine')}</button><span class="sp"></span>${r.urg==='urgent'?rqUrgB():''}${rqBadge(st)}</div>
+  <div class="rqd">
+  <section class="card rqb" data-blk="summary" aria-label="${esc(t('rqB_sum'))}"><h3 class="rqbh">${rqI('doc')}<span>${t('rqB_sum')}</span></h3>
+   <div class="hint"><bdi class="rqno">${esc(r.no)}</bdi> · <bdi>${dd(r.date)}</bdi> · ${rqKindTag(r)}</div><h2 class="rqtitle" dir="auto">${esc(r.title||'')}</h2>
+   <div class="hint" style="font-size:13px">${t('rqBy')}: <b>${esc(r.by||'')}</b> · ${esc(nm(DEPTS,r.dept))}${r.branch?' · '+esc(nm(RQLOC,r.branch)):''}${r.phone?' · <span dir="ltr" class="rqphone">'+esc(r.phone)+'</span>':''}</div>
+   ${r.details?`<p class="rqdet" dir="auto">${esc(r.details)}</p>`:''}
+   <div class="rqmeta">${meta.map(([l,v])=>`<div><div class="hint">${l}</div><b>${v}</b></div>`).join('')}</div>
+   ${r.refs?`<div class="hint" style="margin-top:10px">${t('rqRefs')}: <span dir="auto">${esc(r.refs)}</span></div>`:''}
+   ${(r.photos||[]).length?`<div style="margin-top:14px"><div class="hint" style="margin-bottom:6px">${t('rqPhotos').replace(/ \(.*\)/,'')}</div><div class="rq-photos big">${r.photos.map((ph,i)=>`<button class="rq-ph" data-rqzoom="${i}"><img src="${ph}" alt=""></button>`).join('')}</div></div>`:''}</section>
+  <section class="card rqb" data-blk="owner" aria-label="${esc(t('rqB_own'))}"><h3 class="rqbh">${rqI('user')}<span>${t('rqB_own')}</span></h3>
+   <div class="rqown"><div><div class="hint">${t(proc&&editable?'rqAssign':'rqAssigned')}</div>${proc&&editable?`<input data-rqf="buyer" class="${M.buyer?'miss':''}" value="${esc(r.buyer||'')}" aria-label="${esc(t('rqAssign'))}" dir="auto">`:`<b class="rqbuyer">${r.buyer?esc(r.buyer):`<span class="hint">${t('rqNotAssigned')}</span>`}</b>`}</div>
+    <div><div class="hint">${t('lt_status')}</div><div class="rqstat">${rqBadge(st)}${r.urg==='urgent'?rqUrgB():''}</div></div></div>
+   <div class="rq-steps">${steps.map((s,i)=>`<div class="rq-step ${i<si?'past':i===si?'now':''} ${['rejected','cancelled','later'].includes(st)?'off':''}"><i>${i<si?'✓':i+1}</i><span>${t('rs_'+(s==='approval'&&st0==='approved'?'approved':s))}</span></div>`).join('')}</div>${why}
+   ${A.length?`<div class="controls rqacts">${A.join('')}</div>`:''}
    ${['approval','approved','ordered','done'].includes(st)||(r.ceo&&r.ceo.decision)?rqCeoBox(r):''}
-   ${!proc&&st==='new'&&can?`<div class="controls" style="margin-top:12px"><span class="sp"></span><button class="btn" data-rqgo="cancelled">${t('rqCancel')}</button></div>`:''}
-   ${closeBox}</div>
-  <div style="display:flex;flex-direction:column;gap:16px">
-   ${showOpts?`<div class="card"><h3 class="sec">${t('rqOpts')}</h3><p class="hint" style="white-space:normal;margin:-6px 0 12px">${t('rqOptsH')}</p>
+   ${!proc&&st==='new'&&can?`<div class="controls rqacts"><span class="sp"></span><button class="btn" data-rqgo="cancelled">${t('rqCancel')}</button></div>`:''}
+   ${closeBox}</section>
+   ${showOpts?`<div class="card rqd-wide"><h3 class="sec">${t('rqOpts')}</h3><p class="hint" style="white-space:normal;margin:-6px 0 12px">${t('rqOptsH')}</p>
     ${opts.length?`<div style="overflow:auto"><table><thead><tr><th>${t('rqOptSup')}</th><th class="n">${t('rqOptPrice')}</th><th>${t('rqOptLead')}</th><th>${t('rqOptNote')}</th><th>${t('rqQuote')}</th><th>${t('rqPick')}</th><th></th></tr></thead><tbody>${opts.map((o,i)=>`<tr class="${o.pick?'r-ok':''}"><td><input dir="auto" list="rqsups" data-rqopt="${i}" data-of="sup" class="${M.opt&&!String(o.sup||'').trim()?'miss':''}" value="${esc(o.sup||'')}" style="width:150px" ${editable?'':'disabled'}></td><td class="n"><input type="number" min="0" step="any" class="num ${M.opt&&!(+o.price>0)?'miss':''}" data-rqopt="${i}" data-of="price" value="${o.price??''}" ${editable?'':'disabled'}></td><td><input dir="auto" data-rqopt="${i}" data-of="lead" value="${esc(o.lead||'')}" style="width:100px" ${editable?'':'disabled'}></td><td><input dir="auto" data-rqopt="${i}" data-of="note" value="${esc(o.note||'')}" style="width:130px" ${editable?'':'disabled'}></td><td><div class="qfiles">${(o.files||[]).map((f,j)=>`<span class="qfile"><button class="qf-open" data-rqqv="${i}:${j}" title="${esc(f.name)}">${f.type==='application/pdf'?'<b>PDF</b>':`<img src="${f.data||f.thumb||''}" alt="">`}<span>${esc(f.name.length>16?f.name.slice(0,14)+'…':f.name)}</span></button>${editable?`<button class="qf-del" data-rqqdel="${i}:${j}">✕</button>`:''}</span>`).join('')}${editable&&(o.files||[]).length<3?`<label class="btn btn-sm qf-up">+ ${t('rqUpload')}<input type="file" accept="application/pdf,image/*" data-rqqf="${i}" style="display:none"></label>`:''}</div></td><td><button class="btn btn-ok ${o.pick?'done':''} ${M.pick?'miss':''}" data-rqpick="${i}" ${editable?'':'disabled'}>${o.pick?'✓':'—'}</button></td><td>${editable?`<button class="btn btn-ok" data-rqoptdel="${i}">✕</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:(M.opt?`<div class="banner bn-warn" style="margin-bottom:8px">${t('rqNeedOpt')}</div>`:'')}
     <datalist id="rqsups">${suppliers().map(x=>`<option value="${esc(x.n)}"></option>`).join('')}</datalist>
     ${editable?`<button class="btn" data-act="rqaddopt" style="margin-top:10px">+ ${t('rqAddOpt')}</button>`:''}</div>`:''}
-   ${showSpec?`<div class="card"><h3 class="sec">${t('rqSpec')}</h3><p class="hint" style="white-space:normal;margin:-6px 0 12px">${t('rqSpecH')}</p><div class="form">${specKeys.map(k=>`<div class="fld"><label>${t('sp_'+k)}${req.includes(k)?' <span style="color:var(--fk-danger)">*</span>':''}</label><input dir="auto" data-rqspec="${k}" class="${M.spec.includes(k)?'miss':''}" value="${esc(spec[k]||'')}" ${editable?'':'disabled'}></div>`).join('')}
+   ${showSpec?`<div class="card rqd-wide"><h3 class="sec">${t('rqSpec')}</h3><p class="hint" style="white-space:normal;margin:-6px 0 12px">${t('rqSpecH')}</p><div class="form">${specKeys.map(k=>`<div class="fld"><label>${t('sp_'+k)}${req.includes(k)?' <span style="color:var(--fk-danger)">*</span>':''}</label><input dir="auto" data-rqspec="${k}" class="${M.spec.includes(k)?'miss':''}" value="${esc(spec[k]||'')}" ${editable?'':'disabled'}></div>`).join('')}
     <div class="fld" style="grid-column:1/-1"><label>${t('rqSpecNotes')}</label><textarea dir="auto" data-rqspec="notes" style="min-height:70px" ${editable?'':'disabled'}>${esc(spec.notes||'')}</textarea></div></div>${editable&&st==='review'?`<div class="controls" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--fk-line)">${M.spec.length||M.buyer?`<span class="hint" style="white-space:normal;color:var(--fk-danger)">${t('rqFix')}</span>`:''}<span class="sp"></span><button class="btn btn-accent" data-rqgo="sourcing" style="min-height:42px;padding:8px 18px">${t('ga_agreed')}</button></div>`:''}</div>`:''}
-</div>
-  <div class="card"><h3 class="sec">${t('rqLog')}</h3>
-   <div class="rq-log">${log.map(e=>`<div class="rq-msg t-${e.type}"><div class="hint">${dd(e.at,1)} · <b>${esc(e.by||'')}</b> · ${t('lt_'+e.type)}${proc&&['note','call','meet','ceo'].includes(e.type)?` <span class="badge b-mute">${t('rqInternal')}</span>`:''}</div><div style="white-space:pre-wrap">${e.type==='status'?rqBadge(e.text.split('|')[0])+(e.text.includes('|')?' '+esc(e.text.split('|').slice(1).join(' — ')):''):esc(e.text)}</div></div>`).join('')||`<div class="hint">—</div>`}</div>
-   ${can&&!['cancelled'].includes(st)?`<div class="controls" style="margin-top:12px;align-items:flex-start">${proc&&side!=='ceo'?`<select id="rqlt">${['msg','call','meet','note'].map(k=>`<option value="${k}">${t('lt_'+k)}</option>`).join('')}</select>`:''}<textarea id="rqtext" dir="auto" placeholder="${t('rqMsgPh')}" style="flex:1;min-height:60px;min-width:220px"></textarea><div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-primary" data-act="rqlog">${proc?t('rqAddNote'):t('rqSendMsg')}</button>${side!=='dept'?`<button class="btn" data-act="rqmail" title="${t('rqMailH')}">${t('rqMail')}</button>`:''}</div></div>`:''}</div>`}
-function rqGo(to){const id=rqOpenId;const r=Object.assign({id},rec('Requests',id));const st=r.status||'new';
+  <section class="card rqb" data-blk="thread" aria-label="${esc(t('rqB_thr'))}"><h3 class="rqbh">${rqI('chat')}<span>${t('rqB_thr')}</span></h3>
+   <div class="rq-log">${thread.map(msg).join('')||`<div class="hint">${t('rqNoThread')}</div>`}</div>
+   ${can&&!['cancelled'].includes(st)?`<div class="rqcomp">${proc&&side!=='ceo'?`<label class="rqlt"><span class="hint">${t('rqType')}</span><select id="rqlt">${['msg','call','meet','note'].map(k=>`<option value="${k}">${t('lt_'+k)}</option>`).join('')}</select></label>`:''}
+    <textarea id="rqtext" dir="auto" placeholder="${t('rqMsgPh')}" aria-label="${esc(t('rqMsgPh'))}"></textarea>
+    <div class="rqcomp-a">${side!=='dept'?`<button class="btn rqmailb" data-act="rqmail" title="${t('rqMailH')}">${rqI('mail')}<span>${t('rqMail')}</span></button><span class="hint rqmailh">${t('rqMailHs')}</span>`:''}<span class="sp"></span><button class="btn btn-primary" data-act="rqlog">${rqI('note')}<span>${proc?t('rqAddNote'):t('rqSendMsg')}</span></button></div></div>`:''}</section>
+  <section class="card rqb" data-blk="history" aria-label="${esc(t('rqB_hist'))}"><h3 class="rqbh">${rqI('list')}<span>${t('rqB_hist')}</span></h3>
+   ${hist.length?`<ol class="rqhist">${hist.map(hst).join('')}</ol>`:`<div class="hint">${t('rqNoHist')}</div>`}</section>
+  </div>`}
+function rqAsk(key,r,fn){confirmBox(t(key).replace('{t}',(r&&(r.title||r.no))||''),t(key+'Y'),fn,t('cancelS'),1)}
+/* ok=1 once the person said yes in the confirm box (accept, send to CEO, CEO approve, withdraw, reopen) */
+function rqGo(to,ok){const id=rqOpenId;const r=Object.assign({id},rec('Requests',id));const st=r.status||'new';
   if(to==='later'||to==='rejected'){rqClose={id,to,reason:to==='later'?'later':'',note:'',date:''};render();return}
+  if(to==='reopen'&&!ok){rqAsk('cf_reopen',r,()=>rqGo('reopen',1));return}
   if(to==='reopen'){const back=r.prevStatus&&!['later','rejected'].includes(r.prevStatus)?r.prevStatus:'review';if(editR('Requests',id,{status:back,closeReason:'',closeNote:'',reviewOn:'',log:rqLog(id,'status',back)}))render();return}
   if(to==='back'){const back=st==='sourcing'?'review':st==='quotes'?'sourcing':'quotes';if(editR('Requests',id,{status:back,log:rqLog(id,'status',back)})){if(back==='review'){tab='prq'}render()}return}
   const M=rqMiss(r);
@@ -1519,6 +1915,7 @@ function rqGo(to){const id=rqOpenId;const r=Object.assign({id},rec('Requests',id
   if(to==='quotes'&&M.opt){toast(t('rqNeedOpt'));render();return}
   if(to==='approval'&&M.pick){toast(t('rqNeedPick'));render();return}
   if(to==='ordered'&&st!=='approved'){toast(t('rqNeedAppr'));return}
+  if(!ok&&['review','approval','withdraw','ceook'].includes(to)){rqAsk('cf_'+to,r,()=>rqGo(to,1));return}
   if(to==='withdraw'){if(editR('Requests',id,{status:'quotes',log:rqLog(id,'status','quotes')}))render();return}
   if(to==='ceook'){const at=new Date().toISOString();if(editR('Requests',id,{status:'approved',ceo:{decision:'approved',by:me,at},log:rqLog(id,'status','approved')})){sendAlert('decision',{dec:t('dec_approved'),title:r.title});poFromRequest(id);toast(t('rqApproved'));render()}return}
   if(to==='ceoback'){rqClose={id,to:'ceoback',reason:'other',note:''};render();return}
@@ -1589,10 +1986,18 @@ document.addEventListener('click',e=>{
   const qd=e.target.closest('[data-rqqdel]');if(qd&&rqOpenId){const [i,j]=qd.dataset.rqqdel.split(':').map(Number);const L=(rec('Requests',rqOpenId).opts||[]).map(x=>Object.assign({},x));if(L[i]){L[i].files=(L[i].files||[]).filter((_,k)=>k!==j);if(editR('Requests',rqOpenId,{opts:L}))render()}return}
   const o=e.target.closest('[data-rqopen]');if(o){rqOpenId=o.dataset.rqopen;render();window.scrollTo(0,0);return}
   const st=e.target.closest('[data-rqst]');if(st){(tab==='pon'?rqG:rqF).st=st.dataset.rqst;render();return}
-  const gg=e.target.closest('[data-rqgo]');if(gg&&rqOpenId){const to=gg.dataset.rqgo;if(to==='cancelled'){const r0=rec('Requests',rqOpenId);if(editR('Requests',rqOpenId,{status:'cancelled',prevStatus:r0.status||'new',log:rqLog(rqOpenId,'status','cancelled')}))render();return}rqGo(to);return}
+  const gg=e.target.closest('[data-rqgo]');if(gg&&rqOpenId){const to=gg.dataset.rqgo;if(to==='cancelled'){const id=rqOpenId,r0=rec('Requests',id);rqAsk('cf_cancelled',r0,()=>{if(editR('Requests',id,{status:'cancelled',prevStatus:r0.status||'new',log:rqLog(id,'status','cancelled')}))render()});return}rqGo(to);return}
   const pk=e.target.closest('[data-rqpick]');if(pk&&rqOpenId){const L=(rec('Requests',rqOpenId).opts||[]).map((x,i)=>Object.assign({},x,{pick:i===+pk.dataset.rqpick?!x.pick:false}));if(editR('Requests',rqOpenId,{opts:L}))render();return}
   const od=e.target.closest('[data-rqoptdel]');if(od&&rqOpenId){const L=[...(rec('Requests',rqOpenId).opts||[])];L.splice(+od.dataset.rqoptdel,1);if(editR('Requests',rqOpenId,{opts:L}))render();return}
+  const fx=e.target.closest('[data-rqfx]');if(fx){const F=tab==='pon'?rqG:rqF;F[fx.dataset.rqfx]=!F[fx.dataset.rqfx];render();return}
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='rqmore'){const m=tab==='pon'?'go':'in';rqMore[m]=!rqMore[m];render();return}
+  if(a==='rqclear'){const m=tab==='pon'?'go':'in';Object.assign(m==='go'?rqG:rqF,RQ_FD,{st:RQCH[m].pills[0]});render();return}
+  if(a==='rqsaveview'){rqNaming=true;render();const n=document.getElementById('rqvname');n&&n.focus();return}
+  if(a==='rqviewok'){rqSaveView();return}
+  if(a==='rqviewno'){rqNaming=false;render();return}
+  if(a==='rqdelview'){const m=tab==='pon'?'go':'in',i=rqCurView(m,m==='go'?rqG:rqF);if(i>=0){const v=rqViews();v.splice(i,1);ls2('pp-rq-views',v);toast(t('ivViewDel'));render()}return}
+  if(a==='rqnewgo'){tab='rnew';rqOpenId=null;rqClose=null;render();window.scrollTo(0,0);return}
   if(a==='rqsend')rqSubmit();
   else if(a==='rqback'){const r0=rqOpenId?rec('Requests',rqOpenId):{};rqOpenId=null;rqClose=null;if(side==='ceo')tab='appr';else if(side==='plan')tab=RQIN.includes(r0.status||'new')||(['rejected','cancelled'].includes(r0.status)&&RQIN.includes(r0.prevStatus||'new'))?'prq':'pon';render()}
   else if(a==='rqcloseno'){rqClose=null;render()}
@@ -1617,10 +2022,15 @@ document.addEventListener('change',e=>{const el=e.target;
   if(el.dataset.rqf&&rqOpenId){editR('Requests',rqOpenId,{[el.dataset.rqf]:String(el.value).trim().slice(0,80)});render();return}
   if(el.dataset.rqopt!==undefined&&rqOpenId){const L=(rec('Requests',rqOpenId).opts||[]).map(x=>Object.assign({},x));const i=+el.dataset.rqopt,f=el.dataset.of;if(!L[i])return;L[i][f]=f==='price'?(el.value===''?null:Math.max(0,parseFloat(el.value)||0)):String(el.value).trim().slice(0,200);editR('Requests',rqOpenId,{opts:L});setTimeout(render,0);return}
   if(el.id==='rqkind'){(tab==='pon'?rqG:rqF).kind=el.value;render();return}
+  if(['rqcost','rqdept','rqbranch'].includes(el.id)){(tab==='pon'?rqG:rqF)[el.id.slice(2)]=el.value;render();return}
+  if(el.id==='rqview'){const m=tab==='pon'?'go':'in',v=rqViews()[+el.value];if(el.value!==''&&v){const F=m==='go'?rqG:rqF;Object.assign(F,RQ_FD,v.f);if(RQCH[m].more.includes(F.st)||F.kind||F.cost||F.dept||F.branch)rqMore[m]=true}render();return}
   if(el.id==='rqcr'&&rqClose){rqClose.reason=el.value;render();return}
   if(el.id==='rqcd'&&rqClose){rqClose.date=el.value;return}
   if(el.id==='rqcn'&&rqClose){rqClose.note=el.value;render();return}
 });
+document.addEventListener('keydown',e=>{const el=e.target;if(!el||!el.closest)return;
+  if(el.id==='rqvname'){if(e.key==='Enter'){e.preventDefault();rqSaveView()}else if(e.key==='Escape'){rqNaming=false;render()}return}
+  if((e.key==='Enter'||e.key===' ')&&el.matches('[data-rqopen]')){e.preventDefault();el.click()}});
 document.addEventListener('input',e=>{if(e.target.id==='rqq'){(tab==='pon'?rqG:rqF).q=e.target.value;render();const q=document.getElementById('rqq');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}});
 
 
@@ -1766,7 +2176,8 @@ document.addEventListener('click',e=>{
   if(a==='poback'){poOpen=null;poDoc=false;render()}else if(a==='podoc'){poDoc=true;render();window.scrollTo(0,0)}else if(a==='podocback'){poDoc=false;render()}
   else if(a==='poissue'&&poOpen)poIssue(poOpen)
   else if(a==='pocancel'&&poOpen){if(editR('POs',poOpen,{status:'cancelled'})){poOpen=null;render()}}
-  else if(a==='rqopenpo'&&rqOpenId){const id=poFromRequest(rqOpenId);if(id){tab='lpo';poOpen=id;poDoc=false;rqOpenId=null;render();window.scrollTo(0,0)}}
+  else if(a==='rqopenpo'&&rqOpenId){const rid=rqOpenId,r0=rec('Requests',rid);const go=()=>{const id=poFromRequest(rid);if(id){tab='lpo';poOpen=id;poDoc=false;rqOpenId=null;render();window.scrollTo(0,0)}};
+    if(r0.poId&&rec('POs',r0.poId).no)go();else rqAsk('cf_lpo',r0,go)}
 });
 document.addEventListener('change',e=>{const el=e.target;
   if(el.dataset.pof2&&poOpen){editR('POs',poOpen,{[el.dataset.pof2]:String(el.value).trim().slice(0,300)});render();return}

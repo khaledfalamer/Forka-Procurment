@@ -9,6 +9,7 @@ Owner: Khaled Alamer, CEO of Forka Collective. Read this before any change.
 - No approval limits for now. Every purchase from a department request needs the CEO's OK before the order is placed.
 - LPOs are generated automatically: from CEO-approved requests and from counted stock below reserve. "New LPO" adds a manual one.
 - Required fields show red. Closing a request always needs a reason.
+- Before any change or go-live: look at the live design first (header, logo, colours, fonts). If it differs from what the work was built on, change nothing and show Khaled side-by-side screenshots; he decides. Every change keeps the current colours and logo design (Khaled, 12 Nov 2026).
 
 ## How it works
 - index.html is the whole app (one file). config.js holds SHEET_URL (the Procurement Apps Script web app) and ERP_URL. CNAME is procurement.forka.com, served by GitHub Pages from main.
