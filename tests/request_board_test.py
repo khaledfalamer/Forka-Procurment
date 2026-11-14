@@ -9,7 +9,7 @@ ROOT = str(pathlib.Path(__file__).resolve().parent.parent)
 SHOTS = os.environ.get('SHOTS')
 def free_port():
     s = socket.socket(); s.bind(('127.0.0.1', 0)); p = s.getsockname()[1]; s.close(); return p
-PORT = free_port(); BASE = f'http://127.0.0.1:{PORT}'
+PORT = free_port(); BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 TOK = 'ERPTOK-00000000000000000000'
 EMOJI = re.compile('[\U0001F000-\U0001FAFF\u2600-\u26FF\u2700-\u2712\u2714\u2716-\u27BF\u2B50\u2B55]')   # the plain glyphs ✓ and ✕ are allowed
@@ -52,7 +52,7 @@ async def main():
     out = subprocess.run(['node', os.path.join(ROOT, 'tests', 'request_board_server_test.js')], capture_output=True, text=True)
     print(out.stdout.strip())
     check('Code.gs: the boardCard action passes its checks (node)', out.returncode == 0, out.stdout[-400:] + out.stderr[-400:])
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None)
