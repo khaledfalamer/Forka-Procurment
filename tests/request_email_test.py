@@ -1,7 +1,7 @@
 """Purchasing can email the requester from a request; the email carries the request number and title. python3 tests/request_email_test.py"""
 import asyncio, json, os, pathlib, subprocess, sys, time, urllib.parse
 from playwright.async_api import async_playwright
-ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True); PORT = 8799; BASE = f'http://127.0.0.1:{PORT}'
+ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True); PORT = 8799; BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 TOK = 'ERPTOK-00000000000000000000'
 SAVED = []; res = []; WHO = {'me': {'name': 'Buyer', 'email': 'buyer@forka.com', 'sides': ['plan', 'dept'], 'role': 'team'}}
@@ -16,7 +16,7 @@ async def server(route):
     if b.get('batch'): SAVED.extend(b['batch'])
     await route.fulfill(json={'ok': True, 'ver': 'v2'})
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None)

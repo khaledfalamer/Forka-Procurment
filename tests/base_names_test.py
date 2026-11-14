@@ -2,7 +2,7 @@
 then a server that answers "nothing new". python3 tests/base_names_test.py"""
 import asyncio, json, os, pathlib, subprocess, sys, time
 from playwright.async_api import async_playwright
-ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8791; BASE = f'http://127.0.0.1:{PORT}'
+ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8791; BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 TOK = 'ERPTOK-00000000000000000000'
 BASE_TAB = {l['id']: l for l in json.load(open(pathlib.Path(ROOT) / 'demo-data.json', encoding='utf-8'))['lines']}
@@ -22,7 +22,7 @@ async def server(route):
         return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v2', 'lines': EDITS, 'suppliers': {}, 'tabs': {'Lines': EDITS, 'Base': BASE_TAB}})
     await route.fulfill(json={'ok': True, 'ver': 'v1'})
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None)

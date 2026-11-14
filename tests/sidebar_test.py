@@ -2,13 +2,13 @@
 python3 tests/sidebar_test.py"""
 import asyncio, os, pathlib, subprocess, sys, time
 from playwright.async_api import async_playwright
-ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8801; BASE = f'http://127.0.0.1:{PORT}'
+ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8801; BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 CFG = "window.FORKA_CONFIG={SHEET_URL:'',PIN:false,ERP_URL:'https://erp.forka.com/'};"
 res = []
 def check(n, ok, info=''):
     res.append(bool(ok)); print(('PASS ' if ok else 'FAIL ') + n + ('' if ok else ' - ' + str(info)[:300]))
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None); errs = []

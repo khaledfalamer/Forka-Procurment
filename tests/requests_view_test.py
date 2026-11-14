@@ -7,7 +7,7 @@ from playwright.async_api import async_playwright
 ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True)
 def free_port():
     s = socket.socket(); s.bind(('127.0.0.1', 0)); p = s.getsockname()[1]; s.close(); return p
-PORT = free_port(); BASE = f'http://127.0.0.1:{PORT}'
+PORT = free_port(); BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 TOK = 'ERPTOK-00000000000000000000'
 EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-⛿✀-✒✔✖-➿⭐⭕️]')
@@ -63,7 +63,7 @@ async def rows(pg): return await pg.eval_on_selector_all('.rqlist .rq-li', 'e=>e
 async def status(pg, rid): return await pg.evaluate(f"(rec('Requests','{rid}')||{{}}).status")
 async def no_hscroll(pg): return await pg.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None)

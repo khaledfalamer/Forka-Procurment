@@ -3,7 +3,7 @@ Simulated Procurement server and Forka Apps accounts server (no live servers). p
 import asyncio, json, os, pathlib, re, subprocess, sys, time
 from playwright.async_api import async_playwright
 ROOT = str(pathlib.Path(__file__).resolve().parent.parent); SHOTS = pathlib.Path(ROOT) / 'tests' / 'shots'; SHOTS.mkdir(exist_ok=True)
-PORT = 8797; BASE = f'http://127.0.0.1:{PORT}'
+PORT = 8797; BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
 ACC = 'https://accounts.test/accounts'
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/',ACCOUNTS_URL:'" + ACC + "'};"
 EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-⛿✀-✒✔✖-➿⭐⭕️]')
@@ -44,7 +44,7 @@ async def accounts(route):
     await route.fulfill(json={'ok': True, 'me': me}, headers={'access-control-allow-origin': '*'})
 
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     errs = []
     try:
         async with async_playwright() as p:

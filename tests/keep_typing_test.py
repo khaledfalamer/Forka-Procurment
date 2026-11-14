@@ -1,7 +1,13 @@
 """Typed text is never wiped: not by the 30-second server refresh, not by picking a unit (e.g. Bucket). python3 tests/keep_typing_test.py"""
-import asyncio, json, os, pathlib, subprocess, sys, time
+import re, asyncio, json, os, pathlib, subprocess, sys, time
 from playwright.async_api import async_playwright
-ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8794; BASE = f'http://127.0.0.1:{PORT}'
+ROOT = str(pathlib.Path(__file__).resolve().parent.parent); PORT = 8794; BASE = f'http://127.0.0.1:{PORT}' + os.environ.get('SITE_PATH', '')
+def page_code():
+    """The page and the scripts it loads (SITE_ROOT/SITE_PATH = the Forka App build)."""
+    site = pathlib.Path(os.environ.get('SITE_ROOT', ROOT)); html = (site / os.environ.get('SITE_PATH', '').lstrip('/') / 'index.html').read_text()
+    for src in re.findall(r'(?:<script[^>]+src|<link[^>]+href)="(/assets/[^"]+\.js)"', html): html += (site / src.lstrip('/')).read_text()
+    return html
+
 CFG = "window.FORKA_CONFIG={SHEET_URL:'https://proc.test/exec',PIN:'auto',ERP_URL:'https://erp.forka.com/'};"
 BASE_TAB = {l['id']: l for l in json.load(open(pathlib.Path(__file__).resolve().parent.parent / 'demo-data.json', encoding='utf-8'))['lines']}  # the server sends the item list after sign-in
 TOK = 'ERPTOK-00000000000000000000'; res = []; VER = {'n': 1}
@@ -14,9 +20,9 @@ async def server(route):
     if b.get('load'): return await route.fulfill(json={'ok': True, 'me': me, 'ver': 'v%d' % VER['n'], 'lines': {}, 'suppliers': {}, 'tabs': {'Base': BASE_TAB}})
     await route.fulfill(json={'ok': True, 'ver': 'v%d' % VER['n']})
 async def main():
-    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT), '--bind', '127.0.0.1'], cwd=os.environ.get('SITE_ROOT', ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
     try:
-        check('Page has the keep-what-is-typed guard', 'window.__fkKeep' in (pathlib.Path(ROOT) / 'index.html').read_text())
+        check('Page has the keep-what-is-typed guard', 'window.__fkKeep' in page_code())
         async with async_playwright() as p:
             b = await p.chromium.launch(executable_path=os.environ.get('PW_CHROMIUM') or None)
             ctx = await b.new_context(viewport={'width': 1280, 'height': 900})
