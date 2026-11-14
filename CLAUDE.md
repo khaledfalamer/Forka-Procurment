@@ -11,6 +11,9 @@ Owner: Khaled Alamer, CEO of Forka Collective. Read this before any change.
 - Required fields show red. Closing a request always needs a reason.
 - Before any change or go-live: look at the live design first (header, logo, colours, fonts). If it differs from what the work was built on, change nothing and show Khaled side-by-side screenshots; he decides. Every change keeps the current colours and logo design (Khaled, 12 Nov 2026).
 
+## Moving into the Forka App (14 Nov 2026, Khaled chose this)
+- A React + TypeScript version of this app lives in the forka-erp repo at app/ (served at erp.forka.com/procurement/ once Khaled says "go live"; test address https://forka-erp-next.web.app/procurement/). It passes every check in tests/ (run with SITE_ROOT=<forka-erp>/app/dist SITE_PATH=/procurement). Until go-live, procurement.forka.com keeps running from this repo: a change made here must also be made there (or tell Khaled).
+
 ## How it works
 - The month's item list (items, suppliers, prices, use) is in the Sheet tab "Base" and is sent only after sign-in (Code.gs ensureBase_/importBase_). It was the public data.json until 13 Nov 2026; never put real items, suppliers or prices in the repo again. demo-data.json is made-up sample data for demo mode and tests.
 - index.html is the whole app (one file). config.js holds SHEET_URL (the Procurement Apps Script web app) and ERP_URL. CNAME is procurement.forka.com, served by GitHub Pages from main.
