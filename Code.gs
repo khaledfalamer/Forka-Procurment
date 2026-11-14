@@ -21,6 +21,9 @@
  * Optional WhatsApp (Meta WhatsApp Cloud API — needs a Meta Business account and an approved template):
  *   Script properties: WA_TOKEN, WA_PHONE_ID, WA_TEMPLATE (template with one {{1}} body variable), WA_LANG (e.g. en)
  *   If these are empty, alerts go by email only.
+ *
+ * "Open in Board" on a request (Board card for logos, designs, questions): Script property PROC_BOARD_KEY = a long random value,
+ *   the same in the Apps Script "Forka Boards server". Without it the button answers "not set up yet".
  */
 const DATA_COL = 'data (do not edit)';
 const SHEETS = { line: 'Planner', sup: 'Suppliers' };
@@ -257,7 +260,7 @@ function onlyConfirm_(oldD, d) {
   const keys = {}; Object.keys(oldD).concat(Object.keys(d)).forEach(k => keys[k] = 1);
   return Object.keys(keys).every(k => META_KEYS.indexOf(k) >= 0 || JSON.stringify(oldD[k]) === JSON.stringify(d[k]));
 }
-function writeMany_(sh, list) {           // list: [{id, d, v}]  ->  returns [{id, old, d}]
+function writeMany_(sh, list, keepBoard) {           // list: [{id, d, v}]  ->  returns [{id, old, d}]
   const lab = LABELS[sh.getName()] || {};
   const head = header_(sh);
   const need = {}; list.forEach(x => Object.keys(x.v || {}).forEach(k => need[lab[k] || k] = 1));
@@ -274,6 +277,8 @@ function writeMany_(sh, list) {           // list: [{id, d, v}]  ->  returns [{i
     let i = at[x.id], row, old = null;
     if (i === undefined) { row = new Array(W).fill(''); rows.push(row); i = rows.length - 1; at[x.id] = i; }
     else { row = rows[i]; try { old = JSON.parse(row[dc] || '{}'); } catch (e) { old = null; } }
+    // The Board card of a request is set only by this server (action boardCard), never by a save from the app.
+    if (keepBoard) { if (old && old.boardCard) x.d.boardCard = old.boardCard; else delete x.d.boardCard; }
     Object.keys(x.v || {}).forEach(k => {
       let y = x.v[k];
       if (y === null || y === undefined) y = '';
@@ -426,6 +431,7 @@ function doPost(e) {
     return out_(loadAll_(me, b.ceo));
   }
   if (b.upload) { const u = upload_(me, b.upload); if (u.ok) bump_(); return out_(u); }
+  if (b.boardCard) { try { return out_(boardCard_(me, b)); } catch (err) { return out_({ ok: false, error: 'board' }); } }
 
   const items = Array.isArray(b.batch) ? b.batch : [{ id: b.id, data: b.data, view: b.view, kind: b.kind }];
   const okId = /^[A-Za-z0-9_\-.~:@+]{1,60}$/;
@@ -443,7 +449,7 @@ function doPost(e) {
     });
     const acts = [];
     Object.keys(groups).forEach(name => {
-      writeMany_(sheet_(name), groups[name]).forEach(r => {
+      writeMany_(sheet_(name), groups[name], name === 'Requests').forEach(r => {
         acts.push(actRow_(me, b.side, name, r.id, r.old, r.d));
         if (name === 'Requests') after.push([r.old, r.d]);
       });
@@ -458,6 +464,68 @@ function doPost(e) {
   return out_({ ok: true, saved: items.length });
 }
 
+
+/* ---------------- "Open in Board" for a purchase request (Khaled, 14 Nov 2026) ----------------
+   One card per request on the Board "Purchase requests" (Procurement department), so Purchasing and the requester
+   can share logos, designs and questions. Who may start it: people with Purchasing (plan), the CEO, and the person
+   who sent the request (matched by email). The browser only says which request; this server checks the person and
+   the request itself, then asks the Boards server with a shared key kept in Script properties (PROC_BOARD_KEY,
+   the same value in "Forka Boards server"). The key is never in the code or the browser. */
+const BOARDS_URL = 'https://script.google.com/macros/s/AKfycbzx4SO5yPavY7djHjoUQj6GIXxnrbbyGkmMJnf9HxQcOUJMypeej2aFEXF0LgdGDwm82w/exec';
+const PROC_APP_URL = 'https://procurement.forka.com/';
+const BOARD_APP_URL = 'https://erp.forka.com/boards/';
+const RQ_KIND_EN = { food: 'Food or ingredient', equip: 'Equipment', service: 'Service', design: 'Design or creative', other: 'Other' };
+const RQ_DEPT_EN = { kitchen: 'Kitchen / Chef', bakery: 'Bakery', bar: 'Coffee bar', ops: 'Operations', store: 'Store', maint: 'Maintenance', mkt: 'Marketing', hr: 'HR / Admin', fin: 'Finance', it: 'IT', other: 'Other' };
+const RQ_LOC_EN = { sharjah: 'AMK Sharjah', fujairah: 'AMK Fujairah', uaq: 'AMK Umm Al Quwain', mayar: 'Mayar Cafe', oman: 'Oman', ajman: 'Ajman Central Store', office: 'Head office', all: 'All branches' };
+function lc_(s) { return String(s || '').trim().toLowerCase(); }
+function boardAllowed_(me, r) {
+  const em = lc_(me.email), sd = me.sides || [];
+  return !!em && (sd.indexOf('plan') >= 0 || sd.indexOf('ceo') >= 0 || (!!r && lc_(r.byEmail) === em));
+}
+// The buyer is typed as a name on the request: find their email in the Users tab (contacts). Unknown names go by name only.
+function buyerOf_(r) {
+  const n = lc_(r.buyer); if (!n) return null;
+  const c = contacts_().filter(u => lc_(u.name) === n && u.email);
+  return { name: String(r.buyer).trim(), email: c.length === 1 ? lc_(c[0].email) : '' };
+}
+function boardCard_(me, b) {
+  const id = String(b.boardCard || '');
+  if (!/^[A-Za-z0-9_\-.~:@+]{1,60}$/.test(id)) return { ok: false, error: 'id' };
+  if (me.team || !lc_(me.email)) return { ok: false, error: 'role' };
+  const sh = SpreadsheetApp.getActive().getSheetByName('Requests');
+  const r = sh ? readOne_(sh, id) : null;
+  if (!r || !r.no || r.off) return { ok: false, error: 'gone' };
+  if (!boardAllowed_(me, r)) return { ok: false, error: 'role' };
+  const key = props_().getProperty('PROC_BOARD_KEY');
+  if (!key) return { ok: false, error: 'nosetup' };
+  const link = PROC_APP_URL + '#rq=' + encodeURIComponent(id);
+  const payload = { action: 'procCard', key: key, token: String(b.erp || ''),
+    req: { id: id, no: String(r.no), title: String(r.title || ''), kind: RQ_KIND_EN[r.kind] || String(r.kind || ''), qty: r.qty == null ? '' : String(r.qty), unit: String(r.unit || ''),
+      needBy: String(r.needBy || ''), dept: RQ_DEPT_EN[r.dept] || String(r.dept || ''), branch: RQ_LOC_EN[r.branch] || String(r.branch || ''),
+      details: String(r.details || '').slice(0, 3000), urgent: r.urg === 'urgent', url: link },
+    requester: { email: lc_(r.byEmail), name: String(r.by || '') }, buyer: buyerOf_(r), by: { email: lc_(me.email), name: String(me.name || '') } };
+  let j = null;
+  try {
+    const res = UrlFetchApp.fetch(BOARDS_URL, { method: 'post', contentType: 'text/plain', payload: JSON.stringify(payload), muteHttpExceptions: true, followRedirects: true });
+    j = JSON.parse(res.getContentText());
+  } catch (e) { return { ok: false, error: 'board' }; }
+  if (!j || !j.ok || !/^[A-Za-z0-9_\-.:]{1,120}$/.test(String(j.cardId || ''))) return { ok: false, error: j && (j.error === 'key' || j.error === 'nosetup') ? 'nosetup' : 'board' };
+  const url = BOARD_APP_URL + '#card=' + encodeURIComponent(j.cardId);
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  let d;
+  try {
+    d = readOne_(sh, id) || r;
+    const first = !d.boardCard || d.boardCard.id !== j.cardId;
+    d.boardCard = { id: String(j.cardId), board: String(j.boardId || ''), url: url, by: me.name || '', at: new Date().toISOString() };
+    if (first) d.log = (d.log || []).concat([{ at: new Date().toISOString(), by: me.name || '', type: 'board', text: 'Board card opened by ' + (me.name || me.email) }]);
+    d.who = me.name; d.at = new Date().toISOString();
+    const w = writeMany_(sh, [{ id: id, d: d, v: {} }]);
+    const a = SpreadsheetApp.getActive().getSheetByName('Activity');
+    if (a && w.length) a.appendRow(actRow_(me, b.side, 'Requests', id, w[0].old, w[0].d));
+    bump_();
+  } finally { lock.releaseLock(); }
+  return { ok: true, cardId: String(j.cardId), boardId: String(j.boardId || ''), url: url, rec: d };
+}
 
 /* Run once if Google asks for permission again (connects to Forka Apps to check sign-ins). */
 function authorize() {
